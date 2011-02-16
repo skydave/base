@@ -1,17 +1,10 @@
-/*---------------------------------------------------------------------
-
-A very simple class which encapuslates some Win32API calls for window
-creation and management.
-
-----------------------------------------------------------------------*/
+#ifdef _WINDOWS
 #include "GLWindow.h"
-
+#include <string>
 
 
 namespace base
 {
-
-#ifdef _WINDOWS
 
 
 	GLWindow::GLWindow( int width, int height, std::string caption ) : Window()
@@ -119,6 +112,99 @@ namespace base
 		SetFocus( m_hwnd );
 	}
 
+}
+#endif
+
+
+
+
+
+
+
+
+#ifdef linux
+
+#include "GLWindow.h"
+#include <string>
+
+
+namespace base
+{
+	GLWindow::GLWindow( int width, int height, std::string caption ) : Window()
+	{
+		XVisualInfo *visualInfo;
+		int         errorBase;
+		int         eventBase;
+		Display *display = Application::getDisplay();
+
+		// Make sure OpenGL's GLX extension supported
+		if( !glXQueryExtension( display, &errorBase, &eventBase ) )
+			return;
+
+		// Try for the double-bufferd visual first
+		int doubleBufferVisual[]  =
+		{
+				GLX_RGBA,           // Needs to support OpenGL
+				GLX_DEPTH_SIZE, 24, // Needs to support a 16 bit depth buffer
+				GLX_DOUBLEBUFFER,   // Needs to support double-buffering
+				None                // end of list
+		};
+
+		visualInfo = glXChooseVisual( display, DefaultScreen(display), doubleBufferVisual );
+		if( visualInfo == NULL )
+			return;
+
+		// Create an OpenGL rendering context
+		m_hrc = glXCreateContext( display, visualInfo, NULL, GL_TRUE );
+		if( m_hrc == NULL )
+			return;
+
+		// Create an X colormap since we're probably not using the default visual
+		Colormap colorMap;
+		colorMap = XCreateColormap( display, RootWindow(display, visualInfo->screen),
+									visualInfo->visual, AllocNone );
+
+		XSetWindowAttributes winAttr;
+		winAttr.colormap     = colorMap;
+		winAttr.border_pixel = 0;
+		winAttr.event_mask   = ExposureMask           |
+							   VisibilityChangeMask   |
+							   KeyPressMask           |
+							   KeyReleaseMask         |
+							   ButtonPressMask        |
+							   ButtonReleaseMask      |
+							   PointerMotionMask      |
+							   StructureNotifyMask    |
+							   SubstructureNotifyMask |
+							   FocusChangeMask;
+
+		// Create an X window with the selected visual
+		m_hwnd = XCreateWindow( display, RootWindow(display, visualInfo->screen),
+								  0, 0, width, height, 0, visualInfo->depth, InputOutput,
+					visualInfo->visual, CWBorderPixel | CWColormap | CWEventMask,
+								  &winAttr );
+
+		if( !m_hwnd )
+			return;
+
+		//XSetStandardProperties( info->hDisplay, info->hWnd, info->wndclass, info->wndclass, None, argv, argc, NULL );
+		char *argv[] = { "hola", 0 };
+		XSetStandardProperties( display, m_hwnd, m_wndclass, m_wndclass, None, argv, 1, NULL );
+
+		glXMakeCurrent( display, m_hwnd, m_hrc );
+
+
+		XMapWindow( display, m_hwnd );
+
+		Application::registerWindow( this );
+	}
+
+	//
+	// shows the window
+	//
+	void GLWindow::show()
+	{
+	}
 #endif
 }
 
@@ -274,7 +360,6 @@ namespace win32
 
 		return true;
 	}
-
 
 
 	bool GLWindow::_SetPixelFormat( HWND hWnd )

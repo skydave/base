@@ -136,8 +136,86 @@ namespace base
 	}
 #endif
 
-#ifdef _LINUX
-#error "APPLICATION MAIN LOOP FOR LINUX HAS TO BE IMPLEMENTED"
+#ifdef linux
+
+	std::map< HWND, Window* > Application::m_windowRegister;
+	bool Application::m_quit = false;
+	Display *Application::m_display = 0;
+
+	Application::Application()
+	{
+	}
+
+
+	int Application::exec()
+	{
+		Display *display = getDisplay();
+		XEvent event;
+
+		if( !display )
+			return 1;
+
+		while( !m_quit )
+		{
+			//queryState();
+			//done = intro_do();
+
+			//wininfo.events.keyb.state[KEY_LEFT]     = 0;
+			//wininfo.events.keyb.state[KEY_RIGHT]    = 0;
+			//wininfo.events.keyb.state[KEY_UP]       = 0;
+			//wininfo.events.keyb.state[KEY_DOWN]     = 0;
+			//wininfo.events.keyb.state[KEY_PGUP]     = 0;
+
+			while( XPending(display) )
+			{
+				XNextEvent( display, &event );
+				/*
+				switch( event.type )
+				{
+				case KeyPress:
+					switch( XKeycodeToKeysym( info->hDisplay, event.xkey.keycode, 0 ) )
+					{
+					case XK_Up:
+						wininfo.events.keyb.state[KEY_UP] = 1;break;
+					case XK_Down:
+						wininfo.events.keyb.state[KEY_DOWN] = 1;break;
+					case XK_Left:
+						wininfo.events.keyb.state[KEY_LEFT] = 1;break;
+					case XK_Right:
+						wininfo.events.keyb.state[KEY_RIGHT] = 1;break;
+					case XK_Escape:
+						done = 1;break;
+					}break;
+				case DestroyNotify:
+					done = 1;break;
+				}
+				*/
+			}
+			//glXSwapBuffers( info->hDisplay, info->hWnd );
+		}
+		return 0;
+	}
+
+	Display *Application::getDisplay()
+	{
+		if(!m_display)
+			m_display = XOpenDisplay(NULL);
+		return m_display;
+	}
+
+	void Application::registerWindow( Window *window )
+	{
+		m_windowRegister[window->getHandle()] = window;
+	}
+
+	Window *Application::getRegisteredWindow( HWND hwnd )
+	{
+		std::map< HWND, Window* >::iterator it = m_windowRegister.find( hwnd );
+		if( it != m_windowRegister.end() )
+			return it->second;
+		return 0;
+	}
+
 #endif
 
 }

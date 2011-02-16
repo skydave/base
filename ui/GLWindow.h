@@ -3,12 +3,11 @@
 #include "Application.h"
 #include "Window.h"
 
-
-
+#ifdef _WINDOWS
 
 namespace base
 {
-#ifdef _WINDOWS
+
 	class GLWindow : public Window
 	{
 	public:
@@ -37,10 +36,32 @@ namespace base
 
 		DEVMODE	                                     m_DMsaved; // Saves The Previous Screen Settings (NEW)
 	};
+}
 #endif
+
+#ifdef linux
+
+#include <GL/gl.h>
+#include <GL/glx.h>
+
+
+namespace base
+{
+	class GLWindow : public Window
+	{
+	public:
+		GLWindow( int width, int height, std::string caption );
+
+
+
+		void                                            show(); // shows the window
+	private:
+		GLXContext                                       m_hrc; // render context
+
+	};
 }
 
-
+#endif
 
 
 
