@@ -100,18 +100,6 @@ namespace base
 */
 		Application::registerWindow( this );
 	}
-
-	//
-	// shows the window
-	//
-	void GLWindow::show()
-	{
-		ShowWindow( m_hwnd , SW_SHOW );
-		UpdateWindow( m_hwnd );
-		SetForegroundWindow( m_hwnd );
-		SetFocus( m_hwnd );
-	}
-
 }
 #endif
 
@@ -193,22 +181,57 @@ namespace base
 
 		glXMakeCurrent( display, m_hwnd, m_hrc );
 
-
-		XMapWindow( display, m_hwnd );
-
 		Application::registerWindow( this );
 	}
 
+	GLWindow::~GLWindow()
+	{
+		Display *display = Application::getDisplay();
+
+		// close connection to xserver
+		//XUnmapWindow(display, m_hwnd);
+
+		//Application::unregisterWindow( this );
+	}
+
+
+	//
+	//
+	//
+	void GLWindow::paint()
+	{
+		// make current
+		// TODO
+
+		// paintGL
+		paintGL();
+
+		// swap buffers
+		glXSwapBuffers( Application::getDisplay(), m_hwnd );
+
+		// update dirty flag
+		//Window::paint();
+	}
+
+	void GLWindow::paintGL()
+	{
+		glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
+/*
 	//
 	// shows the window
 	//
 	void GLWindow::show()
 	{
+		Display *display = Application::getDisplay();
+		XMapWindow( display, m_hwnd );
 	}
-#endif
+*/
 }
 
-
+#endif
 
 
 

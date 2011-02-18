@@ -142,10 +142,20 @@ namespace base
 	bool Application::m_quit = false;
 	Display *Application::m_display = 0;
 
+	Atom Application::m_deleteWindowAtom = 0;
+
 	Application::Application()
 	{
 	}
 
+	Application::~Application()
+	{
+		if(m_display)
+		{
+			XCloseDisplay(m_display);
+			m_display = 0;
+		}
+	}
 
 	int Application::exec()
 	{
@@ -169,29 +179,40 @@ namespace base
 			while( XPending(display) )
 			{
 				XNextEvent( display, &event );
-				/*
+
+				// handle event
 				switch( event.type )
 				{
-				case KeyPress:
-					switch( XKeycodeToKeysym( info->hDisplay, event.xkey.keycode, 0 ) )
+					case ClientMessage:
 					{
-					case XK_Up:
-						wininfo.events.keyb.state[KEY_UP] = 1;break;
-					case XK_Down:
-						wininfo.events.keyb.state[KEY_DOWN] = 1;break;
-					case XK_Left:
-						wininfo.events.keyb.state[KEY_LEFT] = 1;break;
-					case XK_Right:
-						wininfo.events.keyb.state[KEY_RIGHT] = 1;break;
-					case XK_Escape:
-						done = 1;break;
+						Atom clientMsg = (Atom)event.xclient.data.l[0];
+						if(clientMsg == m_deleteWindowAtom)
+						{
+							// destroy window
+							getRegisteredWindow( event.xclient.window )->destroy();
+						}
 					}break;
-				case DestroyNotify:
-					done = 1;break;
-				}
-				*/
+					case DestroyNotify:
+					{
+						Window *w = getRegisteredWindow( event.xdestroywindow.window );
+						unregisterWindow(w);
+
+						// we assume we are in gui mode all the time (gui mode means, when there is no window the app closes)
+						if(1)
+							if( m_windowRegister.empty() )
+								m_quit = true;
+					}break;
+				};
 			}
-			//glXSwapBuffers( info->hDisplay, info->hWnd );
+
+			// repaint all windows which need repainting
+			for( WindowRegister::iterator it = m_windowRegister.begin(); it != m_windowRegister.end(); ++it)
+			{
+				Window *w = it->second;
+
+				if(w->needsRepaint())
+					w->paint();
+			}
 		}
 		return 0;
 	}
@@ -199,13 +220,27 @@ namespace base
 	Display *Application::getDisplay()
 	{
 		if(!m_display)
+		{
 			m_display = XOpenDisplay(NULL);
+			m_deleteWindowAtom = XInternAtom( m_display, "WM_DELETE_WINDOW", false); // this means we want to handle window deletion on our own
+		}
 		return m_display;
 	}
 
 	void Application::registerWindow( Window *window )
 	{
 		m_windowRegister[window->getHandle()] = window;
+
+		// we use this place to tell the window which protocols we are supporting (e.g which events we want to handle etc.)
+
+		//Atom wm_delete_window = XInternAtom( m_display, "WM_DELETE_WINDOW", false); // this means we want to handle window deletion on our own
+		XSetWMProtocols( m_display, window->getHandle(), &m_deleteWindowAtom, 1);
+		XFlush( m_display );
+	}
+
+	void Application::unregisterWindow( Window *window )
+	{
+		m_windowRegister.erase( window->getHandle() );
 	}
 
 	Window *Application::getRegisteredWindow( HWND hwnd )
