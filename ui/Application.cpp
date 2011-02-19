@@ -23,6 +23,15 @@ namespace base
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
+
+			// repaint all windows which need repainting
+			for( WindowRegister::iterator it = m_windowRegister.begin(); it != m_windowRegister.end(); ++it)
+			{
+				Window *w = it->second;
+
+				if(w->needsRepaint())
+					w->paint();
+			}
 		};
 		return 0;
 	}

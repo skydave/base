@@ -13,11 +13,13 @@ namespace base
 	public:
 		GLWindow( int width, int height, std::string caption );
 
+		virtual void paint();
+		virtual void paintGL();
 
 
 	private:
-		HDC                                              m_hDC; // device context
-		HGLRC                                            m_hRC; // render context
+		HDC                                              m_hdc; // device context
+		HGLRC                                            m_hrc; // render context
 		HINSTANCE                                  m_hinstance; // program instance
 		WNDCLASS                                          m_wc; // window class
 
@@ -54,8 +56,6 @@ namespace base
 
 		virtual void paint();
 		virtual void paintGL();
-
-		//void                                            show(); // shows the window
 
 	private:
 		GLXContext                                       m_hrc; // render context

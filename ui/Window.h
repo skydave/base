@@ -1,19 +1,14 @@
 #pragma once
 
 #ifdef _WINDOWS
+
+#include <windows.h>
+
 namespace base
 {
 	class Window
 	{
 	public:
-		/*
-		Window() : m_hwnd(NULL)
-		{
-		}
-		HWND getHandle()
-		{
-			return m_hwnd;
-		}*/
 
 		Window();
 		HWND                                       getHandle();
@@ -22,9 +17,11 @@ namespace base
 		void                                            show(); // shows the window
 
 		virtual void                                   paint();
+		virtual void                                 destroy(); // closes and destroys the window
 
 	protected:
 		HWND                                            m_hwnd; // window handle
+		bool                                    m_needsRepaint; // dirty flag
 	};
 }
 #endif

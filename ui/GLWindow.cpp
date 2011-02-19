@@ -1,5 +1,9 @@
 #ifdef _WINDOWS
 #include "GLWindow.h"
+
+//#include <gl/gl.h>
+#include <gl/gl.h>
+
 #include <string>
 
 
@@ -10,8 +14,8 @@ namespace base
 	GLWindow::GLWindow( int width, int height, std::string caption ) : Window()
 	{
 		// intitialisierung
-		m_hDC         =  NULL;
-		m_hRC         =  NULL;
+		m_hdc         =  NULL;
+		m_hrc         =  NULL;
 		m_bpp         =    32;
 		m_fsbpp       =    32;
 		m_fullscreen  = false;
@@ -46,7 +50,6 @@ namespace base
 		m_wc.hCursor		= LoadCursor(NULL, IDC_ARROW);
 		m_wc.hbrBackground	= NULL;
 		m_wc.lpszMenuName	= NULL;
-		//m_wc.lpszClassName	= L"mf window class";
 		m_wc.lpszClassName	= "mf window class";
 
 		if( !RegisterClass( &m_wc ) )
@@ -78,18 +81,41 @@ namespace base
 		int x = GetLastError();
 		if( m_hwnd == NULL) return;
 
-		m_hDC = GetDC( m_hwnd );
+		m_hdc = GetDC( m_hwnd );
 
-		/*
-		if ( _SetPixelFormat( m_hwnd ) )
+
+		//set pixelformat
+		PIXELFORMATDESCRIPTOR pfd=				// pfd Tells Windows How We Want Things To Be
 		{
-			m_hRC = wglCreateContext( m_hDC );
-			wglMakeCurrent( m_hDC , m_hRC );
-		} else
-		{
-			//DestroyWindow( mhwnd );
-		}
-		*/
+			sizeof(PIXELFORMATDESCRIPTOR),		// Size Of This Pixel Format Descriptor
+			1,									// Version Number
+			PFD_DRAW_TO_WINDOW |				// Format Must Support Window
+			PFD_SUPPORT_OPENGL |				// Format Must Support OpenGL
+			PFD_DOUBLEBUFFER,					// Must Support Double Buffering
+			PFD_TYPE_RGBA,						// Request An RGBA Format
+			m_bpp,								// Select Our Color Depth
+			0, 0, 0, 0, 0, 0,					// Color Bits Ignored
+			0,									// No Alpha Buffer
+			0,									// Shift Bit Ignored
+			0,									// No Accumulation Buffer
+			0, 0, 0, 0,							// Accumulation Bits Ignored
+			m_zdepth,								// 16Bit Z-Buffer (Depth Buffer)  
+			0,									// No Stencil Buffer
+			0,									// No Auxiliary Buffer
+			PFD_MAIN_PLANE,						// Main Drawing Layer
+			0,									// Reserved
+			0, 0, 0								// Layer Masks Ignored
+		};
+
+		m_hdc = GetDC(m_hwnd);
+
+		m_pixelformat = ChoosePixelFormat( m_hdc , &pfd );
+
+		SetPixelFormat( m_hdc , m_pixelformat , &pfd );
+
+		m_hrc = wglCreateContext( m_hdc );
+		wglMakeCurrent( m_hdc , m_hrc );
+
 /*
 		if( _fullscreen )
 		{
@@ -100,6 +126,58 @@ namespace base
 */
 		Application::registerWindow( this );
 	}
+
+
+	//
+	//
+	//
+	void GLWindow::paint()
+	{
+		// make current
+		// TODO
+
+		// paintGL
+		paintGL();
+
+		// swap buffers
+		SwapBuffers( m_hdc );
+
+		// update dirty flag
+		//Window::paint();
+	}
+
+	void GLWindow::paintGL()
+	{
+		glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
+	/*
+
+	void GLWindow::show( void )
+	{
+		ShowWindow( mhwnd , SW_SHOW );
+		UpdateWindow( mhwnd );
+		SetForegroundWindow( mhwnd );
+		SetFocus( mhwnd );
+	}
+		int GLWindow::getWidth( void )
+	{
+		RECT windowRect;
+		GetClientRect( mhwnd, &windowRect );
+
+		//To access members
+		return windowRect.right - windowRect.left;
+	}
+
+	int GLWindow::getHeight( void )
+	{
+		RECT windowRect;
+		GetClientRect( mhwnd, &windowRect );
+
+		//To access members
+		return windowRect.bottom - windowRect.top;
+	}*/
 }
 #endif
 
@@ -219,16 +297,6 @@ namespace base
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-/*
-	//
-	// shows the window
-	//
-	void GLWindow::show()
-	{
-		Display *display = Application::getDisplay();
-		XMapWindow( display, m_hwnd );
-	}
-*/
 }
 
 #endif

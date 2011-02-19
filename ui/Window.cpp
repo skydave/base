@@ -27,16 +27,7 @@ namespace base
 	{
 		m_needsRepaint = false;
 	}
-	/*
-	//
-	// shows the window
-	//
-	void Window::show()
-	{
-		Display *display = Application::getDisplay();
-		XMapWindow( display, m_hwnd );
-	}
-	*/
+
 
 	//
 	// shows the window
@@ -47,6 +38,16 @@ namespace base
 		UpdateWindow( m_hwnd );
 		SetForegroundWindow( m_hwnd );
 		SetFocus( m_hwnd );
+	}
+
+	//
+	// closes the window
+	//
+	void Window::destroy()
+	{
+		//Display *display = Application::getDisplay();
+		//XUnmapWindow(display, m_hwnd);
+		//XDestroyWindow(display, m_hwnd);
 	}
 
 }
