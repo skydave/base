@@ -13,13 +13,15 @@ namespace base
 	class GLViewer : public GLWindow
 	{
 	public:
-		GLViewer( int width, int height, std::string caption );
+		typedef void (*RenderCallback)( Camera * );
+		GLViewer( int width, int height, std::string caption, RenderCallback renderCallback = 0 );
 
 		virtual void paintGL();
 
 
 	private:
 		OrbitNavigator m_orbitNavigator;
+		RenderCallback         m_render;
 	};
 }
 #endif

@@ -8,6 +8,9 @@
 #define KEY_PGUP	5
 #define KEY_PGDOWN	6
 
+#define KEY_ESCAPE  27
+#define KEY_RETURN  13
+
 #define KEY_0		40
 #define KEY_1		41
 #define KEY_2		42

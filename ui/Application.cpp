@@ -43,6 +43,14 @@ namespace base
 		return 0;
 	}
 
+	//
+	// stops the app
+	//
+	void Application::quit()
+	{
+		PostQuitMessage(0);
+	}
+
 	void Application::registerWindow( Window *window )
 	{
 		m_windowRegister[window->getHandle()] = window;
@@ -77,6 +85,10 @@ namespace base
 		m_eventInfo.keyb.state[KEY_PGUP]     = GetAsyncKeyState( VK_PRIOR );
 		m_eventInfo.keyb.state[KEY_PGDOWN]   = GetAsyncKeyState( VK_NEXT );
 		m_eventInfo.keyb.state[KEY_DOWN]     = GetAsyncKeyState( VK_DOWN );
+
+		m_eventInfo.keyb.state[KEY_ESCAPE]   = GetAsyncKeyState( VK_ESCAPE );
+		m_eventInfo.keyb.state[KEY_RETURN]   = GetAsyncKeyState( VK_RETURN );
+
 		m_eventInfo.keyb.state[KEY_SPACE]    = GetAsyncKeyState( VK_SPACE );
 		m_eventInfo.keyb.state[KEY_RSHIFT]   = GetAsyncKeyState( VK_RSHIFT );
 		m_eventInfo.keyb.state[KEY_RCONTROL] = GetAsyncKeyState( VK_RCONTROL );
@@ -115,7 +127,7 @@ namespace base
 		m_eventInfo.mouse.dbuttons[1] = m_eventInfo.mouse.buttons[1] - m_eventInfo.mouse.obuttons[1];
 	}
 
-		//
+	//
 	// WinAPI message handler
 	//
 	LRESULT CALLBACK Application::windowHandler( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
@@ -157,6 +169,8 @@ namespace base
 				case VK_RCONTROL: conv = KEY_RCONTROL; break;
 				case VK_LSHIFT:   conv = KEY_LSHIFT;   break;
 				case VK_LCONTROL: conv = KEY_LCONTROL; break;
+				case VK_ESCAPE: conv = KEY_ESCAPE; break;
+				case VK_RETURN: conv = KEY_RETURN; break;
 			}
         
 			for( int i=KEY_A; i<=KEY_Z; i++ )

@@ -25,6 +25,7 @@ namespace base
 		typedef std::map< HWND, Window* > WindowRegister;
 		Application();
 		int                                              exec(); // starts the main application loop
+		static void                                      quit(); // stops the app
 
 		static void            registerWindow( Window *window );
 		static void          unregisterWindow( Window *window );
