@@ -8,25 +8,18 @@
 namespace base
 {
 
-	Window::Window() : m_hwnd(0), m_needsRepaint(true)
+	Window::Window() : m_hwnd(0)
 	{
 	}
 	HWND Window::getHandle()
 	{
 		return m_hwnd;
 	}
-	bool Window::needsRepaint()
-	{
-		return m_needsRepaint;
-	}
-	void Window::update()
-	{
-		m_needsRepaint = true;
-	}
+
 	void Window::paint()
 	{
-		m_needsRepaint = false;
 	}
+
 
 
 	//
@@ -45,9 +38,7 @@ namespace base
 	//
 	void Window::destroy()
 	{
-		//Display *display = Application::getDisplay();
-		//XUnmapWindow(display, m_hwnd);
-		//XDestroyWindow(display, m_hwnd);
+		DestroyWindow(m_hwnd);
 	}
 
 }

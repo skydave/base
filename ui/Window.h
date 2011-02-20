@@ -3,6 +3,7 @@
 #ifdef _WINDOWS
 
 #include <windows.h>
+#include <windowsx.h>
 
 namespace base
 {
@@ -12,8 +13,6 @@ namespace base
 
 		Window();
 		HWND                                       getHandle();
-		bool                                    needsRepaint();
-		void                                          update();
 		void                                            show(); // shows the window
 
 		virtual void                                   paint();
@@ -21,7 +20,6 @@ namespace base
 
 	protected:
 		HWND                                            m_hwnd; // window handle
-		bool                                    m_needsRepaint; // dirty flag
 	};
 }
 #endif
@@ -41,7 +39,6 @@ namespace base
 		virtual ~Window();
 		HWND                                       getHandle();
 		bool                                    needsRepaint();
-		void                                          update();
 		void                                            show(); // shows the window
 
 		virtual void                                   paint();
@@ -49,7 +46,6 @@ namespace base
 	protected:
 		HWND                                            m_hwnd; // window handle
 		char                                    m_wndclass[11]; // window class and title :)
-		bool                                    m_needsRepaint; // dirty flag
 	};
 }
 #endif

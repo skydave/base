@@ -1,9 +1,4 @@
-//--------------------------------------------------------------------------//
-// iq . 2003/2008 . code for 64 kb intros by RGBA                           //
-//--------------------------------------------------------------------------//
-
-#ifndef _EVENTS_H_
-#define _EVENTS_H_
+#pragma once
 
 #define KEY_LEFT	0
 #define KEY_RIGHT	1
@@ -56,31 +51,34 @@
 #define KEY_LCONTROL	102
 #define KEY_RCONTROL	103
 
-typedef struct
+namespace base
 {
-    int state[256];
-//    int ostate[256];
-    int press[256];
-}MSYS_INPUT_KEYBORAD;
-
-typedef struct
-{
-	int     dx, dy;
-    int	    x, y, ox, oy;
-    int     obuttons[2];
-    int	    buttons[3];
-    int	    dbuttons[2];
-}MSYS_INPUT_MOUSE;
 
 
+	typedef struct
+	{
+		int state[256];
+	//    int ostate[256];
+		int press[256];
+	}KeyboardState;
 
-typedef struct
-{
-	MSYS_INPUT_KEYBORAD	keyb;
-	MSYS_INPUT_MOUSE		mouse;
-}MSYS_EVENTINFO;
+	typedef struct
+	{
+		int     dx, dy;
+		int	    x, y, ox, oy;
+		int     obuttons[2];
+		int	    buttons[3];
+		int	    dbuttons[2];
+	}MouseState;
 
-MSYS_EVENTINFO *getEvents( void );
-int getKeyPress( int key );
 
-#endif
+
+	typedef struct
+	{
+		KeyboardState	keyb;
+		MouseState		mouse;
+	}EventInfo;
+
+	//StateInfo *getEvents( void );
+	//int getKeyPress( int key );
+}

@@ -22,10 +22,10 @@ namespace base
 		m_zdepth      =    32;
 		m_pixelformat =     0;
 
-		m_windowRect.left       =      0;
-		m_windowRect.top        =      0;
-		m_windowRect.right      =  width;
-		m_windowRect.bottom     = height;
+		m_windowRect.left       =      100;
+		m_windowRect.top        =      100;
+		m_windowRect.right      =  m_windowRect.left + width;
+		m_windowRect.bottom     = m_windowRect.top + height;
 		
 		m_fullscreenRect.left   =      0;
 		m_fullscreenRect.top    =      0;
@@ -143,7 +143,7 @@ namespace base
 		SwapBuffers( m_hdc );
 
 		// update dirty flag
-		//Window::paint();
+		Window::paint();
 	}
 
 	void GLWindow::paintGL()
@@ -151,6 +151,26 @@ namespace base
 		glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
+
+
+	/*
+	destroy:
+	    if( info->hRC )
+    {
+        wglMakeCurrent( 0, 0 );
+        wglDeleteContext( info->hRC );
+    }
+
+    if( info->hDC  ) ReleaseDC( info->hWnd, info->hDC );
+    if( info->hWnd ) DestroyWindow( info->hWnd );
+
+    UnregisterClass( wndclass, info->hInstance );
+
+    if( info->full )
+    {
+        ChangeDisplaySettings( 0, 0 );
+		while( ShowCursor( 1 )<0 ); // show cursor
+    }
 
 	/*
 
@@ -288,7 +308,7 @@ namespace base
 		glXSwapBuffers( Application::getDisplay(), m_hwnd );
 
 		// update dirty flag
-		//Window::paint();
+		Window::paint();
 	}
 
 	void GLWindow::paintGL()

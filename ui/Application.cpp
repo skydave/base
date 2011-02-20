@@ -7,6 +7,7 @@ namespace base
 
 	std::map< HWND, Window* > Application::m_windowRegister;
 	bool Application::m_quit = false;
+	EventInfo Application::m_eventInfo;
 
 	Application::Application()
 	{
@@ -17,9 +18,17 @@ namespace base
 		// Main message loop:
 		while( !m_quit ) 
 		{
+			// update eventinfo
+			updateEventInfo();
+
 			MSG msg;
-			if( PeekMessage( &msg,NULL,0,0,PM_REMOVE) )
+			while( PeekMessage( &msg,NULL,0,0,PM_REMOVE) )
 			{
+				if (msg.message == WM_QUIT)
+				{
+					m_quit = true;
+					break;
+				}
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
@@ -28,9 +37,7 @@ namespace base
 			for( WindowRegister::iterator it = m_windowRegister.begin(); it != m_windowRegister.end(); ++it)
 			{
 				Window *w = it->second;
-
-				if(w->needsRepaint())
-					w->paint();
+				w->paint();
 			}
 		};
 		return 0;
@@ -41,12 +48,71 @@ namespace base
 		m_windowRegister[window->getHandle()] = window;
 	}
 
+	void Application::unregisterWindow( Window *window )
+	{
+		m_windowRegister.erase( window->getHandle() );
+	}
+
 	Window *Application::getRegisteredWindow( HWND hwnd )
 	{
 		std::map< HWND, Window* >::iterator it = m_windowRegister.find( hwnd );
 		if( it != m_windowRegister.end() )
 			return it->second;
 		return 0;
+	}
+
+	EventInfo &Application::eventInfo()
+	{
+		return m_eventInfo;
+	}
+
+	void Application::updateEventInfo()
+	{
+		POINT   p;
+		int     i;
+
+		m_eventInfo.keyb.state[KEY_LEFT]     = GetAsyncKeyState( VK_LEFT );
+		m_eventInfo.keyb.state[KEY_RIGHT]    = GetAsyncKeyState( VK_RIGHT );
+		m_eventInfo.keyb.state[KEY_UP]       = GetAsyncKeyState( VK_UP );
+		m_eventInfo.keyb.state[KEY_PGUP]     = GetAsyncKeyState( VK_PRIOR );
+		m_eventInfo.keyb.state[KEY_PGDOWN]   = GetAsyncKeyState( VK_NEXT );
+		m_eventInfo.keyb.state[KEY_DOWN]     = GetAsyncKeyState( VK_DOWN );
+		m_eventInfo.keyb.state[KEY_SPACE]    = GetAsyncKeyState( VK_SPACE );
+		m_eventInfo.keyb.state[KEY_RSHIFT]   = GetAsyncKeyState( VK_RSHIFT );
+		m_eventInfo.keyb.state[KEY_RCONTROL] = GetAsyncKeyState( VK_RCONTROL );
+		m_eventInfo.keyb.state[KEY_LSHIFT]   = GetAsyncKeyState( VK_LSHIFT );
+		m_eventInfo.keyb.state[KEY_LCONTROL] = GetAsyncKeyState( VK_LCONTROL );
+		m_eventInfo.keyb.state[KEY_1]        = GetAsyncKeyState( '1' );
+		m_eventInfo.keyb.state[KEY_2]        = GetAsyncKeyState( '2' );
+		m_eventInfo.keyb.state[KEY_3]        = GetAsyncKeyState( '3' );
+		m_eventInfo.keyb.state[KEY_4]        = GetAsyncKeyState( '4' );
+		m_eventInfo.keyb.state[KEY_5]        = GetAsyncKeyState( '5' );
+		m_eventInfo.keyb.state[KEY_6]        = GetAsyncKeyState( '6' );
+		m_eventInfo.keyb.state[KEY_7]        = GetAsyncKeyState( '7' );
+		m_eventInfo.keyb.state[KEY_8]        = GetAsyncKeyState( '8' );
+		m_eventInfo.keyb.state[KEY_9]        = GetAsyncKeyState( '9' );
+		m_eventInfo.keyb.state[KEY_0]        = GetAsyncKeyState( '0' );
+		for( i=KEY_A; i<=KEY_Z; i++ )
+			m_eventInfo.keyb.state[i] = GetAsyncKeyState( 'A'+i-KEY_A );
+
+		//-------
+		GetCursorPos( &p );
+
+		m_eventInfo.mouse.ox = m_eventInfo.mouse.x;
+		m_eventInfo.mouse.oy = m_eventInfo.mouse.y;
+		m_eventInfo.mouse.x = p.x;
+		m_eventInfo.mouse.y = p.y;
+		m_eventInfo.mouse.dx =  m_eventInfo.mouse.x - m_eventInfo.mouse.ox;
+		m_eventInfo.mouse.dy =  m_eventInfo.mouse.y - m_eventInfo.mouse.oy;
+
+		m_eventInfo.mouse.obuttons[0] = m_eventInfo.mouse.buttons[0];
+		m_eventInfo.mouse.obuttons[1] = m_eventInfo.mouse.buttons[1];
+		m_eventInfo.mouse.buttons[0] = GetAsyncKeyState(VK_LBUTTON);
+		m_eventInfo.mouse.buttons[1] = GetAsyncKeyState(VK_RBUTTON);
+		m_eventInfo.mouse.buttons[2] = GetAsyncKeyState(VK_MBUTTON);
+
+		m_eventInfo.mouse.dbuttons[0] = m_eventInfo.mouse.buttons[0] - m_eventInfo.mouse.obuttons[0];
+		m_eventInfo.mouse.dbuttons[1] = m_eventInfo.mouse.buttons[1] - m_eventInfo.mouse.obuttons[1];
 	}
 
 		//
@@ -60,82 +126,72 @@ namespace base
 		{
 		case WM_CLOSE:								
 			{
-				//PostQuitMessage(0);
-				m_quit = true;
+				w->destroy();
+				return 0;
+			}break;
+		case WM_DESTROY:
+			{
+				unregisterWindow(w);
+
+				// we assume we are in gui mode all the time (gui mode means, when there is no window the app closes)
+				if(1)
+					if( m_windowRegister.empty() )
+						PostQuitMessage(0);
 				return 0;
 			}break;
 		case WM_KEYDOWN: // a key has been pressed
+		{
+			// update central eventinfo
+			EventInfo &ei = Application::eventInfo();
+			int conv = 0;
 			switch( wParam )
 			{
-			case VK_ESCAPE:
-				//PostQuitMessage(0);
-				m_quit = true;
-				break;
-			case 0 :
-				break;
-			case VK_RETURN:
-				{
-				}break;
-			case VK_SPACE:
-				{
-				}break;
-			case VK_UP :
-				break;
-			case VK_DOWN :
-				break;
-			case VK_LEFT :
-				{
-				}break;
-			case VK_RIGHT :
-				{
-				}break;
-			case VK_NUMPAD4 :
-				break;
-			case VK_NUMPAD6 :
-				break;
-			case VK_NUMPAD5 :
-				break;
-			case VK_NUMPAD8 :
-				break;
-			case VK_NUMPAD9 :
-				break;
-			case VK_NUMPAD3 :
-				break;
-			case VK_NUMPAD1 :
-				break;
-			case VK_ADD :
-				break;
-			case VK_SUBTRACT :
-				break;
-			case 70 :// KEY : 'f'
-				break;
-			case 82 :// KEY : 'r'
-				break;
-			case 68 :// KEY : 'd'
-				{
-				}break;
-			case 86 :// KEY : 'v'
-				break;
-			case 71 :// KEY : 'g'
-				break;
-			case 49 : // 1 key
-				break;
-			case 50 : // 2 key
-				break;
-			case 51 : // 3 key
-				break;
-			case 52 : // 4 key
-				break;
-			default:
-				return DefWindowProc( hWnd, uMsg, wParam, lParam );
-				break;
+				case VK_LEFT:     conv = KEY_LEFT;     break;
+				case VK_RIGHT:    conv = KEY_RIGHT;    break;
+				case VK_UP:       conv = KEY_UP;       break;
+				case VK_PRIOR:    conv = KEY_PGUP;     break;
+				case VK_NEXT:     conv = KEY_PGDOWN;   break;
+				case VK_DOWN:     conv = KEY_DOWN;     break;
+				case VK_SPACE:    conv = KEY_SPACE;    break;
+				case VK_RSHIFT:   conv = KEY_RSHIFT;   break;
+				case VK_RCONTROL: conv = KEY_RCONTROL; break;
+				case VK_LSHIFT:   conv = KEY_LSHIFT;   break;
+				case VK_LCONTROL: conv = KEY_LCONTROL; break;
 			}
-			break;
-
-		case WM_MOUSEMOVE :
+        
+			for( int i=KEY_A; i<=KEY_Z; i++ )
 			{
-			}break;
+				if( wParam==(WPARAM)('A'+i-KEY_A) )
+					conv = i;
+				if( wParam==(WPARAM)('a'+i-KEY_A) )
+					conv = i;
+			}
 
+			ei.keyb.press[conv] = 1;
+			//w->event();
+			return( DefWindowProc(hWnd,uMsg,wParam,lParam) );
+		}break;
+		case WM_LBUTTONDOWN:
+		case WM_MBUTTONDOWN:
+		case WM_RBUTTONDOWN:
+		{
+		}break;
+		case WM_MOUSEMOVE :
+		{
+			/*
+			int xPos = GET_X_LPARAM(lParam); 
+			int yPos = GET_Y_LPARAM(lParam);
+
+			m_eventInfo.mouse.ox = m_eventInfo.mouse.x;
+			m_eventInfo.mouse.oy = m_eventInfo.mouse.y;
+			m_eventInfo.mouse.x = xPos;
+			m_eventInfo.mouse.y = yPos;
+			m_eventInfo.mouse.dx =  m_eventInfo.mouse.x - m_eventInfo.mouse.ox;
+			m_eventInfo.mouse.dy =  m_eventInfo.mouse.y - m_eventInfo.mouse.oy;
+			//w->event();
+			return( DefWindowProc(hWnd,uMsg,wParam,lParam) );
+			*/
+		}break;
 		default:
 			return DefWindowProc( hWnd, uMsg, wParam, lParam );   
 		}
