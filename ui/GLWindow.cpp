@@ -273,9 +273,8 @@ namespace base
 		if( !m_hwnd )
 			return;
 
-		//XSetStandardProperties( info->hDisplay, info->hWnd, info->wndclass, info->wndclass, None, argv, argc, NULL );
 		char *argv[] = { "hola", 0 };
-		XSetStandardProperties( display, m_hwnd, m_wndclass, m_wndclass, None, argv, 1, NULL );
+		XSetStandardProperties( display, m_hwnd, caption.c_str(), 0, None, argv, 1, NULL );
 
 		glXMakeCurrent( display, m_hwnd, m_hrc );
 

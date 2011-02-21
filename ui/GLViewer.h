@@ -5,8 +5,6 @@
 
 #include <gfx/OrbitNavigator.h>
 
-#ifdef _WINDOWS
-
 namespace base
 {
 
@@ -24,9 +22,3 @@ namespace base
 		RenderCallback         m_render;
 	};
 }
-#endif
-
-#ifdef linux
-
-#endif
-

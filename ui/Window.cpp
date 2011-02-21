@@ -59,7 +59,7 @@ namespace base
 
 namespace base
 {
-	Window::Window() : m_hwnd(0), m_needsRepaint(true)
+	Window::Window() : m_hwnd(0)
 	{
 	}
 
@@ -71,18 +71,10 @@ namespace base
 	{
 		return m_hwnd;
 	}
-	bool Window::needsRepaint()
-	{
-		return m_needsRepaint;
-	}
-	void Window::update()
-	{
-		m_needsRepaint = true;
-	}
+
 
 	void Window::paint()
 	{
-		m_needsRepaint = false;
 	}
 
 	//

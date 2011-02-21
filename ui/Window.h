@@ -38,14 +38,12 @@ namespace base
 		Window();
 		virtual ~Window();
 		HWND                                       getHandle();
-		bool                                    needsRepaint();
 		void                                            show(); // shows the window
 
 		virtual void                                   paint();
 		virtual void                                 destroy(); // closes and destroys the window
 	protected:
 		HWND                                            m_hwnd; // window handle
-		char                                    m_wndclass[11]; // window class and title :)
 	};
 }
 #endif

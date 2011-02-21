@@ -6,8 +6,7 @@
 #include <windows.h>
 #include <gl/gl.h>
 #endif
-
-
+#include <GL/gl.h>
 
 
 
