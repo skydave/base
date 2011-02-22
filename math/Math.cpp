@@ -43,7 +43,37 @@ namespace math
 	}
 
 
-/*
+	/*
+	//
+	//
+	//
+	bool rayHitPlaneValues( const Vec3f &planeNormal, const float &planeDistance, Ray &ray, float &hitDistance, Vec3f *hitPoint )
+	{
+        Vec3f rayOrigin    = ray.getOrigin();
+		Vec3f rayDirection = ray.getDirection();//ray.getTarget() - rayOrigin;
+		//Vec3f rayOrigin    = Vec3f( 0.0f, 10.0f, 0.0f );
+		//Vec3f rayDirection = Vec3f( 0.0f, -1.0f, 0.0f );
+
+
+		float temp = dotProduct( rayDirection, planeNormal );
+
+		// 
+		//if( temp >= 0.0f )
+		//	return false;
+
+		hitDistance = -(dotProduct( planeNormal, rayOrigin ) + planeDistance) / temp;
+
+		// the point must lie on the raysegment between origin and target to pass the test
+		if( (hitDistance > ray.getLength()) || (hitDistance < 0.0f) )
+			return false;
+
+		if( hitPoint )
+			*hitPoint = rayOrigin + hitDistance*rayDirection;
+
+		return true;
+	}
+	*/
+
 	//
 	// computes a intersection between a ray and a plane
 	//
@@ -110,7 +140,7 @@ namespace math
 	}
 
 
-*/
+
 
 
 
@@ -149,94 +179,6 @@ namespace math
 	}
 
 	//
-	// computes the signed distance between a 3d point and a sphere given by its center and radius
-	// negative distance means inside
-	//
-	float distancePointSphere( const math::Vec3f &point, const Vec3f &center, const float &radius )
-	{
-		return (point - center).getLength() - radius;
-	}
-
-	//
-	// computes the signed distance between a 3d point and a cylinder
-	// given by its centers and radius (negative distance means inside)
-	//
-	float distancePointCylinder( const math::Vec3f &point, const Vec3f &center1, const Vec3f &center2, const float &radius )
-	{
-		math::Vec3f axis = center2 - center1;
-
-		// get height of cylinder
-		float height = axis.getLength();
-		// normalize axis
-		axis /= height;
-		float axialComponent = dotProduct( axis, point - center1 );
-		math::Vec3f offAxis = point - center1 - axialComponent*axis;
-		math::Vec3f pn;
-		float offAxisComponent = offAxis.getLength();
-		bool isInside=false;
-
-		// below bottom cap?
-		if( axialComponent < 0.0f )
-		{
-			if( offAxisComponent < radius )
-			{
-				pn = center1 + offAxis;
-			}else
-			{
-				pn = center1 + (radius/offAxisComponent)*offAxis;
-			}
-		}else
-		// between cylinder planes
-		if( axialComponent <= height )
-		{
-			//if( offAxisComponent == 0.0f )
-			//{
-			//	pn = point + radius*offAxis;
-			//	isInside = true;
-			//}else
-			{
-				float dist = fabs(offAxisComponent - radius);
-
-				pn = center1 + axialComponent*axis + (radius/offAxisComponent)*offAxis;
-
-				if( offAxisComponent < radius )
-				{
-					isInside = true;
-
-					// distance to top cap
-					if( height - axialComponent < dist )
-					{
-						dist = height - axialComponent;
-						pn = center2 + offAxis;
-					}
-
-					// distance to bottom cap
-					if( axialComponent < dist )
-					{
-						dist = axialComponent;
-						pn = center1 + offAxis;
-					}
-				}
-			}
-		}else
-		// above cap
-		{
-			if( offAxisComponent < radius )
-			{
-				pn = center2 + offAxis;
-			}else
-			{
-				pn = center2 + (radius/offAxisComponent)*offAxis;
-			}
-		}
-
-		if( isInside )
-			return -(point - pn).getLength();
-
-		return (point - pn).getLength();		
-	}
-
-	//
 	// computes the euclidian distance between 2 points in space
 	//
 	float distance( const Vec3f &p0, const Vec3f &p1 )
@@ -270,7 +212,7 @@ namespace math
 
 		return p1 + dotProduct( point - p1, direction  ) * direction;
 	}
-/*
+
 	//
 	// creates the matrix which descripes _only_ the orientation which comes from a
 	// lookat constrain
@@ -304,6 +246,17 @@ namespace math
 		return m;
 
 
+		/*
+		m.tr
+		vm.Translate( 0.0f , 0.0f , -distance );
+		//vm.RotateZ(XMath.Deg2Rad(azimuth)); //TODO
+		//vm.RotateX( -XMath.Deg2Rad(elevation) );
+		//vm.RotateY( XMath.Deg2Rad(twist) );
+		vm.RotateX( XMath.Deg2Rad(elevation) );
+		vm.RotateY( XMath.Deg2Rad(twist) );
+		vm.RotateZ( XMath.Deg2Rad(azimuth)); //TODO
+		vm.Translate( - lx ,- ly , - lz ); 
+		*/
 		return m;
 	}
 
@@ -329,41 +282,5 @@ namespace math
 	float mapValueTo0_1( const float &sourceRangeMin, const float &sourceRangeMax, const float &value )
 	{
 		return (value-sourceRangeMin) / (sourceRangeMax - sourceRangeMin);
-	}
-	*/
-
-	static signed char coefs[16] = {
-		-1, 2,-1, 0,
-		 3,-5, 0, 2,
-		-3, 4, 1, 0,
-		 1,-1, 0, 0 };
-
-	void evalCatmullRom( const float *keyPos, const float *keyT, int num, int dim, float t, float *v )
-	{
-		const int size = dim + 1;
-
-		// find key
-		int k = 0;while( keyT[k] < t )k++;
-
-		// interpolant
-		const float h = (t-keyT[k-1])/(keyT[k]-keyT[k-1]);
-
-		// init result
-		for( int i=0; i < dim; i++ ) v[i] = 0.0f;
-
-		// add basis functions
-		for( int i=0; i<4; i++ )
-		{
-			int kn = k+i-2;
-			if( kn<0 ) kn=0;
-			else if( kn>(num-1) )
-				kn=num-1;
-
-			const signed char *co = coefs + 4*i;
-
-			const float b  = 0.5f*(((co[0]*h + co[1])*h + co[2])*h + co[3]);
-
-			for( int j=0; j < dim; j++ ) v[j] += b * keyPos[kn*dim+j];
-		}
 	}
 }

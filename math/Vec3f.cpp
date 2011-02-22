@@ -44,49 +44,21 @@ namespace math
 	}
 
 	//
-	// returns the cartesian length of the vector
-	//
-	float Vec3f::length( void )const
-	{
-		float t = x*x + y*y + z*z;
-#ifdef WINDOWS
-		__asm
-		{
-			fld t;
-			fsqrt;
-			fstp t;
-		}
-#endif
-#ifdef LINUX
-//		asm( "fld t\n\t"
-//			 "fsqrt\n\t"
-//			 "fstp t\n\t" )
-#endif
-
-		return t;
-	}
-
-	//
 	//
 	//
 	float Vec3f::getLength( void ) const
 	{
+		/*
 		float t = x*x + y*y + z*z;
-#ifdef WINDOWS
 		__asm
 		{
 			fld t;
 			fsqrt;
 			fstp t;
 		}
-#endif
-#ifdef LINUX
-//		asm( "fld t\n\t"
-//			 "fsqrt\n\t"
-//			 "fstp t\n\t" )
-#endif
 		return t;
-        //return sqrtf( x*x + y*y + z*z );
+		*/
+        return sqrtf( x*x + y*y + z*z );
 	}
 
 	float Vec3f::getSquaredLength( void ) const
@@ -258,4 +230,3 @@ namespace math
 		return v[i];
 	}
 }
-

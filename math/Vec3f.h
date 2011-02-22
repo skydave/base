@@ -7,10 +7,6 @@
 
 
 
-
-
-
-
 namespace math
 {
 	///
@@ -27,7 +23,6 @@ namespace math
 
         void  set( const float &x, const float &y, const float &z );
 
-		float                                   length( void )const; ///< returns the cartesian length of the vector
 		float                                getLength( void )const; ///< returns the cartesian length of the vector
 		float                         getSquaredLength( void )const; ///< returns the un-square-rooted length of the vector 
 		void                      setLength( const float &fLength ); ///< scales the vector to the specified length
@@ -62,4 +57,3 @@ namespace math
 		};
 	};
 }
-

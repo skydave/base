@@ -471,9 +471,9 @@ namespace math
 	//
 	Matrix44f Matrix44f::getNormalizedOrientation( void )
 	{
-		Vec3f g_vRight;
-		Vec3f g_vUp;
-		Vec3f g_vDir;
+		static Vec3f g_vRight;
+		static Vec3f g_vUp;
+		static Vec3f g_vDir;
 
 		g_vRight	= getRight();
 		g_vUp		= getUp();
