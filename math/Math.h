@@ -10,6 +10,8 @@
 #define MATH_PIf 3.14159265f
 #define MATH_PI 3.14159265
 
+#define MATH_2PIf 6.2831853f
+
 
 #include "Vec2f.h"
 #include "Vec3f.h"

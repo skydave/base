@@ -31,7 +31,7 @@ namespace base
 	//
 	// draw a orientation grid identical to the ones used in popular dcc apps
 	//
-	void drawGrid()
+	void drawGrid( bool axes )
 	{
 
 		float gridSizeHalved = 5.0f / 2.0f;
@@ -85,21 +85,24 @@ namespace base
 		glEnd();
 
 		// draw koordinate axes
-		glLineWidth( 5.0f );
-		glBegin( GL_LINES );
-		// right axes
-		glColor3f( 0.8f, 0.0f, 0.0f );
-		glVertex3f( 0.0f, 0.0f, 0.0f );
-		glVertex3f( 1.0f, 0.0f, 0.0f );
-		// forward axes
-		glColor3f( 0.0f, 0.0f, 0.8f );
-		glVertex3f( 0.0f, 0.0f, 0.0f );
-		glVertex3f( 0.0f, 0.0f, 1.0f );
-		// up axes
-		glColor3f( 0.0f, 0.8f, 0.0f );
-		glVertex3f( 0.0f, 0.0f, 0.0f );
-		glVertex3f( 0.0f, 1.0f, 0.0f );
+		if(axes)
+		{
+			glLineWidth( 5.0f );
+			glBegin( GL_LINES );
+			// right axes
+			glColor3f( 0.8f, 0.0f, 0.0f );
+			glVertex3f( 0.0f, 0.0f, 0.0f );
+			glVertex3f( 1.0f, 0.0f, 0.0f );
+			// forward axes
+			glColor3f( 0.0f, 0.0f, 0.8f );
+			glVertex3f( 0.0f, 0.0f, 0.0f );
+			glVertex3f( 0.0f, 0.0f, 1.0f );
+			// up axes
+			glColor3f( 0.0f, 0.8f, 0.0f );
+			glVertex3f( 0.0f, 0.0f, 0.0f );
+			glVertex3f( 0.0f, 1.0f, 0.0f );
 
-		glEnd();
+			glEnd();
+		}
 	}
 }
