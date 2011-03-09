@@ -1,8 +1,7 @@
 #ifdef _WINDOWS
 #include "GLWindow.h"
 
-//#include <gl/gl.h>
-#include <gl/gl.h>
+#include <gltools/gl.h>
 
 #include <string>
 

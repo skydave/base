@@ -3,10 +3,12 @@
 
 
 #ifdef _WINDOWS
-#include <windows.h>
-#include <gl/gl.h>
+	#include <windows.h>
+	#define GLEW_STATIC
+	#include "glew.h"
+	#include <gl/gl.h>
+#else
+	#include <GL/gl.h>
 #endif
-#include <GL/gl.h>
-
 
 
