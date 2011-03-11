@@ -24,16 +24,16 @@ namespace base
 		//Attribute *copy();
 
 		template<typename T>
-		int appendElement( const T &value );
+		unsigned int appendElement( const T &value );
 
 		template<typename T>
-		int appendElement( const T &v0, const T &v1 );
+		unsigned int appendElement( const T &v0, const T &v1 );
 
 		template<typename T>
-		int appendElement( const T &v0, const T &v1, const T &v2 );
+		unsigned int appendElement( const T &v0, const T &v1, const T &v2 );
 
 		template<typename T>
-		T &get( int index );
+		T &get( unsigned int index );
 
 		//int appendElement( void *mem );
 		//int appendElements( int num );
@@ -102,9 +102,9 @@ namespace base
 
 
 	template<typename T>
-	int Attribute::appendElement( const T &value )
+	unsigned int Attribute::appendElement( const T &value )
 	{
-		int pos = m_data.size();
+		unsigned int pos = m_data.size();
 		m_data.resize( pos + sizeof(T) );
 		*((T *)&m_data[pos]) = value;
 		++m_numElements;
@@ -112,9 +112,9 @@ namespace base
 	}
 
 	template<typename T>
-	int Attribute::appendElement( const T &v0, const T &v1 )
+	unsigned int Attribute::appendElement( const T &v0, const T &v1 )
 	{
-		int pos = m_data.size();
+		unsigned int pos = m_data.size();
 		m_data.resize( pos + sizeof(T)*2 );
 		T *data = (T*)&m_data[pos];
 		*data = v0;++data;
@@ -124,9 +124,9 @@ namespace base
 	}
 
 	template<typename T>
-	int Attribute::appendElement( const T &v0, const T &v1, const T &v2 )
+	unsigned int Attribute::appendElement( const T &v0, const T &v1, const T &v2 )
 	{
-		int pos = m_data.size();
+		unsigned int pos = m_data.size();
 		m_data.resize( pos + sizeof(T)*3 );
 		T *data = (T*)&m_data[pos];
 		*data = v0;++data;
@@ -137,7 +137,7 @@ namespace base
 	}
 
 	template<typename T>
-	T &Attribute::get( int index )
+	T &Attribute::get( unsigned int index )
 	{
 		T *data = (T*)&m_data[index * sizeof(T)];
 		return *data;

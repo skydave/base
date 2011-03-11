@@ -3,7 +3,7 @@
 
 //
 #define BASE_DECL_SMARTPTR(C)\
-	class C;\
+	struct C;\
 	BASE_DECL_SMARTPTR_(C)
 
 //
@@ -11,6 +11,9 @@
 	typedef base::shared_ptr<C> C##Ptr;\
 	typedef base::shared_ptr<const C> C##CPtr;
 
+#ifdef _WINDOWS
+#include <memory>
+#endif
 #ifdef linux
 #include <tr1/memory>
 #endif
