@@ -1,13 +1,15 @@
 #pragma once
 #include <vector>
 
+#include <util/shared_ptr.h>
 
-
-#define ATTR_TYPE_SAMPLER  0
-
+#define Vec3Attribute() Attribute(3, sizeof(float))
+#define Vec2Attribute() Attribute(2, sizeof(float))
 
 namespace base
 {
+
+	BASE_DECL_SMARTPTR(Attribute);
 
 	// basicly a list manager
 	struct Attribute
@@ -20,11 +22,6 @@ namespace base
 		}
 
 		//Attribute *copy();
-
-		//virtual void bindAsAttribute( int index );
-		//virtual void unbindAsAttribute( int index );
-		//virtual void bindAsUniform( int index );
-		//virtual void unbindAsUniform( int index );
 
 		template<typename T>
 		int appendElement( const T &value );
@@ -82,11 +79,24 @@ namespace base
 			return (void *)&m_data[index*numComponents()*elementComponentSize()];
 		}
 
+
+		//
+		// OpenGL
+		//
+		//virtual void bindAsAttribute( int index );
+		//virtual void unbindAsAttribute( int index );
+		//virtual void bindAsUniform( int index );
+		//virtual void unbindAsUniform( int index );
+
+
 		std::vector<unsigned char> m_data;
 		char m_componentSize; // size in memory of a component of an element in byte
 		int m_componentType;
 		char m_numComponents; // number of components per element
 		int m_numElements;
+
+
+		// OpenGL
 		//unsigned int m_bufferId;
 	};
 
@@ -96,7 +106,7 @@ namespace base
 	{
 		int pos = m_data.size();
 		m_data.resize( pos + sizeof(T) );
-		*((T *)&m_data.m_data[pos]) = value;
+		*((T *)&m_data[pos]) = value;
 		++m_numElements;
 		return m_numElements;
 	}
@@ -106,7 +116,7 @@ namespace base
 	{
 		int pos = m_data.size();
 		m_data.resize( pos + sizeof(T)*2 );
-		T *data = (T*)&m_data.m_data[pos];
+		T *data = (T*)&m_data[pos];
 		*data = v0;++data;
 		*data = v1;++data;
 		++m_numElements;
@@ -118,7 +128,7 @@ namespace base
 	{
 		int pos = m_data.size();
 		m_data.resize( pos + sizeof(T)*3 );
-		T *data = (T*)&m_data.m_data[pos];
+		T *data = (T*)&m_data[pos];
 		*data = v0;++data;
 		*data = v1;++data;
 		*data = v2;++data;
@@ -129,8 +139,8 @@ namespace base
 	template<typename T>
 	T &Attribute::get( int index )
 	{
-		T *data = (T*)&m_data.m_data[index * sizeof(T)];
-		return *T;
+		T *data = (T*)&m_data[index * sizeof(T)];
+		return *data;
 	}
 
 

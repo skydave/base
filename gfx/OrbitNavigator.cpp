@@ -19,8 +19,7 @@ namespace base
 		m_azimuth = m_elevation = 0.0f;
 		m_distance = .5f;
 
-		m_camera = new Camera();
-		m_ownCamera = true;
+		m_camera = CameraPtr(new Camera());
 
 		update();
 	}
@@ -28,7 +27,7 @@ namespace base
 	//
 	// constructor
 	//
-	OrbitNavigator::OrbitNavigator( Camera *camera )
+	OrbitNavigator::OrbitNavigator( CameraPtr camera )
 	{
 		// init local stuff
 		m_lookAt = math::Vec3f( 0.0f, 0.0f, 0.0f );
@@ -36,7 +35,6 @@ namespace base
 		m_distance = .5f;
 
 		m_camera = camera;
-		m_ownCamera = false;
 
 		update();
 	}

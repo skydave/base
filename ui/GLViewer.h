@@ -11,7 +11,7 @@ namespace base
 	class GLViewer : public GLWindow
 	{
 	public:
-		typedef void (*RenderCallback)( Camera * );
+		typedef void (*RenderCallback)( CameraPtr );
 		GLViewer( int width, int height, std::string caption, RenderCallback renderCallback = 0 );
 
 		virtual void paintGL();

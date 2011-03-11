@@ -16,7 +16,7 @@ namespace base
 	struct OrbitNavigator
 	{
 		OrbitNavigator();  // constructor
-		OrbitNavigator( Camera *camera );  // constructor
+		OrbitNavigator( CameraPtr camera );  // constructor
 
 		void                                                                   update();  ///< recomputes the transform from current polar coordinates and distance value
 
@@ -29,8 +29,7 @@ namespace base
 		float                                                 getDistance( void ) const;
 
 
-		Camera                                                                *m_camera;
-		bool                                                                m_ownCamera;
+		CameraPtr                                                              m_camera;
 
 
 		math::Vec3f                                                            m_lookAt;

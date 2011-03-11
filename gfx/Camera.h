@@ -1,9 +1,10 @@
 #pragma once
-
+#include <util/shared_ptr.h>
 #include <math/Math.h>
 
 namespace base
 {
+	BASE_DECL_SMARTPTR(Camera);
 
 	struct Camera
 	{
