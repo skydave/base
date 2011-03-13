@@ -1,84 +1,97 @@
 #include "Attribute.h"
 
+#include <gltools/gl.h>
 
 namespace base
 {
+	Attribute::Attribute( char numComponents, ComponentType componentType ) : m_numElements(0), m_numComponents(numComponents), m_componentType(componentType)
+	{
+		switch(componentType)
+		{
+		case SAMPLER:
+		case INT:m_componentSize=sizeof(int);break;
+		default:
+		case FLOAT:m_componentSize=sizeof(float);break;
+		};
+
+		glGenBuffers(1, &m_bufferId);
+	}
+
+
+	void Attribute::bindAsAttribute( int index )
+	{
+		// activate and specify pointer to vertex array
+		// should be done only when attribute has been updated
+		glBindBuffer(GL_ARRAY_BUFFER, m_bufferId);
+		glBufferData(GL_ARRAY_BUFFER, numComponents()*elementComponentSize()*numElements(), getRawPointer(), GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_bufferId);
+		glEnableVertexAttribArray(index);
+		glVertexAttribPointer(index, numComponents(), elementComponentType(), false, 0, 0);
+
+	}
+	void Attribute::unbindAsAttribute( int index )
+	{
+		// deactivate vertex arrays after drawing
+		glDisableVertexAttribArray(index);
+	}
+
+	void Attribute::bindAsUniform( int index )
+	{
+		switch( numComponents() )
+		{
+		case 1:
+			if( elementComponentType() == FLOAT )
+			{
+				//printf("setting uniform tmp: %f at uniform location %i\n", *((float *)getRawPointer()), index );
+				glUniform1fv( index, numElements(), (float *)getRawPointer());
+			}
+			else if( elementComponentType() == INT )
+			{
+				glUniform1iv( index, numElements(), (int*)getRawPointer());
+			}else if( elementComponentType() == SAMPLER )
+			{
+				// get gl textureid
+				unsigned int t = (unsigned int) (*(int*)getRawPointer());
+
+				// bind texture to given texture unit (index)
+				glActiveTexture(GL_TEXTURE0+index);
+				glBindTexture(GL_TEXTURE_2D, t);
+
+				// now set the sampler uniform to point to the textureunit
+				int tt = index; // for now texture unit == unfiform location
+								// this will be bad with higher number of uniforms in shader
+								// need more clever texture unit management
+				glUniform1iv( index, 1, &tt);
+			}
+			break;
+		case 2:
+			if( elementComponentType() == GL_FLOAT )
+				glUniform2fv( index, numElements(), (float *)getRawPointer());
+			break;
+		case 3:
+			if( elementComponentType() == GL_FLOAT )
+				glUniform3fv( index, numElements(), (float *)getRawPointer());
+			break;
+		case 4:
+			if( elementComponentType() == GL_FLOAT )
+				glUniform4fv( index, numElements(), (float *)getRawPointer());
+			break;
+		case 9:
+			glUniformMatrix3fv( index, numElements(), false, (float *)getRawPointer() );
+			break;
+		case 16:
+			glUniformMatrix4fv( index, numElements(), false, (float *)getRawPointer() );
+			break;
+		};
+	}
+	void Attribute::unbindAsUniform( int index )
+	{
+		// ?
+		// for better texture unit management tell the currently used texture unit is not used anymore
+	}
 
 /*
-
-void Attribute::bindAsAttribute( int index )
-{
-	// activate and specify pointer to vertex array
-	// should be done only when attribute has been updated
-	oglBindBuffer(GL_ARRAY_BUFFER, m_bufferId);
-	oglBufferData(GL_ARRAY_BUFFER, numComponents()*elementComponentSize()*numElements(), getRawPointer(), GL_STATIC_DRAW);
-
-	oglBindBuffer(GL_ARRAY_BUFFER, m_bufferId);
-	oglEnableVertexAttribArray(index);
-	oglVertexAttribPointer(index, numComponents(), elementComponentType(), false, 0, 0);
-
-}
-void Attribute::unbindAsAttribute( int index )
-{
-	// deactivate vertex arrays after drawing
-	oglDisableVertexAttribArray(index);
-}
-
-void Attribute::bindAsUniform( int index )
-{
-	switch( numComponents() )
-	{
-	case 1:
-		if( elementComponentType() == GL_FLOAT )
-		{
-			//printf("setting uniform tmp: %f at uniform location %i\n", *((float *)getRawPointer()), index );
-			oglUniform1fv( index, numElements(), (float *)getRawPointer());
-		}
-		else if( elementComponentType() == GL_INT )
-		{
-			oglUniform1iv( index, numElements(), (int*)getRawPointer());
-		}else if( elementComponentType() == ATTR_TYPE_SAMPLER )
-		{
-			// get gl textureid
-			unsigned int t = (unsigned int) (*(int*)getRawPointer());
-
-			// bind texture to given texture unit (index)
-			oglActiveTexture(GL_TEXTURE0+index);
-			glBindTexture(GL_TEXTURE_2D, t);
-
-			// now set the sampler uniform to point to the textureunit
-			int tt = index; // for now texture unit == unfiform location
-							// this will be bad with higher number of uniforms in shader
-							// need more clever texture unit management
-			oglUniform1iv( index, 1, &tt);
-		}
-		break;
-	case 2:
-		if( elementComponentType() == GL_FLOAT )
-			oglUniform2fv( index, numElements(), (float *)getRawPointer());
-		break;
-	case 3:
-		if( elementComponentType() == GL_FLOAT )
-			oglUniform3fv( index, numElements(), (float *)getRawPointer());
-		break;
-	case 4:
-		if( elementComponentType() == GL_FLOAT )
-			oglUniform4fv( index, numElements(), (float *)getRawPointer());
-		break;
-	case 9:
-		oglUniformMatrix3fv( index, numElements(), false, (float *)getRawPointer() );
-		break;
-	case 16:
-		oglUniformMatrix4fv( index, numElements(), false, (float *)getRawPointer() );
-		break;
-	};
-}
-void Attribute::unbindAsUniform( int index )
-{
-	// ?
-}
-
-
 Attribute *Attribute::copy()
 {
 	Attribute *nattr = new Attribute( numComponents(), elementComponentSize() );

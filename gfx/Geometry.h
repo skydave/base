@@ -94,12 +94,16 @@ namespace base
 
 
 /*
-		unsigned int                   m_indexBufferId;
 		int                            m_numComponents;
 */
 		PrimitiveType                  m_primitiveType; // determines the primitive type indexBuffer is pointing to...
 		std::vector<unsigned int>        m_indexBuffer;
 		unsigned int                   m_numPrimitives;
+
+		//
+		// OpenGL specific
+		//
+		//unsigned int                   m_indexBufferId;
 	};
 
 

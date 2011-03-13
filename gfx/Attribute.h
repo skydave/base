@@ -3,8 +3,10 @@
 
 #include <util/shared_ptr.h>
 
-#define Vec3Attribute() Attribute(3, sizeof(float))
-#define Vec2Attribute() Attribute(2, sizeof(float))
+#define Vec3Attribute() Attribute(3, Attribute::FLOAT)
+#define Vec2Attribute() Attribute(2, Attribute::FLOAT)
+#define Mat44Attribute() Attribute(16, Attribute::FLOAT)
+#define Mat33Attribute() Attribute(9, Attribute::FLOAT)
 
 namespace base
 {
@@ -14,12 +16,14 @@ namespace base
 	// basicly a list manager
 	struct Attribute
 	{
-		Attribute( char numComponents=3, char componentSize=sizeof(float) ) : m_numElements(0), m_numComponents(numComponents), m_componentSize(componentSize)
+		enum ComponentType
 		{
-			//oglGenBuffers(1, &m_bufferId);
+			INT = 0x1404,
+			FLOAT = 0x1406,
+			SAMPLER
+		};
 
-			//m_componentType = GL_FLOAT;
-		}
+		Attribute( char numComponents=3, ComponentType componentType = FLOAT );
 
 		//Attribute *copy();
 
@@ -34,6 +38,9 @@ namespace base
 
 		template<typename T>
 		T &get( unsigned int index );
+
+		template<typename T>
+		void set( unsigned int index, T &value );
 
 		//int appendElement( void *mem );
 		//int appendElements( int num );
@@ -80,31 +87,32 @@ namespace base
 		}
 
 
-		//
-		// OpenGL
-		//
-		//virtual void bindAsAttribute( int index );
-		//virtual void unbindAsAttribute( int index );
-		//virtual void bindAsUniform( int index );
-		//virtual void unbindAsUniform( int index );
+
 
 
 		std::vector<unsigned char> m_data;
-		char m_componentSize; // size in memory of a component of an element in byte
-		int m_componentType;
-		char m_numComponents; // number of components per element
-		int m_numElements;
+		char              m_componentSize; // size in memory of a component of an element in byte
+		ComponentType     m_componentType;
+		char              m_numComponents; // number of components per element
+		int                 m_numElements;
 
 
+		//
 		// OpenGL
-		//unsigned int m_bufferId;
+		//
+		void bindAsAttribute( int index );
+		void unbindAsAttribute( int index );
+		void bindAsUniform( int index );
+		void unbindAsUniform( int index );
+
+		unsigned int m_bufferId;
 	};
 
 
 	template<typename T>
 	unsigned int Attribute::appendElement( const T &value )
 	{
-		unsigned int pos = m_data.size();
+		unsigned int pos = (unsigned int) m_data.size();
 		m_data.resize( pos + sizeof(T) );
 		*((T *)&m_data[pos]) = value;
 		++m_numElements;
@@ -114,7 +122,7 @@ namespace base
 	template<typename T>
 	unsigned int Attribute::appendElement( const T &v0, const T &v1 )
 	{
-		unsigned int pos = m_data.size();
+		unsigned int pos = (unsigned int) m_data.size();
 		m_data.resize( pos + sizeof(T)*2 );
 		T *data = (T*)&m_data[pos];
 		*data = v0;++data;
@@ -126,7 +134,7 @@ namespace base
 	template<typename T>
 	unsigned int Attribute::appendElement( const T &v0, const T &v1, const T &v2 )
 	{
-		unsigned int pos = m_data.size();
+		unsigned int pos = (unsigned int) m_data.size();
 		m_data.resize( pos + sizeof(T)*3 );
 		T *data = (T*)&m_data[pos];
 		*data = v0;++data;
@@ -142,6 +150,14 @@ namespace base
 		T *data = (T*)&m_data[index * sizeof(T)];
 		return *data;
 	}
+
+	template<typename T>
+	void Attribute::set( unsigned int index, T &value )
+	{
+		T *data = (T*)&m_data[index * sizeof(T)];
+		*data = value;
+	}
+
 
 
 } // namespace base

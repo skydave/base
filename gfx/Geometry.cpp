@@ -2,7 +2,7 @@
 
 #include <math/Math.h>
 
-
+#include <gltools/gl.h>
 
 
 
@@ -13,7 +13,7 @@ namespace base
 	Geometry::Geometry( PrimitiveType pt ) : m_primitiveType(pt), m_numPrimitives(0)
 	{
 		// initialize indexbuffer
-		//oglGenBuffers(1, &m_indexBufferId);
+		//glGenBuffers(1, &m_indexBufferId);
 	}
 
 	AttributePtr Geometry::getAttr( const std::string &name )
