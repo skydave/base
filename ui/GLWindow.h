@@ -42,8 +42,8 @@ namespace base
 
 #ifdef linux
 
-#include <GL/gl.h>
-#include <GL/glx.h>
+#include <gltools/gl.h>
+
 
 
 namespace base
