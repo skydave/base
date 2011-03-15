@@ -173,11 +173,11 @@ namespace base
 
 
 
-
+		/*
 	void Shader::use()
 	{
 		glUseProgram(m_glProgram);
-		/*
+
 		// iterate all active uniforms
 		for( int i=0; i<m_activeUniforms.size(); ++i )
 		{
@@ -204,7 +204,25 @@ namespace base
 				}
 			}
 		}
+
+	}
 		*/
+
+	void Shader::setUniform( const std::string &name, AttributePtr uniform )
+	{
+		m_uniforms[name] = uniform;
+	}
+	bool Shader::hasUniform( const std::string &name )
+	{
+		return (m_uniforms.find( name ) != m_uniforms.end());
+	}
+
+	AttributePtr Shader::getUniform( const std::string &name )
+	{
+		std::map<std::string, AttributePtr>::iterator it = m_uniforms.find( name );
+		if(it != m_uniforms.end())
+			return it->second;
+		return AttributePtr();
 	}
 
 }

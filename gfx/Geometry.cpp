@@ -106,7 +106,7 @@ namespace base
 		uvs->appendElement( 1.0f, .0f );
 
 		result->setAttr( "P", positions);
-		result->setAttr( "uv", uvs );
+		result->setAttr( "UV", uvs );
 
 		result->addQuad( 0, 1, 2, 3 );
 
@@ -122,7 +122,7 @@ namespace base
 		result->setAttr( "P", positions);
 
 		AttributePtr uvs = AttributePtr(new Vec2Attribute());
-		result->setAttr( "uv", uvs );
+		result->setAttr( "UV", uvs );
 
 		for( int j=0; j<zres; ++j )
 			for( int i=0; i<xres; ++i )

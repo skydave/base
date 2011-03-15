@@ -8,7 +8,7 @@ namespace base
 	{
 		switch(componentType)
 		{
-		case SAMPLER:
+		case SAMPLER2D:
 		case INT:m_componentSize=sizeof(int);break;
 		default:
 		case FLOAT:m_componentSize=sizeof(float);break;
@@ -49,7 +49,7 @@ namespace base
 			else if( elementComponentType() == INT )
 			{
 				glUniform1iv( index, numElements(), (int*)getRawPointer());
-			}else if( elementComponentType() == SAMPLER )
+			}else if( elementComponentType() == SAMPLER2D )
 			{
 				// get gl textureid
 				unsigned int t = (unsigned int) (*(int*)getRawPointer());

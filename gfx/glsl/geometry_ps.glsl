@@ -3,10 +3,13 @@ varying vec3 n;
 varying vec2 uv;
 
 uniform int oid;
+uniform sampler2D input;
 
 void main()
 {
-	gl_FragData[0] = vec4(1.0, 0.0, 0.0, 0.0);
+	//gl_FragData[0] = vec4(uv.x, uv.y, 0.0, 0.0);
+	gl_FragData[0] = texture2D(input, uv);
+	//gl_FragData[0] = vec4(1.0, 0.0, 0.0, 0.0);
 	//gl_FragData[0] = vec4(1.0, 1.0, uv.x, uv.y);
 	//gl_FragData[1] = vec4(pw.x, pw.y, pw.z, (gl_FragCoord.z / gl_FragCoord.w));
 	//gl_FragData[2] = vec4(n.x, n.y, n.z, (gl_FragCoord.z / gl_FragCoord.w));
