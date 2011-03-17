@@ -116,5 +116,6 @@ namespace base
 	GeometryPtr geo_pointCloud();
 	GeometryPtr geo_quad();
 	GeometryPtr geo_grid( int xres, int zres );
+	GeometryPtr geo_cube();
 
 }

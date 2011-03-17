@@ -8,6 +8,7 @@
 #define Mat44Attribute() Attribute(16, Attribute::FLOAT)
 #define Mat33Attribute() Attribute(9, Attribute::FLOAT)
 #define Sampler2dAttribute() Attribute(1, Attribute::SAMPLER2D)
+#define Sampler3dAttribute() Attribute(1, Attribute::SAMPLER3D)
 
 namespace base
 {

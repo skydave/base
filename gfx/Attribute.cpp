@@ -63,6 +63,20 @@ namespace base
 								// this will be bad with higher number of uniforms in shader
 								// need more clever texture unit management
 				glUniform1iv( index, 1, &tt);
+			}else if( elementComponentType() == SAMPLER3D )
+			{
+				// get gl textureid
+				unsigned int t = (unsigned int) (*(int*)getRawPointer());
+
+				// bind texture to given texture unit (index)
+				glActiveTexture(GL_TEXTURE0+index);
+				glBindTexture(GL_TEXTURE_3D_EXT, t);
+
+				// now set the sampler uniform to point to the textureunit
+				int tt = index; // for now texture unit == unfiform location
+								// this will be bad with higher number of uniforms in shader
+								// need more clever texture unit management
+				glUniform1iv( index, 1, &tt);
 			}
 			break;
 		case 2:
