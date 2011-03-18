@@ -173,7 +173,7 @@ namespace base
 
 
 
-		/*
+	/*
 	void Shader::use()
 	{
 		glUseProgram(m_glProgram);
