@@ -146,7 +146,7 @@ namespace base
 		//glDrawElements(m_primitiveType, m_indexBuffer.size(), GL_UNSIGNED_INT, 0);
 
 		// ...works for now
-		glDrawElements(geo->m_primitiveType, geo->m_indexBuffer.size(), GL_UNSIGNED_INT, &geo->m_indexBuffer[0]);
+		glDrawElements(geo->m_primitiveType, (GLsizei)geo->m_indexBuffer.size(), GL_UNSIGNED_INT, &geo->m_indexBuffer[0]);
 
 
 		if(shader && shader->isOk())

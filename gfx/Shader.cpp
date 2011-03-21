@@ -10,7 +10,64 @@
 
 namespace base
 {
-	ShaderPtr Shader::load( const std::string &vertexShaderPath, const std::string &pixelShaderPath )
+	Shader::ShaderLoader::ShaderLoader( ShaderPtr shader ) : m_shader(shader)
+	{
+	}
+
+	Shader::ShaderLoader Shader::ShaderLoader::attach( int shaderType, const std::string &src)
+	{
+		GLhandleARB s = glCreateShader(shaderType);
+		const char* vsSrcList[1];
+		vsSrcList[0] = src.c_str();
+		int length = (int) src.size();
+		glShaderSource(s, 1, (const GLchar **)&vsSrcList, &length);
+		glCompileShader(s);
+
+		glAttachShader(m_shader->m_glProgram, s);
+
+		return *this;
+	}
+
+	Shader::ShaderLoader Shader::ShaderLoader::attachPS( const std::string &src )
+	{
+		return attach( GL_FRAGMENT_SHADER_ARB, src );
+	}
+
+	Shader::ShaderLoader Shader::ShaderLoader::attachVS( const std::string &src )
+	{
+		return attach( GL_VERTEX_SHADER_ARB, src );
+	}
+
+	Shader::ShaderLoader Shader::ShaderLoader::attachPS( const char *src, const int &srcSize )
+	{
+		std::string ps_src( src, srcSize );
+		return attach( GL_FRAGMENT_SHADER_ARB, ps_src );
+	}
+
+	Shader::ShaderLoader Shader::ShaderLoader::attachVS( const char *src, const int &srcSize )
+	{
+		std::string vs_src( src, srcSize );
+		return attach( GL_VERTEX_SHADER_ARB, vs_src );
+	}
+
+	Shader::ShaderLoader::operator ShaderPtr()
+	{
+		std::cout << "DEINE MUDDA\n";
+		m_shader->finalize();
+
+		if( m_shader->isOk() )
+			return m_shader;
+
+		return ShaderPtr();
+	}
+
+
+	Shader::ShaderLoader Shader::load( const char *vsSrc, const int &vsSrcSize, const char *psSrc, const int &psSrcSize, const std::string &id )
+	{
+		return Shader::create( id ).attachVS( vsSrc, vsSrcSize ).attachPS( psSrc, psSrcSize );
+	}
+
+	Shader::ShaderLoader Shader::load( const std::string &vertexShaderPath, const std::string &pixelShaderPath, const std::string &id )
 	{
 		std::string vsSrc, psSrc;
 
@@ -27,7 +84,7 @@ namespace base
 			else
 			{
 				std::cout << "Unable to open vertexshader file\n";
-				return ShaderPtr();
+				return Shader::ShaderLoader(ShaderPtr());
 			}
 		}
 
@@ -44,23 +101,23 @@ namespace base
 			else
 			{
 				std::cout << "Unable to open pixelshader file\n";
-				return ShaderPtr();
+				return Shader::ShaderLoader(ShaderPtr());
 			}
 		}
-		
-		ShaderPtr shader = ShaderPtr( new Shader() );
-		shader->init( vsSrc, psSrc, vertexShaderPath+"/"+pixelShaderPath );
-		shader->finalize();
 
-		if( shader->isOk() )
-			return shader;
-
-		return ShaderPtr();
+		return Shader::create( id ).attachVS( vsSrc ).attachPS( psSrc );
 	}
 
 
+	Shader::ShaderLoader Shader::create( const std::string &id )
+	{
+		ShaderPtr shader = ShaderPtr( new Shader() );
+		return Shader::ShaderLoader( shader );
+	}
+
 	Shader::Shader() : m_isOk(false)
 	{
+		m_glProgram = glCreateProgram();
 	}
 
 	bool Shader::isOk()
@@ -68,37 +125,8 @@ namespace base
 		return m_isOk;
 	}
 
-	void Shader::init(const std::string &vsSrc, const std::string &psSrc, const std::string &id)
-	{
-		std::cout << "Shader::init " << id << std::endl;
-
-		m_glProgram = glCreateProgram();
-
-		// vertex shader ------
-		attach(GL_VERTEX_SHADER_ARB, vsSrc, "vertexShader");
-
-		// pixel shader ------
-		attach(GL_FRAGMENT_SHADER_ARB, psSrc, "pixelShader");
-
-	}
 
 
-	void Shader::attach(int shaderType, const std::string &src, const std::string &id )
-	{
-		//char text[1000];
-
-		GLhandleARB s = glCreateShader(shaderType);
-		const char* vsSrcList[1];
-		vsSrcList[0] = src.c_str();
-		int length = (int) src.size();
-		glShaderSource(s, 1, (const GLchar **)&vsSrcList, &length);
-		glCompileShader(s);
-
-		//glGetInfoLogARB(s, 1000, 0, text);
-		//std::cout << "Shader::attach log "<<id<<":\n" << text << std::endl;
-
-		glAttachShader(m_glProgram, s);
-	}
 
 
 	void Shader::finalize()
@@ -172,41 +200,6 @@ namespace base
 	}
 
 
-
-
-	void Shader::use()
-	{
-		glUseProgram(m_glProgram);
-		/*
-		// iterate all active uniforms
-		for( int i=0; i<m_activeUniforms.size(); ++i )
-		{
-			// iterate over all global uniforms and bind it if we found one
-			for( int j=0; j<g_globalUniforms.size(); ++j )
-			{
-				char *t1 = (char *)m_activeUniformNames.m_data[i];
-				char *t2 = (char *)g_globalUniformNames.m_data[j];
-				if( !strcmp( (char *)m_activeUniformNames.m_data[i], g_globalUniformNames.m_data[j] ) )
-				{
-					((Attribute*)(g_globalUniforms.m_data[j]))->bindAsUniform( m_activeUniforms.m_data[i] );
-					break;
-				}
-			}
-			// now iterate over all local uniforms and bind the ones we found
-			for( int j=0; j<m_uniforms.size(); ++j )
-			{
-				char *t1 = (char *)m_activeUniformNames.m_data[i];
-				const char *t2 = m_uniformNames.m_data[j];
-				if( !strcmp( (char *)m_activeUniformNames.m_data[i], m_uniformNames.m_data[j] ) )
-				{
-					((Attribute*)(m_uniforms.m_data[j]))->bindAsUniform( m_activeUniforms.m_data[i] );
-					break;
-				}
-			}
-		}
-		*/
-	}
-
 }
 
 
@@ -214,54 +207,3 @@ namespace base
 
 
 
-
-
-/*
-
-
-
-
-
-
-int atexit ( void ( * function ) (void) )
-{
-	return 0;
-}
-
-
-vector<void *> Shader::g_globalUniforms; // list of uniforms
-vector<const char *> Shader::g_globalUniformNames; // list of uniform names
-
-void Shader::setGlobalUniform( const char *name, Attribute *uniform )
-{
-	g_globalUniformNames.push_back( name );
-	g_globalUniforms.push_back( uniform );
-}
-
-
-
-Attribute *Shader::getUniform( int uniformIndex )
-{
-	return (Attribute *)m_uniforms.m_data[uniformIndex];
-}
-
-void Shader::setUniform( const char *name, Attribute *uniform )
-{
-	// for each registered uniform
-	for( int i=0; i<m_uniformNames.size(); ++i )
-	{
-		// if uniform already has been registered under that name
-		if( !strcmp( (char *)m_uniformNames.m_data[i], name ) )
-		{
-			// just change the reference
-			m_uniforms.m_data[i] = uniform;
-			// done
-			return;
-		}
-	}
-
-	// no uniform existed add it
-	m_uniformNames.push_back( name );
-	m_uniforms.push_back( uniform );
-}
-*/
