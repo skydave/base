@@ -96,8 +96,7 @@ namespace base
 	{
 		if(shader && shader->isOk())
 		{
-
-			shader->use();
+			glUseProgram(shader->m_glProgram);
 
 			// iterate all active attributes and bind attributes from geometry
 			for( std::map<std::string, int>::iterator it = shader->m_activeAttributes.begin(); it != shader->m_activeAttributes.end(); ++it )
@@ -126,6 +125,11 @@ namespace base
 					//	if( !strcmp( (char *)shader->m_activeUniformNames.m_data[i], m_uniformNames.m_data[j] ) )
 					//		getUniform(j)->bindAsUniform( shader->m_activeUniforms.m_data[i] );
 					//}
+				}else
+				if( shader->hasUniform(name) )
+				// otherwise look if the shader has it
+				{
+					shader->getUniform(name)->bindAsUniform(uniformIndex);
 				}else
 				// otherwise look in the globals to see if we can take it from there
 				{

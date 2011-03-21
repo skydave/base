@@ -7,6 +7,9 @@
 #define Vec2Attribute() Attribute(2, Attribute::FLOAT)
 #define Mat44Attribute() Attribute(16, Attribute::FLOAT)
 #define Mat33Attribute() Attribute(9, Attribute::FLOAT)
+#define Sampler1dAttribute() Attribute(1, Attribute::SAMPLER1D)
+#define Sampler2dAttribute() Attribute(1, Attribute::SAMPLER2D)
+#define Sampler3dAttribute() Attribute(1, Attribute::SAMPLER3D)
 
 namespace base
 {
@@ -20,7 +23,9 @@ namespace base
 		{
 			INT = 0x1404,
 			FLOAT = 0x1406,
-			SAMPLER
+			SAMPLER1D,
+			SAMPLER2D,
+			SAMPLER3D
 		};
 
 		Attribute( char numComponents=3, ComponentType componentType = FLOAT );

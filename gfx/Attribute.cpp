@@ -8,7 +8,7 @@ namespace base
 	{
 		switch(componentType)
 		{
-		case SAMPLER:
+		case SAMPLER2D:
 		case INT:m_componentSize=sizeof(int);break;
 		default:
 		case FLOAT:m_componentSize=sizeof(float);break;
@@ -49,7 +49,7 @@ namespace base
 			else if( elementComponentType() == INT )
 			{
 				glUniform1iv( index, numElements(), (int*)getRawPointer());
-			}else if( elementComponentType() == SAMPLER )
+			}else if( elementComponentType() == SAMPLER2D )
 			{
 				// get gl textureid
 				unsigned int t = (unsigned int) (*(int*)getRawPointer());
@@ -57,6 +57,20 @@ namespace base
 				// bind texture to given texture unit (index)
 				glActiveTexture(GL_TEXTURE0+index);
 				glBindTexture(GL_TEXTURE_2D, t);
+
+				// now set the sampler uniform to point to the textureunit
+				int tt = index; // for now texture unit == unfiform location
+								// this will be bad with higher number of uniforms in shader
+								// need more clever texture unit management
+				glUniform1iv( index, 1, &tt);
+			}else if( elementComponentType() == SAMPLER3D )
+			{
+				// get gl textureid
+				unsigned int t = (unsigned int) (*(int*)getRawPointer());
+
+				// bind texture to given texture unit (index)
+				glActiveTexture(GL_TEXTURE0+index);
+				glBindTexture(GL_TEXTURE_3D_EXT, t);
 
 				// now set the sampler uniform to point to the textureunit
 				int tt = index; // for now texture unit == unfiform location

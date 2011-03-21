@@ -73,7 +73,7 @@ namespace base
 
 		{
 			// read vertex shader file content
-			std::ifstream vsFile(vertexShaderPath);
+			std::ifstream vsFile(vertexShaderPath.c_str() );
 			if (vsFile.is_open())
 			{
 				std::stringstream buffer;
@@ -90,7 +90,7 @@ namespace base
 
 		{
 			// read pixel shader file content
-			std::ifstream psFile(pixelShaderPath);
+			std::ifstream psFile(pixelShaderPath.c_str());
 			if (psFile.is_open())
 			{
 				std::stringstream buffer;
@@ -200,10 +200,25 @@ namespace base
 	}
 
 
+
+	void Shader::setUniform( const std::string &name, AttributePtr uniform )
+	{
+		m_uniforms[name] = uniform;
+	}
+	bool Shader::hasUniform( const std::string &name )
+	{
+		return (m_uniforms.find( name ) != m_uniforms.end());
+	}
+
+	AttributePtr Shader::getUniform( const std::string &name )
+	{
+		std::map<std::string, AttributePtr>::iterator it = m_uniforms.find( name );
+		if(it != m_uniforms.end())
+			return it->second;
+		return AttributePtr();
+	}
+
 }
-
-
-
 
 
 

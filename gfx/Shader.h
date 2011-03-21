@@ -5,12 +5,12 @@
 #include <util/shared_ptr.h>
 
 #include <gltools/gl.h>
+#include "Attribute.h"
 
 #include <iostream>
 
 namespace base
 {
-	//struct Attribute;
 
 	BASE_DECL_SMARTPTR(Shader);
 
@@ -36,7 +36,6 @@ namespace base
 		//void init(const std::string &vsSrc, const std::string &psSrc, const std::string &id = "");
 		bool isOk();
 		void finalize();
-		void use();
 
 
 
@@ -47,6 +46,14 @@ namespace base
 		// list of active uniforms (which are required by this shader) (name mapped to index)
 		std::map<std::string, int> m_activeUniforms;
 
+
+		//
+		// local uniform management
+		//
+		void setUniform( const std::string &name, AttributePtr uniform );
+		bool hasUniform( const std::string &name );
+		AttributePtr getUniform( const std::string &name );
+		std::map<std::string, AttributePtr>                m_uniforms; // list of uniforms
 
 
 		//

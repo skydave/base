@@ -106,7 +106,7 @@ namespace base
 		uvs->appendElement( 1.0f, .0f );
 
 		result->setAttr( "P", positions);
-		result->setAttr( "uv", uvs );
+		result->setAttr( "UV", uvs );
 
 		result->addQuad( 0, 1, 2, 3 );
 
@@ -122,7 +122,7 @@ namespace base
 		result->setAttr( "P", positions);
 
 		AttributePtr uvs = AttributePtr(new Vec2Attribute());
-		result->setAttr( "uv", uvs );
+		result->setAttr( "UV", uvs );
 
 		for( int j=0; j<zres; ++j )
 			for( int i=0; i<xres; ++i )
@@ -141,6 +141,34 @@ namespace base
 
 			}
 
+
+		return result;
+	}
+
+	GeometryPtr geo_cube()
+	{
+		GeometryPtr result = GeometryPtr(new Geometry(Geometry::QUAD));
+
+		AttributePtr positions = AttributePtr(new Vec3Attribute());
+
+		positions->appendElement( math::Vec3f(-.5f,-.5f,0.5f) );
+		positions->appendElement( math::Vec3f(-.5f,0.5f,0.5f) );
+		positions->appendElement( math::Vec3f(.5f,.5f,0.5f) );
+		positions->appendElement( math::Vec3f(.5f,-.5f,0.5f) );
+
+		positions->appendElement( math::Vec3f(-.5f,-.5f,-0.5f) );
+		positions->appendElement( math::Vec3f(-.5f,0.5f,-0.5f) );
+		positions->appendElement( math::Vec3f(.5f,.5f,-0.5f) );
+		positions->appendElement( math::Vec3f(.5f,-.5f,-0.5f) );
+
+		result->setAttr( "P", positions);
+
+		result->addQuad( 0, 1, 2, 3 );
+		result->addQuad( 7, 6, 5, 4 );
+		result->addQuad( 3, 2, 6, 7 );
+		result->addQuad( 0, 4, 5, 1 );
+		result->addQuad( 2, 1, 5, 6 );
+		result->addQuad( 0, 3, 7, 4 );
 
 		return result;
 	}
