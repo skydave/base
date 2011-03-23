@@ -174,6 +174,26 @@ namespace base
 	}
 
 
+
+
+
+
+
+
+
+	void apply_transform( GeometryPtr geo, math::Matrix44f tm )
+	{
+		AttributePtr pAttr = geo->getAttr("P");
+		int numElements = pAttr->numElements();
+		for( int i=0; i<numElements; ++i )
+		{
+			math::Vec3f v = math::transform( pAttr->get<math::Vec3f>(i), tm);
+			pAttr->set<math::Vec3f>( (unsigned int)i, v );
+		}
+	}
+
+
+
 }
 
 

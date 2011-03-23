@@ -3,6 +3,7 @@
 #include <map>
 
 #include "Attribute.h"
+#include <math/Math.h>
 
 
 
@@ -117,5 +118,10 @@ namespace base
 	GeometryPtr geo_quad();
 	GeometryPtr geo_grid( int xres, int zres );
 	GeometryPtr geo_cube();
+
+	//
+	// geometry manipulation functions
+	//
+	void apply_transform( GeometryPtr geo, math::Matrix44f tm );
 
 }
