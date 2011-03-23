@@ -283,4 +283,57 @@ namespace math
 	{
 		return (value-sourceRangeMin) / (sourceRangeMax - sourceRangeMin);
 	}
+
+
+
+
+
+
+
+
+	float smoothstep( float x )
+	{
+		return (x) * (x) * (3 - 2 * (x));
+	}
+
+
+
+	static signed char coefs[16] = {
+		-1, 2,-1, 0,
+		 3,-5, 0, 2,
+		-3, 4, 1, 0,
+		 1,-1, 0, 0 };
+
+	void evalCatmullRom( const float *keyPos, const float *keyT, int num, int dim, float t, float *v )
+	{
+		const int size = dim + 1;
+
+		if( t<0.0f )t=0.0f;
+		if( t>1.0f )t=1.0f;
+
+		// find key
+		int k = 0;while( keyT[k] < t )k++;
+
+		// interpolant
+		const float h = (t-keyT[k-1])/(keyT[k]-keyT[k-1]);
+
+		// init result
+		for( int i=0; i < dim; i++ ) v[i] = 0.0f;
+
+		// add basis functions
+		for( int i=0; i<4; i++ )
+		{
+			int kn = k+i-2;
+			if( kn<0 ) kn=0;
+			else if( kn>(num-1) )
+				kn=num-1;
+
+			const signed char *co = coefs + 4*i;
+
+			const float b  = 0.5f*(((co[0]*h + co[1])*h + co[2])*h + co[3]);
+
+			for( int j=0; j < dim; j++ ) v[j] += b * keyPos[kn*dim+j];
+		}
+	}
+
 }

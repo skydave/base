@@ -909,4 +909,7 @@ float mapValueToRange( const float &sourceRangeMin, const float &sourceRangeMax,
 float mapValueTo0_1( const float &sourceRangeMin, const float &sourceRangeMax, const float &value );
 
 
+float smoothstep( float x );
+void evalCatmullRom( const float *keyPos, const float *keyT, int num, int dim, float t, float *v );
+
 }
