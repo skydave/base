@@ -12,7 +12,7 @@ namespace base
 		Texture1d();
 		~Texture1d();
 
-		void                   uploadRGBA8( int xres, char *pixels );
+		void          uploadRGBA8( int xres, unsigned char *pixels );
 		AttributePtr                                    getUniform();
 
 
@@ -34,14 +34,14 @@ namespace base
 		Texture2d();
 		~Texture2d();
 
-		void         uploadRGBA8( int xres, int yres, char *pixels );
-		AttributePtr                                    getUniform();
+		void uploadRGBA8( int xres, int yres, unsigned char *pixels );
+		AttributePtr                                     getUniform();
 
 
-		unsigned int                                            m_id; // opengl handle
-		AttributePtr                                       m_uniform; // will be used to attach textures to geometry/or shaders which then will be bound
-		int                                           m_xres, m_yres; // texture info just for the record
-		int                                          m_textureFormat; // format of texture in gpu memory
+		unsigned int                                             m_id; // opengl handle
+		AttributePtr                                        m_uniform; // will be used to attach textures to geometry/or shaders which then will be bound
+		int                                            m_xres, m_yres; // texture info just for the record
+		int                                           m_textureFormat; // format of texture in gpu memory
 
 		static Texture2dPtr create( int textureFormat, int xres = 64, int yres = 64 );
 		static Texture2dPtr createRGBA8( int xres = 64, int yres = 64 );
@@ -60,14 +60,14 @@ namespace base
 		Texture3d();
 		~Texture3d();
 
-		void              uploadRGBA8( int xres, int yres, int zres, char *pixels );
-		AttributePtr                                                   getUniform();
+		void              uploadRGBA8( int xres, int yres, int zres, unsigned char *pixels );
+		AttributePtr                                                            getUniform();
 
 
-		unsigned int                                                           m_id; // opengl handle
-		AttributePtr                                                      m_uniform; // will be used to attach textures to geometry/or shaders which then will be bound
-		int                                                  m_xres, m_yres, m_zres; // texture info just for the record
-		int                                                         m_textureFormat; // format of texture in gpu memory
+		unsigned int                                                                    m_id; // opengl handle
+		AttributePtr                                                               m_uniform; // will be used to attach textures to geometry/or shaders which then will be bound
+		int                                                           m_xres, m_yres, m_zres; // texture info just for the record
+		int                                                                  m_textureFormat; // format of texture in gpu memory
 
 		static Texture3dPtr create( int textureFormat, int xres = 64, int yres = 64, int zres = 64 );
 		static Texture3dPtr createRGBA8( int xres = 64, int yres = 64, int zres = 64 );

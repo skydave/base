@@ -52,7 +52,6 @@ namespace base
 
 	Shader::ShaderLoader::operator ShaderPtr()
 	{
-		std::cout << "DEINE MUDDA\n";
 		m_shader->finalize();
 
 		if( m_shader->isOk() )

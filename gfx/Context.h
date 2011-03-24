@@ -35,6 +35,7 @@ namespace base
 		//
 		// global uniform manangement
 		//
+		void setUniform( const std::string &name, AttributePtr uniform );
 		std::map<std::string, AttributePtr> m_globalUniforms;
 
 

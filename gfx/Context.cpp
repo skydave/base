@@ -86,6 +86,11 @@ namespace base
 	}
 
 
+	void Context::setUniform( const std::string &name, AttributePtr uniform )
+	{
+		m_globalUniforms[name] = uniform;
+	}
+
 
 
 
@@ -126,8 +131,8 @@ namespace base
 					//		getUniform(j)->bindAsUniform( shader->m_activeUniforms.m_data[i] );
 					//}
 				}else
-				if( shader->hasUniform(name) )
 				// otherwise look if the shader has it
+				if( shader->hasUniform(name) )
 				{
 					shader->getUniform(name)->bindAsUniform(uniformIndex);
 				}else

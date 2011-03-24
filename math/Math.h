@@ -24,6 +24,7 @@
 #include "BoundingBox.h"
 #include "BoundingBox2d.h"
 #include "RNG.h"
+#include "Noise.h"
 
 
 ///

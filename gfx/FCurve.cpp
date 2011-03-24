@@ -25,7 +25,7 @@ namespace base
 	{
 		float value = defaultValue;
 		if( m_numKeys > 0 )
-			math::evalCatmullRom( &m_values[0], &m_x[0], m_values.size(), 1, x, &value );
+			math::evalCatmullRom( &m_values[0], &m_x[0], (int)m_values.size(), 1, x, &value );
 		return value;
 	}
 

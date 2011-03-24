@@ -72,7 +72,7 @@ namespace base
 	}
 
 
-	void Texture1d::uploadRGBA8( int xres, char *pixels )
+	void Texture1d::uploadRGBA8( int xres, unsigned char *pixels )
 	{
 		m_xres = xres;
 		glBindTexture(GL_TEXTURE_1D, m_id);
@@ -166,7 +166,7 @@ namespace base
 	}
 
 
-	void Texture2d::uploadRGBA8( int xres, int yres, char *pixels )
+	void Texture2d::uploadRGBA8( int xres, int yres, unsigned char *pixels )
 	{
 		m_xres = xres;
 		m_yres = yres;
@@ -260,7 +260,7 @@ namespace base
 	}
 
 
-	void Texture3d::uploadRGBA8( int xres, int yres, int zres, char *pixels )
+	void Texture3d::uploadRGBA8( int xres, int yres, int zres, unsigned char *pixels )
 	{
 		m_xres = xres;
 		m_yres = yres;
