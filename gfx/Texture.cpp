@@ -79,6 +79,13 @@ namespace base
 		glTexImage1D(GL_TEXTURE_1D, 0, m_textureFormat, m_xres, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 	}
 
+	void Texture1d::uploadRGBAFloat32( int xres, float *pixels )
+	{
+		m_xres = xres;
+		glBindTexture(GL_TEXTURE_1D, m_id);
+		glTexImage1D(GL_TEXTURE_1D, 0, m_textureFormat, m_xres, 0, GL_RGBA, GL_FLOAT, pixels);
+	}
+
 	AttributePtr Texture1d::getUniform()
 	{
 		if( !m_uniform )
@@ -174,6 +181,15 @@ namespace base
 		glTexImage2D(GL_TEXTURE_2D, 0, m_textureFormat, m_xres, m_yres, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 	}
 
+	void Texture2d::uploadRGBAFloat32( int xres, int yres, float *pixels )
+	{
+		m_xres = xres;
+		m_yres = yres;
+		glBindTexture(GL_TEXTURE_2D, m_id);
+		glTexImage2D(GL_TEXTURE_2D, 0, m_textureFormat, m_xres, m_yres, 0, GL_RGBA, GL_FLOAT, pixels);
+	}
+
+
 	AttributePtr Texture2d::getUniform()
 	{
 		if( !m_uniform )
@@ -268,6 +284,16 @@ namespace base
 		glBindTexture(GL_TEXTURE_3D_EXT, m_id);
 		glTexImage3DEXT(GL_TEXTURE_3D_EXT, 0, m_textureFormat, m_xres, m_yres, m_zres, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 	}
+
+	void Texture3d::uploadRGBAFloat32( int xres, int yres, int zres, float *pixels )
+	{
+		m_xres = xres;
+		m_yres = yres;
+		m_zres = zres;
+		glBindTexture(GL_TEXTURE_3D_EXT, m_id);
+		glTexImage3DEXT(GL_TEXTURE_3D_EXT, 0, m_textureFormat, m_xres, m_yres, m_zres, 0, GL_RGBA, GL_FLOAT, pixels);
+	}
+
 
 	AttributePtr Texture3d::getUniform()
 	{

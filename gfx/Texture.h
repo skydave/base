@@ -13,6 +13,7 @@ namespace base
 		~Texture1d();
 
 		void          uploadRGBA8( int xres, unsigned char *pixels );
+		void            uploadRGBAFloat32( int xres, float *pixels );
 		AttributePtr                                    getUniform();
 
 
@@ -35,6 +36,7 @@ namespace base
 		~Texture2d();
 
 		void uploadRGBA8( int xres, int yres, unsigned char *pixels );
+		void   uploadRGBAFloat32( int xres, int yres, float *pixels );
 		AttributePtr                                     getUniform();
 
 
@@ -61,6 +63,7 @@ namespace base
 		~Texture3d();
 
 		void              uploadRGBA8( int xres, int yres, int zres, unsigned char *pixels );
+		void                uploadRGBAFloat32( int xres, int yres, int zres, float *pixels );
 		AttributePtr                                                            getUniform();
 
 
