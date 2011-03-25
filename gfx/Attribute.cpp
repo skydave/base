@@ -8,7 +8,9 @@ namespace base
 	{
 		switch(componentType)
 		{
+		case SAMPLER1D:
 		case SAMPLER2D:
+		case SAMPLER3D:
 		case INT:m_componentSize=sizeof(int);break;
 		default:
 		case FLOAT:m_componentSize=sizeof(float);break;

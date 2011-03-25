@@ -15,7 +15,7 @@
 
 uniform int scene;
 uniform float tmp;
-uniform sampler2D permTexture; // permutation texture used for perlin noise
+uniform sampler2D common_permTexture; // permutation texture used for perlin noise
 
 //
 // The interpolation function. This could be a 1D texture lookup
@@ -54,28 +54,28 @@ vec3 noise2d( vec2 P )
 	
 	
 /*
-	float a = texture2D(permTexture, Pi).a;
-	float b = texture2D(permTexture, Pi + vec2(ONE, 0.0)).a;
-	float c = texture2D(permTexture, Pi + vec2(0.0, ONE)).a;
-	float d = texture2D(permTexture, Pi + vec2(ONE, ONE)).a;
+	float a = texture2D(common_permTexture, Pi).a;
+	float b = texture2D(common_permTexture, Pi + vec2(ONE, 0.0)).a;
+	float c = texture2D(common_permTexture, Pi + vec2(0.0, ONE)).a;
+	float d = texture2D(common_permTexture, Pi + vec2(ONE, ONE)).a;
 */
 	
 	
 
 	// Noise contribution from lower left corner
-	vec2 grad00 = texture2D(permTexture, Pi).rg * 4.0 - 1.0;
+	vec2 grad00 = texture2D(common_permTexture, Pi).rg * 4.0 - 1.0;
 	float a = dot(grad00, Pf);
 
 	// Noise contribution from lower right corner
-	vec2 grad10 = texture2D(permTexture, Pi + vec2(ONE, 0.0)).rg * 4.0 - 1.0;
+	vec2 grad10 = texture2D(common_permTexture, Pi + vec2(ONE, 0.0)).rg * 4.0 - 1.0;
 	float b = dot(grad10, Pf - vec2(1.0, 0.0));
 
 	// Noise contribution from upper left corner
-	vec2 grad01 = texture2D(permTexture, Pi + vec2(0.0, ONE)).rg * 4.0 - 1.0;
+	vec2 grad01 = texture2D(common_permTexture, Pi + vec2(0.0, ONE)).rg * 4.0 - 1.0;
 	float c = dot(grad01, Pf - vec2(0.0, 1.0));
 
 	// Noise contribution from upper right corner
-	vec2 grad11 = texture2D(permTexture, Pi + vec2(ONE, ONE)).rg * 4.0 - 1.0;
+	vec2 grad11 = texture2D(common_permTexture, Pi + vec2(ONE, ONE)).rg * 4.0 - 1.0;
 	float d = dot(grad11, Pf - vec2(1.0, 1.0));
 
 
@@ -94,7 +94,7 @@ vec3 noise2d( vec2 P )
 	//return vec3(n, u, v);
 	//return vec3(Pf.x, 0.0, 0.0);
 	
-	//return texture2D(permTexture, Pi).xyz;
+	//return texture2D(common_permTexture, Pi).xyz;
 }
 
 
@@ -106,19 +106,19 @@ vec3 noise2d_org( vec2 P )
   vec2 Pf = fract(P);             // Fractional part for interpolation
 
   // Noise contribution from lower left corner
-  vec2 grad00 = texture2D(permTexture, Pi).rg * 4.0 - 1.0;
+  vec2 grad00 = texture2D(common_permTexture, Pi).rg * 4.0 - 1.0;
   float n00 = dot(grad00, Pf);
 
   // Noise contribution from lower right corner
-  vec2 grad10 = texture2D(permTexture, Pi + vec2(ONE, 0.0)).rg * 4.0 - 1.0;
+  vec2 grad10 = texture2D(common_permTexture, Pi + vec2(ONE, 0.0)).rg * 4.0 - 1.0;
   float n10 = dot(grad10, Pf - vec2(1.0, 0.0));
 
   // Noise contribution from upper left corner
-  vec2 grad01 = texture2D(permTexture, Pi + vec2(0.0, ONE)).rg * 4.0 - 1.0;
+  vec2 grad01 = texture2D(common_permTexture, Pi + vec2(0.0, ONE)).rg * 4.0 - 1.0;
   float n01 = dot(grad01, Pf - vec2(0.0, 1.0));
 
   // Noise contribution from upper right corner
-  vec2 grad11 = texture2D(permTexture, Pi + vec2(ONE, ONE)).rg * 4.0 - 1.0;
+  vec2 grad11 = texture2D(common_permTexture, Pi + vec2(ONE, ONE)).rg * 4.0 - 1.0;
   float n11 = dot(grad11, Pf - vec2(1.0, 1.0));
 
   // Blend contributions along x

@@ -1,7 +1,7 @@
 #include "Texture.h"
 
 #include <gltools/gl.h>
-//#include "Attribute.h"
+
 
 namespace base
 {
