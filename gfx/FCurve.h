@@ -21,7 +21,6 @@ namespace base
 
 		float eval( float x );
 
-		int  m_numKeys; // number of keyframes
 		std::vector<float> m_values;
 		std::vector<float> m_x;
 

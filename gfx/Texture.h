@@ -14,6 +14,7 @@ namespace base
 
 		void          uploadRGBA8( int xres, unsigned char *pixels );
 		void            uploadRGBAFloat32( int xres, float *pixels );
+		void                uploadFloat32( int xres, float *pixels );
 		AttributePtr                                    getUniform();
 
 
@@ -37,6 +38,7 @@ namespace base
 
 		void uploadRGBA8( int xres, int yres, unsigned char *pixels );
 		void   uploadRGBAFloat32( int xres, int yres, float *pixels );
+		void       uploadFloat32( int xres, int yres, float *pixels );
 		AttributePtr                                     getUniform();
 
 
@@ -64,6 +66,7 @@ namespace base
 
 		void              uploadRGBA8( int xres, int yres, int zres, unsigned char *pixels );
 		void                uploadRGBAFloat32( int xres, int yres, int zres, float *pixels );
+		//void                    uploadFloat32( int xres, int yres, int zres, float *pixels );
 		AttributePtr                                                            getUniform();
 
 

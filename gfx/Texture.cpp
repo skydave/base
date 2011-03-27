@@ -36,17 +36,7 @@ namespace base
 
 	Texture1dPtr Texture1d::createFloat32( int xres )
 	{
-		/*
-		Texture1dPtr result = Texture1dPtr(new Texture1d());
-
-		result->m_textureFormat = GL_RGBA8;
-
-		glBindTexture(GL_TEXTURE_2D, result->m_id);
-		glTexImage2D(GL_TEXTURE_2D, 0, result->m_textureFormat,  m_xres, m_yres, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-
-		return result;
-		*/
-		return Texture1dPtr();
+		return Texture1d::create( GL_FLOAT_R32_NV, xres );
 	}
 
 
@@ -84,6 +74,13 @@ namespace base
 		m_xres = xres;
 		glBindTexture(GL_TEXTURE_1D, m_id);
 		glTexImage1D(GL_TEXTURE_1D, 0, m_textureFormat, m_xres, 0, GL_RGBA, GL_FLOAT, pixels);
+	}
+
+	void Texture1d::uploadFloat32( int xres, float *pixels )
+	{
+		m_xres = xres;
+		glBindTexture(GL_TEXTURE_1D, m_id);
+		glTexImage1D(GL_TEXTURE_1D, 0, m_textureFormat, m_xres, 0, GL_RED, GL_FLOAT, pixels);
 	}
 
 	AttributePtr Texture1d::getUniform()
@@ -136,17 +133,7 @@ namespace base
 
 	Texture2dPtr Texture2d::createFloat32( int xres, int yres )
 	{
-		/*
-		Texture2dPtr result = Texture2dPtr(new Texture2d());
-
-		result->m_textureFormat = GL_RGBA8;
-
-		glBindTexture(GL_TEXTURE_2D, result->m_id);
-		glTexImage2D(GL_TEXTURE_2D, 0, result->m_textureFormat,  m_xres, m_yres, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-
-		return result;
-		*/
-		return Texture2dPtr();
+		return Texture2d::create( GL_FLOAT_R32_NV, xres, yres );
 	}
 
 
@@ -187,6 +174,14 @@ namespace base
 		m_yres = yres;
 		glBindTexture(GL_TEXTURE_2D, m_id);
 		glTexImage2D(GL_TEXTURE_2D, 0, m_textureFormat, m_xres, m_yres, 0, GL_RGBA, GL_FLOAT, pixels);
+	}
+
+	void Texture2d::uploadFloat32( int xres, int yres, float *pixels )
+	{
+		m_xres = xres;
+		m_yres = yres;
+		glBindTexture(GL_TEXTURE_2D, m_id);
+		glTexImage2D(GL_TEXTURE_2D, 0, m_textureFormat, m_xres, m_yres, 0, GL_RED, GL_FLOAT, pixels);
 	}
 
 
@@ -238,17 +233,7 @@ namespace base
 
 	Texture3dPtr Texture3d::createFloat32( int xres, int yres, int zres )
 	{
-		/*
-		Texture2dPtr result = Texture2dPtr(new Texture2d());
-
-		result->m_textureFormat = GL_RGBA8;
-
-		glBindTexture(GL_TEXTURE_2D, result->m_id);
-		glTexImage2D(GL_TEXTURE_2D, 0, result->m_textureFormat,  m_xres, m_yres, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-
-		return result;
-		*/
-		return Texture3dPtr();
+		return Texture3d::create( GL_FLOAT_R32_NV, xres, yres, zres );
 	}
 
 
