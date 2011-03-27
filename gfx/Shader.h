@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <util/shared_ptr.h>
+#include <math/Vec3f.h>
 
 #include <gltools/gl.h>
 #include "Attribute.h"
@@ -50,10 +51,11 @@ namespace base
 		//
 		// local uniform management
 		//
-		void setUniform( const std::string &name, AttributePtr uniform );
-		bool hasUniform( const std::string &name );
-		AttributePtr getUniform( const std::string &name );
-		std::map<std::string, AttributePtr>                m_uniforms; // list of uniforms
+		void      setUniform( const std::string &name, AttributePtr uniform );
+		void         setUniform( const std::string &name, math::Vec3f value ); // convinience function
+		bool                            hasUniform( const std::string &name );
+		AttributePtr                    getUniform( const std::string &name );
+		std::map<std::string, AttributePtr>                        m_uniforms; // list of uniforms
 
 
 		//

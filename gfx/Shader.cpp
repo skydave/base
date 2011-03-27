@@ -204,6 +204,14 @@ namespace base
 	{
 		m_uniforms[name] = uniform;
 	}
+
+	void Shader::setUniform( const std::string &name, math::Vec3f value )
+	{
+		AttributePtr u = Attribute::createVec3f();
+		u->appendElement<math::Vec3f>(value);
+		setUniform(name, u);
+	}
+
 	bool Shader::hasUniform( const std::string &name )
 	{
 		return (m_uniforms.find( name ) != m_uniforms.end());

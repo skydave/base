@@ -1,5 +1,5 @@
 #include "Geometry.h"
-
+#include <iostream>
 #include <math/Math.h>
 
 #include <gltools/gl.h>
@@ -190,6 +190,52 @@ namespace base
 			math::Vec3f v = math::transform( pAttr->get<math::Vec3f>(i), tm);
 			pAttr->set<math::Vec3f>( (unsigned int)i, v );
 		}
+	}
+
+
+
+	//
+	// computes vertex normals
+	// Assumes geometry to be triangles!
+	//
+	void apply_normals( GeometryPtr geo )
+	{
+		// only works with triangles
+		if( geo->primitiveType() != Geometry::TRIANGLE )
+		{
+			std::cerr << "apply_normals: cant compute normals on non triangulated geometry\n";
+			return;
+		}
+
+		AttributePtr normalAttr = AttributePtr(new Vec3Attribute());
+		AttributePtr positions = geo->getAttr("P");
+		int numPoints = positions->numElements();
+		for( int i=0; i < numPoints; ++i )
+			normalAttr->appendElement( math::Vec3f(0.0f, 0.0f, 0.0f) );
+
+		int numPrimitives = geo->numPrimitives();
+		for( int i=0; i < numPrimitives; ++i )
+		{
+			int idx[3];
+			idx[0] = geo->m_indexBuffer[i*3];
+			idx[1] = geo->m_indexBuffer[i*3+1];
+			idx[2] = geo->m_indexBuffer[i*3+2];
+
+			math::Vec3f v1 = positions->get<math::Vec3f>( idx[1] )-positions->get<math::Vec3f>( idx[0] );
+			math::Vec3f v2 = positions->get<math::Vec3f>( idx[2] )-positions->get<math::Vec3f>( idx[0] );
+			math::Vec3f fn = math::normalize( math::crossProduct( v2,v1 ) );
+
+			for( int j=0; j<3; ++j )
+				normalAttr->set<math::Vec3f>( idx[j], normalAttr->get<math::Vec3f>(idx[j])+fn );
+		}
+
+		for( int i=0; i < numPoints; ++i )
+		{
+			math::Vec3f tmp = math::normalize(  normalAttr->get<math::Vec3f>(i) );
+			normalAttr->set<math::Vec3f>( i, tmp );
+		}
+
+		geo->setAttr( "N", normalAttr );
 	}
 
 

@@ -19,6 +19,11 @@ namespace base
 		glGenBuffers(1, &m_bufferId);
 	}
 
+	Attribute::~Attribute()
+	{
+		glDeleteBuffers(1, &m_bufferId);
+	}
+
 
 	void Attribute::bindAsAttribute( int index )
 	{
@@ -105,6 +110,16 @@ namespace base
 	{
 		// ?
 		// for better texture unit management tell the currently used texture unit is not used anymore
+	}
+
+
+
+
+
+
+	AttributePtr Attribute::createVec3f()
+	{
+		return AttributePtr( new Attribute(3, Attribute::FLOAT) );
 	}
 
 /*

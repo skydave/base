@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-
+#include <math/Math.h>
 #include <util/shared_ptr.h>
 
 #define Vec3Attribute() Attribute(3, Attribute::FLOAT)
@@ -29,6 +29,7 @@ namespace base
 		};
 
 		Attribute( char numComponents=3, ComponentType componentType = FLOAT );
+		~Attribute();
 
 		//Attribute *copy();
 
@@ -101,6 +102,10 @@ namespace base
 		char              m_numComponents; // number of components per element
 		int                 m_numElements;
 
+		//
+		// static creators
+		//
+		static AttributePtr createVec3f();
 
 		//
 		// OpenGL

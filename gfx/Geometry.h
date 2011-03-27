@@ -123,5 +123,6 @@ namespace base
 	// geometry manipulation functions
 	//
 	void apply_transform( GeometryPtr geo, math::Matrix44f tm );
+	void apply_normals( GeometryPtr geo );
 
 }
