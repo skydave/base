@@ -13,7 +13,7 @@ varying vec3 ed; // eye direction in worldspace
 void main()
 {
 	vec3 r = P*vec3(1.3333,1.0,0.0)*0.5+vec3(0.0,0.0,-1.0);
-	mat4 t = transpose(vminv);
+	mat4 t = transpose(vminv); // we transpose so that we can use .xyz to easily access the vectors of the coordinate system defined by the matrix
     ed.x=dot(r,t[0].xyz);
     ed.y=dot(r,t[1].xyz);
     ed.z=dot(r,t[2].xyz);

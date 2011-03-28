@@ -336,4 +336,20 @@ namespace math
 		}
 	}
 
+	void evalLinear( const float *keyPos, const float *keyT, int num, int dim, float t, float *v )
+	{
+		const int size = dim + 1;
+
+		if( t<0.0f )t=0.0f;
+		if( t>1.0f )t=1.0f;
+
+		// find key
+		int k = 0;while( keyT[k] < t )k++;
+
+		// interpolant
+		const float h = (t-keyT[k-1])/(keyT[k]-keyT[k-1]);
+
+		// init result
+		for( int i=0; i < dim; i++ ) v[i] = (1.0f - h)*keyPos[(k-1)*dim+i] + h*keyPos[k*dim+i];
+	}
 }

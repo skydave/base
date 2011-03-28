@@ -212,6 +212,13 @@ namespace base
 		setUniform(name, u);
 	}
 
+	void Shader::setUniform( const std::string &name, float value )
+	{
+		AttributePtr u = Attribute::createFloat();
+		u->appendElement<float>(value);
+		setUniform(name, u);
+	}
+
 	bool Shader::hasUniform( const std::string &name )
 	{
 		return (m_uniforms.find( name ) != m_uniforms.end());

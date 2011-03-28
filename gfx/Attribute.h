@@ -106,6 +106,7 @@ namespace base
 		// static creators
 		//
 		static AttributePtr createVec3f();
+		static AttributePtr createFloat();
 
 		//
 		// OpenGL

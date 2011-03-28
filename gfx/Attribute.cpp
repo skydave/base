@@ -122,6 +122,11 @@ namespace base
 		return AttributePtr( new Attribute(3, Attribute::FLOAT) );
 	}
 
+	AttributePtr Attribute::createFloat()
+	{
+		return AttributePtr( new Attribute(1, Attribute::FLOAT) );
+	}
+
 /*
 Attribute *Attribute::copy()
 {

@@ -7,9 +7,8 @@ namespace base
 	//
 	//
 	//
-	FCurve::FCurve()
+	FCurve::FCurve( Type type ) : m_type(type), defaultValue(0.0f)
 	{
-		defaultValue = 0.0f;
 	}
 
 	void FCurve::addKey( float x, float value )
@@ -25,7 +24,17 @@ namespace base
 	{
 		float value = defaultValue;
 		if( !m_values.empty() )
-			math::evalCatmullRom( &m_values[0], &m_x[0], (int)m_values.size(), 1, x, &value );
+		{
+			switch(m_type)
+			{
+			case LINEAR:
+				math::evalLinear( &m_values[0], &m_x[0], (int)m_values.size(), 1, x, &value );
+			case CATMULLROM:
+			default:
+				math::evalCatmullRom( &m_values[0], &m_x[0], (int)m_values.size(), 1, x, &value );
+				break;
+			}
+		}
 		return value;
 	}
 

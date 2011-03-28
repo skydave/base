@@ -912,5 +912,6 @@ float mapValueTo0_1( const float &sourceRangeMin, const float &sourceRangeMax, c
 
 float smoothstep( float x );
 void evalCatmullRom( const float *keyPos, const float *keyT, int num, int dim, float t, float *v );
+void evalLinear( const float *keyPos, const float *keyT, int num, int dim, float t, float *v );
 
 }

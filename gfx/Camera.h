@@ -21,7 +21,7 @@ namespace base
 		float                                     m_aspectRatio;
 
 		math::Matrix44f                      m_projectionMatrix;
-		math::Matrix44f                            m_viewMatrix;
+		math::Matrix44f                            m_viewMatrix; ///< the matrix which transforms from world to camera space - the inverse of this matrix is the transform of the camera
 		math::Matrix44f                     m_inverseViewMatrix;
 		math::Matrix44f                             m_transform; ///< the matrix which transforms the camera from local into world space - the inverse of this matrix is the view transform
 	};

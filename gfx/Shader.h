@@ -53,6 +53,7 @@ namespace base
 		//
 		void      setUniform( const std::string &name, AttributePtr uniform );
 		void         setUniform( const std::string &name, math::Vec3f value ); // convinience function
+		void               setUniform( const std::string &name, float value ); // convinience function
 		bool                            hasUniform( const std::string &name );
 		AttributePtr                    getUniform( const std::string &name );
 		std::map<std::string, AttributePtr>                        m_uniforms; // list of uniforms

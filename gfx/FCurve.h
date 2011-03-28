@@ -15,7 +15,12 @@ namespace base
 
 	struct FCurve
 	{
-		FCurve();
+		enum Type
+		{
+			LINEAR,
+			CATMULLROM
+		};
+		FCurve(Type type = CATMULLROM);
 
 		void addKey( float x, float value );
 
@@ -26,6 +31,7 @@ namespace base
 
 
 		float defaultValue;
+		Type        m_type;
 	};
 }
 
