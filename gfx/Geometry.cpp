@@ -230,10 +230,7 @@ namespace base
 		}
 
 		for( int i=0; i < numPoints; ++i )
-		{
-			math::Vec3f tmp = math::normalize(  normalAttr->get<math::Vec3f>(i) );
-			normalAttr->set<math::Vec3f>( i, tmp );
-		}
+			normalAttr->set<math::Vec3f>( i, math::normalize(  normalAttr->get<math::Vec3f>(i) ) );
 
 		geo->setAttr( "N", normalAttr );
 	}

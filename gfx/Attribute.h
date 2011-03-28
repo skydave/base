@@ -46,7 +46,7 @@ namespace base
 		T &get( unsigned int index );
 
 		template<typename T>
-		void set( unsigned int index, T &value );
+		void set( unsigned int index, T value );
 
 		//int appendElement( void *mem );
 		//int appendElements( int num );
@@ -162,7 +162,7 @@ namespace base
 	}
 
 	template<typename T>
-	void Attribute::set( unsigned int index, T &value )
+	void Attribute::set( unsigned int index, T value )
 	{
 		T *data = (T*)&m_data[index * sizeof(T)];
 		*data = value;

@@ -28,8 +28,8 @@ namespace base
 		math::Matrix44f      m_projectionMatrix; // camera to view
 
 
-		AttributePtr    m_mvpmAttr; // model view projection matrix
-		AttributePtr   m_vminvAttr; // view matrix inverse
+		AttributePtr    m_mvpmAttr; // model view projection matrix (world to screen)
+		AttributePtr   m_vminvAttr; // view matrix inverse (camera to world)
 		AttributePtr m_mvminvtAttr; // model view matrix inverse transpose (model view matrix without scaling/shearing) used to transform vectors
 
 		//
