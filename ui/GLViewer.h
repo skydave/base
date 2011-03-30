@@ -15,6 +15,7 @@ namespace base
 		GLViewer( int width, int height, std::string caption, RenderCallback renderCallback = 0 );
 
 		virtual void paintGL();
+		CameraPtr  getCamera();
 
 
 	private:

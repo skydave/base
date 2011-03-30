@@ -69,10 +69,10 @@ namespace math
 		void                                                                        transpose( void );
 		void                                                                           invert( void );
 
-		Vec3f                                                 getRight( const bool &normalized=true );
-		Vec3f                                                    getUp( const bool &normalized=true );
-		Vec3f                                                   getDir( const bool &normalized=true );
-		Vec3f                                                                  getTranslation( void );
+		Vec3f                                          getRight( const bool &normalized=true ) const;
+		Vec3f                                             getUp( const bool &normalized=true ) const;
+		Vec3f                                            getDir( const bool &normalized=true ) const;
+		Vec3f                                                           getTranslation( void ) const;
 
 		Matrix44f                                                              getOrientation( void );
 		Matrix44f	                                                 getNormalizedOrientation( void );

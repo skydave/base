@@ -403,7 +403,7 @@ namespace math
 	//
 	//
 	//
-	Vec3f Matrix44f::getRight( const bool &normalized )
+	Vec3f Matrix44f::getRight( const bool &normalized ) const
 	{
 		Vec3f right( _11, _12, _13 );
 
@@ -416,7 +416,7 @@ namespace math
 	//
 	//
 	//
-	Vec3f Matrix44f::getUp( const bool &normalized )
+	Vec3f Matrix44f::getUp( const bool &normalized ) const
 	{
 		Vec3f up( _21, _22, _23 );
 
@@ -429,7 +429,7 @@ namespace math
 	//
 	//
 	//
-	Vec3f Matrix44f::getDir( const bool &normalized )
+	Vec3f Matrix44f::getDir( const bool &normalized ) const
 	{
 		Vec3f dir( _31, _32, _33 );
 
@@ -442,7 +442,7 @@ namespace math
 	//
 	//
 	//
-	Vec3f Matrix44f::getTranslation( void )
+	Vec3f Matrix44f::getTranslation( void ) const
 	{
 		return Vec3f( _41, _42, _43 );
 	}

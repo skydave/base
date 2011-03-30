@@ -25,6 +25,33 @@ namespace base
 		glPopMatrix();
 	}
 
+	//
+	// draw orientation vectors for given transform
+	//
+	void drawTransform( const math::Matrix44f &tm )
+	{
+		math::Vec3f t = tm.getTranslation();
+		math::Vec3f right = t + tm.getRight(false);
+		math::Vec3f up = t + tm.getUp(false);
+		math::Vec3f dir = t + tm.getDir(false);
+
+		glLineWidth( 5.0f );
+		glBegin( GL_LINES );
+		// right axes
+		glColor3f( 0.8f, 0.0f, 0.0f );
+		glVertex3f( t.x, t.y, t.z );
+		glVertex3f( right.x, right.y, right.z );
+		// forward axes
+		glColor3f( 0.0f, 0.0f, 0.8f );
+		glVertex3f( t.x, t.y, t.z );
+		glVertex3f( dir.x, dir.y, dir.z );
+		// up axes
+		glColor3f( 0.0f, 0.8f, 0.0f );
+		glVertex3f( t.x, t.y, t.z );
+		glVertex3f( up.x, up.y, up.z );
+
+		glEnd();
+	}
 
 
 

@@ -72,6 +72,11 @@ namespace base
 		}
 	}
 
+	CameraPtr GLViewer::getCamera()
+	{
+		return m_orbitNavigator.m_camera;
+	}
+
 
 }
 
