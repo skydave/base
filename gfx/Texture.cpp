@@ -129,6 +129,7 @@ namespace base
 	Texture2dPtr Texture2d::createRGBAFloat32( int xres, int yres )
 	{
 		return Texture2d::create( GL_RGBA_FLOAT32_ATI, xres, yres );
+		//return Texture2d::create( GL_RGBA32F_ARB, xres, yres );
 	}
 
 	Texture2dPtr Texture2d::createFloat32( int xres, int yres )
@@ -152,6 +153,7 @@ namespace base
 		// the texture wraps over at the edges (repeat)
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
+
 	}
 
 	Texture2d::~Texture2d()

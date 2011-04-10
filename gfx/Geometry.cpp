@@ -136,8 +136,8 @@ namespace base
 			for( int i=0; i<xres-1; ++i )
 			{
 				int vo = (j*xres);
-				result->addTriangle( vo+i, vo+i+1, vo+xres+i+1 );
-				result->addTriangle( vo+i, vo+xres+i+1, vo+xres+i );
+				result->addTriangle( vo+xres+i+1, vo+i+1, vo+i );
+				result->addTriangle( vo+xres+i, vo+xres+i+1, vo+i );
 
 			}
 
@@ -223,7 +223,7 @@ namespace base
 
 			math::Vec3f v1 = positions->get<math::Vec3f>( idx[1] )-positions->get<math::Vec3f>( idx[0] );
 			math::Vec3f v2 = positions->get<math::Vec3f>( idx[2] )-positions->get<math::Vec3f>( idx[0] );
-			math::Vec3f fn = math::normalize( math::crossProduct( v2,v1 ) );
+			math::Vec3f fn = math::normalize( math::crossProduct( v1,v2 ) );
 
 			for( int j=0; j<3; ++j )
 				normalAttr->set<math::Vec3f>( idx[j], normalAttr->get<math::Vec3f>(idx[j])+fn );
