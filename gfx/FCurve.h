@@ -21,17 +21,25 @@ namespace base
 			CATMULLROM
 		};
 		FCurve(Type type = CATMULLROM);
+		FCurve( const FCurve &curve );
 
-		void addKey( float x, float value );
+		bool isEmpty();
+		void clear();
 
-		float eval( float x );
+		void addCP( float x, float value );
+		void setCP( int index, float x, float value );
+
+		float eval( float x ) const;
 
 		std::vector<float> m_values;
 		std::vector<float> m_x;
 
 
-		float defaultValue;
-		Type        m_type;
+		float m_defaultValue;
+		Type          m_type;
+
+	private:
+		void sort(); // sorts CP's after increasing x
 	};
 }
 
