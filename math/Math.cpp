@@ -344,12 +344,24 @@ namespace math
 		if( t>1.0f )t=1.0f;
 
 		// find key
-		int k = 0;while( keyT[k] < t )k++;
+		int k = 0;while( (keyT[k] < t)&&(k<num) )k++;
+		if(k == num)
+		{
+			for( int i=0; i < dim; i++ ) v[i] = keyPos[k-1*dim+i];
+			return;
+		}
+		int kn = k-1;
+
+		if(kn < 0)
+		{
+			for( int i=0; i < dim; i++ ) v[i] = keyPos[0*dim+i];
+			return;
+		}
 
 		// interpolant
-		const float h = (t-keyT[k-1])/(keyT[k]-keyT[k-1]);
+		const float h = (t-keyT[kn])/(keyT[k]-keyT[kn]);
 
 		// init result
-		for( int i=0; i < dim; i++ ) v[i] = (1.0f - h)*keyPos[(k-1)*dim+i] + h*keyPos[k*dim+i];
+		for( int i=0; i < dim; i++ ) v[i] = (1.0f - h)*keyPos[(kn)*dim+i] + h*keyPos[k*dim+i];
 	}
 }
