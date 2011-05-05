@@ -39,7 +39,8 @@ namespace base
 		Type          m_type;
 
 	private:
-		void sort(); // sorts CP's after increasing x
+		// commented out because of compiler error with gcc
+		//void sort(); // sorts CP's after increasing x
 	};
 }
 

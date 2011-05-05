@@ -78,7 +78,7 @@ namespace base
 
 		return ret;
 	}
-
+/* // commented out because of compiler error with gcc
 	//
 	// sorts CP's after increasing x
 	//
@@ -107,8 +107,7 @@ namespace base
 
 		// no sort all other vectors from ref
 		sort_from_ref<float>( m_values, order );
-
-
 	}
+*/
 
 }
