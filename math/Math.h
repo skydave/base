@@ -380,6 +380,16 @@ inline void transform( Vec3f &result, const Vec3f &lhs, const Matrix44f &rhs )
 	result.z = lhs.x*rhs._13 + lhs.y*rhs._23 + lhs.z*rhs._33 + rhs._43;
 }
 
+/*
+inline void transform( Vec4f &result, const Vec3f &lhs, const Matrix44f &rhs )
+{
+	result.x = lhs.x*rhs._11 + lhs.y*rhs._21 + lhs.z*rhs._31 + rhs._41;
+	result.y = lhs.x*rhs._12 + lhs.y*rhs._22 + lhs.z*rhs._32 + rhs._42;
+	result.z = lhs.x*rhs._13 + lhs.y*rhs._23 + lhs.z*rhs._33 + rhs._43;
+	result.w = lhs.x*rhs._14 + lhs.y*rhs._24 + lhs.z*rhs._34 + rhs._44;
+}
+*/
+
 inline Matrix44f &transpose( math::Matrix44f &matrix )
 {
 	matrix.transpose();
