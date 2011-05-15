@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <util/shared_ptr.h>
+#include <util/Path.h>
 #include <math/Vec3f.h>
 
 #include <gltools/gl.h>
@@ -22,6 +23,7 @@ namespace base
 			ShaderLoader( ShaderPtr shader );
 
 			ShaderLoader attach( int shaderType, const std::string &src);
+			ShaderLoader attach( int shaderType, Path src );
 			ShaderLoader attachPS( const std::string &src);
 			ShaderLoader attachVS( const std::string &src);
 			ShaderLoader attachPS( const char *src, const int &srcSize );
@@ -29,6 +31,16 @@ namespace base
 
 			operator ShaderPtr ();
 			ShaderPtr m_shader;
+		};
+		struct ShaderObject
+		{
+			ShaderObject();
+			void init(int shaderType);
+			bool compile( Path source );
+			bool reload();
+			Path m_source;
+			int m_shaderType;
+			GLhandleARB m_id;
 		};
 
 
@@ -51,12 +63,14 @@ namespace base
 		//
 		// local uniform management
 		//
-		void      setUniform( const std::string &name, AttributePtr uniform );
-		void         setUniform( const std::string &name, math::Vec3f value ); // convinience function
-		void               setUniform( const std::string &name, float value ); // convinience function
-		bool                            hasUniform( const std::string &name );
-		AttributePtr                    getUniform( const std::string &name );
-		std::map<std::string, AttributePtr>                        m_uniforms; // list of uniforms
+		void                      setUniform( const std::string &name, AttributePtr uniform );
+		void                         setUniform( const std::string &name, math::Vec3f value ); // convinience function
+		void                               setUniform( const std::string &name, float value ); // convinience function
+		void                                 setUniform( const std::string &name, int value ); // convinience function
+		void    setUniform( const std::string &name, float v0, float v1, float v2, float v3 ); // convinience function
+		bool                                            hasUniform( const std::string &name );
+		AttributePtr                                    getUniform( const std::string &name );
+		std::map<std::string, AttributePtr>                                        m_uniforms; // list of uniforms
 
 
 		//
@@ -65,6 +79,12 @@ namespace base
 		static ShaderLoader create( const std::string &id = "" );
 		static ShaderLoader load( const std::string &vertexShaderPath, const std::string &pixelShaderPath, const std::string &id = "" );
 		static ShaderLoader load( const char *vsSrc, const int &vsSrcSize, const char *psSrc, const int &psSrcSize, const std::string &id = "" );
+		static ShaderLoader load( Path vertexShaderPath, Path pixelShaderPath, const std::string &id = "" );
+
+		// list of glshaders which are linked into the glprogram
+		ShaderObject &createShaderObject();
+		std::vector<ShaderObject> m_objects;
+		void reload();
 
 		GLhandleARB m_glProgram;
 		bool             m_isOk;

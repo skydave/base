@@ -91,6 +91,14 @@ namespace base
 		m_globalUniforms[name] = uniform;
 	}
 
+	AttributePtr Context::getUniform( const std::string &name )
+	{
+		std::map<std::string, AttributePtr>::iterator it = m_globalUniforms.find( name );
+		if(it != m_globalUniforms.end())
+			return it->second;
+		return AttributePtr();
+	}
+
 
 
 

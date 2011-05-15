@@ -35,18 +35,22 @@ namespace base
 
 		template<typename T>
 		unsigned int appendElement( const T &value );
-
 		template<typename T>
 		unsigned int appendElement( const T &v0, const T &v1 );
-
 		template<typename T>
 		unsigned int appendElement( const T &v0, const T &v1, const T &v2 );
+		template<typename T>
+		unsigned int appendElement( const T &v0, const T &v1, const T &v2, const T &v3 );
 
 		template<typename T>
 		T &get( unsigned int index );
 
 		template<typename T>
 		void set( unsigned int index, T value );
+		template<typename T>
+		void set( unsigned int index, T v0, T v1, T v2 );
+		template<typename T>
+		void set( unsigned int index, T v0, T v1, T v2, T v3 );
 
 		//int appendElement( void *mem );
 		//int appendElements( int num );
@@ -105,8 +109,10 @@ namespace base
 		//
 		// static creators
 		//
+		static AttributePtr createVec4f();
 		static AttributePtr createVec3f();
 		static AttributePtr createFloat();
+		static AttributePtr   createInt();
 
 		//
 		// OpenGL
@@ -156,6 +162,19 @@ namespace base
 	}
 
 	template<typename T>
+	unsigned int Attribute::appendElement( const T &v0, const T &v1, const T &v2, const T &v3 )
+	{
+		unsigned int pos = (unsigned int) m_data.size();
+		m_data.resize( pos + sizeof(T)*3 );
+		T *data = (T*)&m_data[pos];
+		*data = v0;++data;
+		*data = v1;++data;
+		*data = v2;++data;
+		++m_numElements;
+		return m_numElements;
+	}
+
+	template<typename T>
 	T &Attribute::get( unsigned int index )
 	{
 		T *data = (T*)&m_data[index * sizeof(T)];
@@ -169,6 +188,23 @@ namespace base
 		*data = value;
 	}
 
+	template<typename T>
+	void Attribute::set( unsigned int index, T v0, T v1, T v2 )
+	{
+		T *data = (T*)&m_data[index * sizeof(T) * 3];
+		*data++ = v0;
+		*data++ = v1;
+		*data++ = v2;
+	}
 
+	template<typename T>
+	void Attribute::set( unsigned int index, T v0, T v1, T v2, T v3 )
+	{
+		T *data = (T*)&m_data[index * sizeof(T) * 4];
+		*data++ = v0;
+		*data++ = v1;
+		*data++ = v2;
+		*data++ = v3;
+	}
 
 } // namespace base

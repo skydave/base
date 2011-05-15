@@ -115,7 +115,10 @@ namespace base
 
 
 
-
+	AttributePtr Attribute::createVec4f()
+	{
+		return AttributePtr( new Attribute(4, Attribute::FLOAT) );
+	}
 
 	AttributePtr Attribute::createVec3f()
 	{
@@ -125,6 +128,11 @@ namespace base
 	AttributePtr Attribute::createFloat()
 	{
 		return AttributePtr( new Attribute(1, Attribute::FLOAT) );
+	}
+
+	AttributePtr Attribute::createInt()
+	{
+		return AttributePtr( new Attribute(1, Attribute::INT) );
 	}
 
 /*

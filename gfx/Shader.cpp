@@ -28,6 +28,16 @@ namespace base
 		return *this;
 	}
 
+	Shader::ShaderLoader Shader::ShaderLoader::attach( int shaderType, Path src )
+	{
+		Shader::ShaderObject &so = m_shader->createShaderObject();
+		so.init(shaderType);
+		so.compile(src);
+		glAttachShader(m_shader->m_glProgram, so.m_id);
+		return *this;
+	}
+
+
 	Shader::ShaderLoader Shader::ShaderLoader::attachPS( const std::string &src )
 	{
 		return attach( GL_FRAGMENT_SHADER_ARB, src );
@@ -64,6 +74,64 @@ namespace base
 	Shader::ShaderLoader Shader::load( const char *vsSrc, const int &vsSrcSize, const char *psSrc, const int &psSrcSize, const std::string &id )
 	{
 		return Shader::create( id ).attachVS( vsSrc, vsSrcSize ).attachPS( psSrc, psSrcSize );
+	}
+
+
+
+	Shader::ShaderObject::ShaderObject()
+	{
+	}
+
+	void Shader::ShaderObject::init(int shaderType)
+	{
+		m_shaderType = shaderType;
+		m_id = glCreateShader(m_shaderType);
+	}
+
+	bool Shader::ShaderObject::compile( Path source )
+	{
+		m_source = source;
+
+		// get source from path
+		// TODO: use filesystem to abstract away fileaccess
+
+		// read vertex shader file content
+		std::string src;
+		std::ifstream file(source.c_str() );
+		if (file.is_open())
+		{
+			std::stringstream buffer;
+			buffer << file.rdbuf();
+			src = buffer.str();
+			file.close();
+		}
+
+		const char* vsSrcList[1];
+		vsSrcList[0] = src.c_str();
+		int length = (int) src.size();
+		glShaderSource(m_id, 1, (const GLchar **)&vsSrcList, &length);
+
+		glCompileShader(m_id);
+
+		return true;
+	}
+
+	bool Shader::ShaderObject::reload()
+	{
+		compile(m_source);
+		return true;
+	}
+
+	void Shader::reload()
+	{
+		// iterate all shader objects, recompile them
+		for( std::vector<ShaderObject>::iterator it = m_objects.begin(); it != m_objects.end(); ++it )
+		{
+			(*it).reload();
+		}
+
+		// then relink
+		finalize();
 	}
 
 	Shader::ShaderLoader Shader::load( const std::string &vertexShaderPath, const std::string &pixelShaderPath, const std::string &id )
@@ -107,11 +175,22 @@ namespace base
 		return Shader::create( id ).attachVS( vsSrc ).attachPS( psSrc );
 	}
 
+	Shader::ShaderLoader Shader::load( Path vertexShaderPath, Path pixelShaderPath, const std::string &id )
+	{
+		return Shader::create( id ).attach( GL_VERTEX_SHADER_ARB, vertexShaderPath ).attach( GL_FRAGMENT_SHADER_ARB, pixelShaderPath );
+	}
+
 
 	Shader::ShaderLoader Shader::create( const std::string &id )
 	{
 		ShaderPtr shader = ShaderPtr( new Shader() );
 		return Shader::ShaderLoader( shader );
+	}
+
+	Shader::ShaderObject &Shader::createShaderObject()
+	{
+		m_objects.push_back( Shader::ShaderObject() );
+		return m_objects.back();
 	}
 
 	Shader::Shader() : m_isOk(false)
@@ -153,6 +232,7 @@ namespace base
 
 		// extract active attributes info
 		int numActiveAttributes = 0;
+		m_activeAttributes.clear();
 		glGetProgramiv(m_glProgram, GL_ACTIVE_ATTRIBUTES, &numActiveAttributes);
 		std::cout << "number of active attributes: " << numActiveAttributes << std::endl;
 		for( int i=0;i<numActiveAttributes; ++i )
@@ -169,6 +249,7 @@ namespace base
 
 		// extract active uniforms info
 		int numActiveUniforms = 0;
+		m_activeUniforms.clear();
 		glGetProgramiv(m_glProgram, GL_ACTIVE_UNIFORMS, &numActiveUniforms);
 		std::cout << "number of active uniforms: " << numActiveUniforms << std::endl;
 		for( int i=0;i<numActiveUniforms; ++i )
@@ -205,6 +286,13 @@ namespace base
 		m_uniforms[name] = uniform;
 	}
 
+	void Shader::setUniform( const std::string &name, float v0, float v1, float v2, float v3 )
+	{
+		AttributePtr u = Attribute::createVec4f();
+		u->appendElement<float>(v0,v1,v2,v3);
+		setUniform(name, u);
+	}
+
 	void Shader::setUniform( const std::string &name, math::Vec3f value )
 	{
 		AttributePtr u = Attribute::createVec3f();
@@ -216,6 +304,13 @@ namespace base
 	{
 		AttributePtr u = Attribute::createFloat();
 		u->appendElement<float>(value);
+		setUniform(name, u);
+	}
+
+	void Shader::setUniform( const std::string &name, int value )
+	{
+		AttributePtr u = Attribute::createInt();
+		u->appendElement<int>(value);
 		setUniform(name, u);
 	}
 
