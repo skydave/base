@@ -117,7 +117,7 @@ namespace base
 		strcpy(&pPath[0], m_sPath.c_str());
 		
 		// reset m_sPath as required.
-		m_sPath = bHasFSOnStart ? PATH_SEPARATOR_STR : TEXT("");
+		m_sPath = bHasFSOnStart ? PATH_SEPARATOR_STR : "";
 		
 		// split path into it tokens, using strtok which is NOT reentrant
 		// so be careful!
@@ -231,7 +231,7 @@ namespace base
 		if(m_sPath.length() == 0 || IsRoot())
 		{
 			// return empty path.
-			return Path(TEXT(""));
+			return Path("");
 		}
 		
 		// reverse find a / ignoring the end / if it exists.
@@ -251,7 +251,7 @@ namespace base
 		else
 		{
 			// not parent path avaliable, return an empty path.
-			return Path(TEXT(""));
+			return Path("");
 		}    
 	}
 	
@@ -272,7 +272,7 @@ namespace base
 		strcpy(&pPath[0], m_sPath.c_str());
 		
 		// reset m_sPath as required.
-		std::string sTmpPath = bHasFSOnStart ? PATH_SEPARATOR_STR : TEXT("");
+		std::string sTmpPath = bHasFSOnStart ? PATH_SEPARATOR_STR : "";
 		
 		// split path into it tokens.
 		LPSTR p = strtok(&pPath[0], PATH_SEPARATOR_STR);
@@ -308,7 +308,7 @@ namespace base
 		if(m_sPath.length() == 0)
 		{
 			// return empty name.
-			return TEXT("");
+			return "";
 		}
 		
 		// reverse find a / ignoring the end / if it exists.
@@ -331,7 +331,7 @@ namespace base
 	{
 		if(!IsValid())
 		{
-			return TEXT("");
+			return "";
 		}
 		
 		std::string sTmpStr = GetBaseFileName();
@@ -350,7 +350,7 @@ namespace base
 	{
 		if(!IsValid())
 		{
-			return TEXT("");
+			return "";
 		}
 		
 		std::string sTmpStr = GetBaseFileName();
@@ -371,7 +371,7 @@ namespace base
 		else
 		{
 			// no extension!
-			return TEXT("");
+			return "";
 		}
 	}
 	
@@ -414,7 +414,7 @@ namespace base
 	Path Path::Root()
 	{
 	#if defined(_WINDOWS)
-		return Path((m_sDrive.length() ? (m_sDrive + PATH_SEPARATOR_STR) : TEXT("")));
+		return Path((m_sDrive.length() ? (m_sDrive + PATH_SEPARATOR_STR) : ""));
 	#else
 		return Path(PATH_SEPARATOR_STR);
 	#endif

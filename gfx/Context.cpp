@@ -163,7 +163,47 @@ namespace base
 		//glDrawElements(m_primitiveType, m_indexBuffer.size(), GL_UNSIGNED_INT, 0);
 
 		// ...works for now
+		//glDrawElements(geo->m_primitiveType, (GLsizei)geo->m_indexBuffer.size(), GL_UNSIGNED_INT, &geo->m_indexBuffer[0]);
+
+
+
+		glEnable( GL_POINT_SPRITE_ARB );
+
+
+		float quadratic[] =  { 0.0f, 0.0f, 0.01f };
+
+		glPointParameterfvARB( GL_POINT_DISTANCE_ATTENUATION_ARB, quadratic );
+
+		float maxSize = 0.0f;
+
+		glGetFloatv( GL_POINT_SIZE_MAX_ARB, &maxSize );
+
+		glPointSize( maxSize );
+
+		glPointParameterf( GL_POINT_SIZE_MAX, maxSize );
+
+		glPointParameterf( GL_POINT_SIZE_MIN, 1.0f );
+
+		glTexEnvf( GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE );
+
+		glEnable( GL_POINT_SPRITE );
+
 		glDrawElements(geo->m_primitiveType, (GLsizei)geo->m_indexBuffer.size(), GL_UNSIGNED_INT, &geo->m_indexBuffer[0]);
+		/*
+		AttributePtr  pos = geo->getAttr("P");
+		glBegin(GL_POINTS);
+		for(int i=0; i< pos->numElements(); ++i)
+		{
+			glVertex3f( pos->get<math::Vec3f>(i).x, pos->get<math::Vec3f>(i).y, pos->get<math::Vec3f>(i).z );
+		}
+		glEnd();
+		*/
+
+		glDisable( GL_POINT_SPRITE );
+
+
+
+
 
 
 		if(shader && shader->isOk())

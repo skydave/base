@@ -34,7 +34,7 @@ namespace base
 	{
 		enum PrimitiveType
 		{
-			POINT = 0,
+			POINT = 0, // GL_POINTS
 			LINE = 1,
 			TRIANGLE = 4,
 			QUAD = 7
@@ -89,6 +89,7 @@ namespace base
 */
 		PrimitiveType primitiveType();
 		unsigned int numPrimitives();
+		unsigned int addPoint( unsigned int vId );
 		unsigned int addTriangle( unsigned int vId0, unsigned int vId1, unsigned int vId2 );
 		unsigned int addQuad( unsigned int vId0, unsigned int vId1, unsigned int vId2, unsigned int vId3 );
 
@@ -116,7 +117,7 @@ namespace base
 	//
 	GeometryPtr geo_pointCloud();
 	GeometryPtr geo_quad();
-	GeometryPtr geo_grid( int xres, int zres );
+	GeometryPtr geo_grid( int xres, int zres, Geometry::PrimitiveType primType = Geometry::TRIANGLE );
 	GeometryPtr geo_cube();
 
 	//

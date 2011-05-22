@@ -45,6 +45,13 @@ namespace base
 		return m_numPrimitives;
 	}
 
+	unsigned int Geometry::addPoint( unsigned int vId )
+	{
+		m_indexBuffer.push_back(vId);
+		++m_numPrimitives;
+		return m_numPrimitives;
+	}
+
 	unsigned int Geometry::addTriangle( unsigned int vId0, unsigned int vId1, unsigned int vId2 )
 	{
 		m_indexBuffer.push_back(vId0);
@@ -114,7 +121,7 @@ namespace base
 		return result;
 	}
 
-	GeometryPtr geo_grid( int xres, int zres )
+	GeometryPtr geo_grid( int xres, int zres, Geometry::PrimitiveType primType )
 	{
 		GeometryPtr result = GeometryPtr(new Geometry());
 
@@ -132,14 +139,22 @@ namespace base
 				positions->appendElement( math::Vec3f(u-0.5f,0.0f,v-0.5f) );
 				uvs->appendElement( u, v );
 			}
-		for( int j=0; j<zres-1; ++j )
-			for( int i=0; i<xres-1; ++i )
-			{
-				int vo = (j*xres);
-				result->addTriangle( vo+xres+i+1, vo+i+1, vo+i );
-				result->addTriangle( vo+xres+i, vo+xres+i+1, vo+i );
 
-			}
+		if( primType == Geometry::POINT )
+		{
+			int numPoints = xres*zres;
+			for( int i=0;i<numPoints;++i )
+				result->addPoint( i );
+		}else
+		if( primType == Geometry::TRIANGLE )
+			for( int j=0; j<zres-1; ++j )
+				for( int i=0; i<xres-1; ++i )
+				{
+					int vo = (j*xres);
+					result->addTriangle( vo+xres+i+1, vo+i+1, vo+i );
+					result->addTriangle( vo+xres+i, vo+xres+i+1, vo+i );
+
+				}
 
 
 		return result;

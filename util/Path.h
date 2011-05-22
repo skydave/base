@@ -17,9 +17,9 @@ typedef unsigned long UInt32;
 	typedef char * 			LPSTR;
 	typedef char			TCHAR;
 	
-	#if !defined(TEXT)
-		#define TEXT(txt)			txt
-	#endif
+	//#if !defined(TEXT)
+	//	#define TEXT(txt)			txt
+	//#endif
 	
 	#if !defined(_T)
 		#define _T(txt)				TEXT(txt)
