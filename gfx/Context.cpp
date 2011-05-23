@@ -163,10 +163,10 @@ namespace base
 		//glDrawElements(m_primitiveType, m_indexBuffer.size(), GL_UNSIGNED_INT, 0);
 
 		// ...works for now
-		//glDrawElements(geo->m_primitiveType, (GLsizei)geo->m_indexBuffer.size(), GL_UNSIGNED_INT, &geo->m_indexBuffer[0]);
+		glDrawElements(geo->m_primitiveType, (GLsizei)geo->m_indexBuffer.size(), GL_UNSIGNED_INT, &geo->m_indexBuffer[0]);
 
 
-
+		/*
 		glEnable( GL_POINT_SPRITE_ARB );
 
 
@@ -189,18 +189,17 @@ namespace base
 		glEnable( GL_POINT_SPRITE );
 
 		glDrawElements(geo->m_primitiveType, (GLsizei)geo->m_indexBuffer.size(), GL_UNSIGNED_INT, &geo->m_indexBuffer[0]);
-		/*
-		AttributePtr  pos = geo->getAttr("P");
-		glBegin(GL_POINTS);
-		for(int i=0; i< pos->numElements(); ++i)
-		{
-			glVertex3f( pos->get<math::Vec3f>(i).x, pos->get<math::Vec3f>(i).y, pos->get<math::Vec3f>(i).z );
-		}
-		glEnd();
-		*/
+		
+		//AttributePtr  pos = geo->getAttr("P");
+		//glBegin(GL_POINTS);
+		//for(int i=0; i< pos->numElements(); ++i)
+		//{
+		//	glVertex3f( pos->get<math::Vec3f>(i).x, pos->get<math::Vec3f>(i).y, pos->get<math::Vec3f>(i).z );
+		//}
+		//glEnd();
 
 		glDisable( GL_POINT_SPRITE );
-
+		*/
 
 
 
