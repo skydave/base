@@ -232,7 +232,7 @@ namespace base
 				GLX_RGBA,           // Needs to support OpenGL
 				GLX_DEPTH_SIZE, 24, // Needs to support a 16 bit depth buffer
 				GLX_DOUBLEBUFFER,   // Needs to support double-buffering
-				None                // end of list
+				X11_None            // end of list
 		};
 
 		visualInfo = glXChooseVisual( display, DefaultScreen(display), doubleBufferVisual );
@@ -273,7 +273,7 @@ namespace base
 			return;
 
 		char *argv[] = { "hola", 0 };
-		XSetStandardProperties( display, m_hwnd, caption.c_str(), 0, None, argv, 1, NULL );
+		XSetStandardProperties( display, m_hwnd, caption.c_str(), 0, X11_None, argv, 1, NULL );
 
 		glXMakeCurrent( display, m_hwnd, m_hrc );
 
