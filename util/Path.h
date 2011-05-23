@@ -78,7 +78,7 @@ typedef unsigned long UInt32;
 		/**
 			* Return length of path string
 			*/
-		UInt32 Path::length( void );
+		UInt32 length( void );
 
 		/**
 		create a new path that is the direct parent of this one
