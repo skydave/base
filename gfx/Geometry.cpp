@@ -13,7 +13,7 @@ namespace base
 	Geometry::Geometry( PrimitiveType pt ) : m_primitiveType(pt), m_numPrimitives(0)
 	{
 		// initialize indexbuffer
-		//glGenBuffers(1, &m_indexBufferId);
+		glGenBuffers(1, &m_indexBufferId);
 	}
 
 	AttributePtr Geometry::getAttr( const std::string &name )

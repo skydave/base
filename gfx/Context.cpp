@@ -158,12 +158,13 @@ namespace base
 		// render primitives
 
 		// ...using indexbufferobject (does not work on laptop)
-		//oglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBufferId);
-		//oglBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer.size(), m_indexBuffer.m_data, GL_STATIC_DRAW);
-		//glDrawElements(m_primitiveType, m_indexBuffer.size(), GL_UNSIGNED_INT, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geo->m_indexBufferId);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, geo->m_indexBuffer.size()*sizeof(unsigned int), &geo->m_indexBuffer[0], GL_STATIC_DRAW);
+		glDrawElements(geo->m_primitiveType, geo->numPrimitives()*3, GL_UNSIGNED_INT, 0);
+
 
 		// ...works for now
-		glDrawElements(geo->m_primitiveType, (GLsizei)geo->m_indexBuffer.size(), GL_UNSIGNED_INT, &geo->m_indexBuffer[0]);
+		//glDrawElements(geo->m_primitiveType, (GLsizei)geo->m_indexBuffer.size(), GL_UNSIGNED_INT, &geo->m_indexBuffer[0]);
 
 
 		/*

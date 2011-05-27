@@ -105,7 +105,7 @@ namespace base
 		//
 		// OpenGL specific
 		//
-		//unsigned int                   m_indexBufferId;
+		unsigned int                   m_indexBufferId;
 	};
 
 
