@@ -14,6 +14,15 @@ namespace base
 	{
 		// initialize indexbuffer
 		glGenBuffers(1, &m_indexBufferId);
+
+		switch( pt )
+		{
+		case Geometry::POINT:m_numPrimitiveVertices = 1;break;
+		case Geometry::LINE:m_numPrimitiveVertices = 2;break;
+		default:
+		case Geometry::TRIANGLE:m_numPrimitiveVertices = 3;break;
+		case Geometry::QUAD:m_numPrimitiveVertices = 4;break;
+		}
 	}
 
 	AttributePtr Geometry::getAttr( const std::string &name )
@@ -43,6 +52,12 @@ namespace base
 	unsigned int Geometry::numPrimitives()
 	{
 		return m_numPrimitives;
+	}
+
+	// Point=1; Line=2; Triangle=3; Quad=4
+	unsigned int Geometry::numPrimitiveVertices()
+	{
+		return m_numPrimitiveVertices;
 	}
 
 	unsigned int Geometry::addPoint( unsigned int vId )
@@ -123,7 +138,7 @@ namespace base
 
 	GeometryPtr geo_grid( int xres, int zres, Geometry::PrimitiveType primType )
 	{
-		GeometryPtr result = GeometryPtr(new Geometry());
+		GeometryPtr result = GeometryPtr(new Geometry(primType));
 
 		AttributePtr positions = AttributePtr(new Vec3Attribute());
 		result->setAttr( "P", positions);

@@ -156,16 +156,22 @@ namespace base
 
 
 		// render primitives
-
-		// ...using indexbufferobject (does not work on laptop)
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geo->m_indexBufferId);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, geo->m_indexBuffer.size()*sizeof(unsigned int), &geo->m_indexBuffer[0], GL_STATIC_DRAW);
-		glDrawElements(geo->m_primitiveType, geo->numPrimitives()*3, GL_UNSIGNED_INT, 0);
+		glDrawElements(geo->m_primitiveType, geo->numPrimitives()*geo->numPrimitiveVertices(), GL_UNSIGNED_INT, 0);
+
+
 
 
 		// ...works for now
 		//glDrawElements(geo->m_primitiveType, (GLsizei)geo->m_indexBuffer.size(), GL_UNSIGNED_INT, &geo->m_indexBuffer[0]);
-
+		//AttributePtr  pos = geo->getAttr("P");
+		//glBegin(GL_POINTS);
+		//for(int i=0; i< pos->numElements(); ++i)
+		//{
+		//	glVertex3f( pos->get<math::Vec3f>(i).x, pos->get<math::Vec3f>(i).y, pos->get<math::Vec3f>(i).z );
+		//}
+		//glEnd();
 
 		/*
 		glEnable( GL_POINT_SPRITE_ARB );

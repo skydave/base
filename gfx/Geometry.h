@@ -89,6 +89,7 @@ namespace base
 */
 		PrimitiveType primitiveType();
 		unsigned int numPrimitives();
+		unsigned int numPrimitiveVertices(); // Point=1; Line=2; Triangle=3; Quad=4
 		unsigned int addPoint( unsigned int vId );
 		unsigned int addTriangle( unsigned int vId0, unsigned int vId1, unsigned int vId2 );
 		unsigned int addQuad( unsigned int vId0, unsigned int vId1, unsigned int vId2, unsigned int vId3 );
@@ -101,6 +102,7 @@ namespace base
 		PrimitiveType                  m_primitiveType; // determines the primitive type indexBuffer is pointing to...
 		std::vector<unsigned int>        m_indexBuffer;
 		unsigned int                   m_numPrimitives;
+		unsigned int            m_numPrimitiveVertices; // Point=1; Line=2; Triangle=3; Quad=4
 
 		//
 		// OpenGL specific
