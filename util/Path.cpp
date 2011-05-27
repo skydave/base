@@ -207,7 +207,7 @@ namespace base
 	#endif
 	}
 	
-	LPCSTR Path::c_str()
+	LPCSTR Path::c_str() const
 	{
 	#if defined(_WINDOWS)
 		m_sTmpBuff = m_sDrive + m_sPath;

@@ -73,7 +73,7 @@ typedef unsigned long UInt32;
 		/**
 		Return the path as a LPCSTR
 		*/
-		LPCSTR c_str();
+		LPCSTR c_str() const;
     
 		/**
 			* Return length of path string
