@@ -206,6 +206,8 @@ namespace base
 		return m_sPath;
 	#endif
 	}
+
+	std::string Path::m_sTmpBuff;
 	
 	LPCSTR Path::c_str() const
 	{

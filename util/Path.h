@@ -40,7 +40,7 @@ typedef unsigned long UInt32;
     
 	#if defined(_WINDOWS)
 		std::string m_sDrive; /// the drive the path resides on.  (will always be empty on UNIX systems)
-		std::string m_sTmpBuff; /// internal temp buffer so we can return a LPCSTR via the c_str() method.
+		static std::string m_sTmpBuff; /// internal temp buffer so we can return a LPCSTR via the c_str() method.
 	#endif
 
 	public:

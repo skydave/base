@@ -37,20 +37,22 @@ namespace base
 			}
 		}
 
-		unsigned long size( File *file )
+		uint64 size( File *file )
 		{
 			if( file )
 			{
 				return platform::size(file->opaque);
 			}
+			return 0;
 		}
 
-		unsigned long read( File *file, void *buffer, unsigned int size, unsigned int count )
+		uint64 read( File *file, void *buffer, unsigned int size, unsigned int count )
 		{
 			if( file )
 			{
 				return platform::read(file->opaque, buffer, size, count);
 			}
+			return 0;
 		}
 	}
 

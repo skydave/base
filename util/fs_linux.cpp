@@ -36,7 +36,7 @@ namespace base
 				free(opaque);
 			}
 
-			unsigned long size( void *opaque )
+			uint64 size( void *opaque )
 			{
 				int fd = *((int *) opaque);
 				struct stat statbuf;
@@ -44,7 +44,7 @@ namespace base
 				return (unsigned long) statbuf.st_size;
 			}
 
-			unsigned long read( void *opaque, void *buffer, unsigned int size, unsigned int count )
+			uint64 read( void *opaque, void *buffer, unsigned int size, unsigned int count )
 			{
 				int fd = *((int *) opaque);
 				int max = size * count;

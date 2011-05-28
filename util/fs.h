@@ -1,6 +1,6 @@
 #pragma once
 #include "Path.h"
-
+#include "types.h"
 
 
 
@@ -17,8 +17,8 @@ namespace base
 		bool                                                       exists( const Path &path );
 		File                                                        *open( const Path &path );
 		void                                                              close( File *file );
-		unsigned long                                                      size( File *file ); // returns size of file in byte
-		unsigned long read( File *file, void *buffer, unsigned int size, unsigned int count );
+		uint64                                                             size( File *file ); // returns size of file in byte
+		uint64        read( File *file, void *buffer, unsigned int size, unsigned int count );
 
 
 
@@ -30,8 +30,8 @@ namespace base
 			bool exists( const Path &path );
 			void *open( const Path &path );
 			void close( void *opaque );
-			unsigned long size( void *opaque );
-			unsigned long read( void *opaque, void *buffer, unsigned int size, unsigned int count );
+			uint64 size( void *opaque );
+			uint64 read( void *opaque, void *buffer, unsigned int size, unsigned int count );
 		}
 	}
 

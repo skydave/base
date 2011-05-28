@@ -28,7 +28,7 @@ namespace base
 			std::cout << "FILE EXISTS!\n";
 
 			// read file content
-			unsigned long size = fs::size(f);
+			unsigned int size = (unsigned int)fs::size(f);
 			std::cout << "file size: " << size << std::endl;
 
 			unsigned char *data = (unsigned char *)malloc( size*sizeof(unsigned char) );
