@@ -87,7 +87,7 @@ namespace base
 	{
 		if( !m_uniform )
 		{
-			m_uniform = AttributePtr( new Sampler1dAttribute() );
+			m_uniform = Attribute::createSampler1d();
 			m_uniform->appendElement( (int)m_id );
 		}
 		return m_uniform;
@@ -186,12 +186,23 @@ namespace base
 		glTexImage2D(GL_TEXTURE_2D, 0, m_textureFormat, m_xres, m_yres, 0, GL_RED, GL_FLOAT, pixels);
 	}
 
+	void Texture2d::upload( ImagePtr image )
+	{
+		m_xres = image->m_width;
+		m_yres = image->m_height;
+		glBindTexture(GL_TEXTURE_2D, m_id);
+		glTexParameteri( GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+		glTexImage2D(GL_TEXTURE_2D, 0, m_textureFormat, m_xres, m_yres, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->m_data);
+		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+	}
+
 
 	AttributePtr Texture2d::getUniform()
 	{
 		if( !m_uniform )
 		{
-			m_uniform = AttributePtr( new Sampler2dAttribute() );
+			m_uniform = Attribute::createSampler2d();
 			m_uniform->appendElement( (int)m_id );
 		}
 		return m_uniform;
@@ -286,7 +297,7 @@ namespace base
 	{
 		if( !m_uniform )
 		{
-			m_uniform = AttributePtr( new Sampler3dAttribute() );
+			m_uniform = Attribute::createSampler3d();
 			m_uniform->appendElement( (int)m_id );
 		}
 		return m_uniform;

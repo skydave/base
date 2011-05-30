@@ -67,15 +67,23 @@ namespace base
 
 			uint64 read( void *opaque, void *buffer, unsigned int size, unsigned int count )
 			{
-				//int fd = *((int *) opaque);
-				//int max = size * count;
-				//int rc = ::read(fd, buffer, max);
+				HANDLE Handle = ((WinApiFile *) opaque)->handle;
+				DWORD CountOfBytesRead;
+				uint64 retval;
 
-				//if ((rc < max) && (size > 1))
-				//	lseek(fd, -(rc % size), SEEK_CUR); // rollback to object boundary.
+				// Read data from the file
+				// !!! FIXME: uint32 might be a greater # than DWORD
+				if(!ReadFile(Handle, buffer, count * size, &CountOfBytesRead, NULL))
+				{
+					// error
+				}else
+				{
+					// Return the number of "objects" read.
+					// !!! FIXME: What if not the right amount of bytes was read to make an object?
+					retval = CountOfBytesRead / size;
+				}
 
-				//return(rc / size);
-				return 0;
+				return(retval);
 			}
 
 		}

@@ -21,9 +21,6 @@
 struct Shader;
 */
 
-#define PointGeometry() Geometry(Geometry::POINT)
-#define LineGeometry() Geometry(Geometry::LINE)
-#define QuadGeometry() Geometry(Geometry::QUAD)
 
 namespace base
 {
@@ -77,6 +74,7 @@ namespace base
 		vector<void *>     m_uniforms; // list of uniforms
 		vector<const char *> m_uniformNames; // list of uniform names
 		*/
+		void bindIndexBuffer();
 
 		//
 		// primitive management
@@ -101,6 +99,7 @@ namespace base
 */
 		PrimitiveType                  m_primitiveType; // determines the primitive type indexBuffer is pointing to...
 		std::vector<unsigned int>        m_indexBuffer;
+		bool                      m_indexBufferIsDirty;
 		unsigned int                   m_numPrimitives;
 		unsigned int            m_numPrimitiveVertices; // Point=1; Line=2; Triangle=3; Quad=4
 
@@ -108,6 +107,11 @@ namespace base
 		// OpenGL specific
 		//
 		unsigned int                   m_indexBufferId;
+
+		//
+		// static creators
+		//
+		static GeometryPtr createPointGeometry();
 	};
 
 
@@ -121,6 +125,7 @@ namespace base
 	GeometryPtr geo_quad();
 	GeometryPtr geo_grid( int xres, int zres, Geometry::PrimitiveType primType = Geometry::TRIANGLE );
 	GeometryPtr geo_cube();
+	GeometryPtr geo_sphere( int uSubdivisions, int vSubdivisions, float radius, math::Vec3f center = math::Vec3f(0.0f,0.0f,0.0f), Geometry::PrimitiveType primType = Geometry::TRIANGLE );
 
 	//
 	// geometry manipulation functions

@@ -4,7 +4,7 @@
 
 namespace base
 {
-	Attribute::Attribute( char numComponents, ComponentType componentType ) : m_numElements(0), m_numComponents(numComponents), m_componentType(componentType)
+	Attribute::Attribute( char numComponents, ComponentType componentType ) : m_numElements(0), m_numComponents(numComponents), m_componentType(componentType), m_isDirty(true)
 	{
 		switch(componentType)
 		{
@@ -27,10 +27,14 @@ namespace base
 
 	void Attribute::bindAsAttribute( int index )
 	{
-		// activate and specify pointer to vertex array
-		// should be done only when attribute has been updated
-		glBindBuffer(GL_ARRAY_BUFFER, m_bufferId);
-		glBufferData(GL_ARRAY_BUFFER, numComponents()*elementComponentSize()*numElements(), getRawPointer(), GL_STATIC_DRAW);
+		if(m_isDirty && m_numElements)
+		{
+			// activate and specify pointer to vertex array
+			// should be done only when attribute has been updated
+			glBindBuffer(GL_ARRAY_BUFFER, m_bufferId);
+			glBufferData(GL_ARRAY_BUFFER, numComponents()*elementComponentSize()*numElements(), getRawPointer(), GL_STATIC_DRAW);
+			m_isDirty = false;
+		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_bufferId);
 		glEnableVertexAttribArray(index);
@@ -113,7 +117,32 @@ namespace base
 	}
 
 
+	
 
+	AttributePtr Attribute::createSampler3d()
+	{
+		return AttributePtr( new Attribute(1, Attribute::SAMPLER3D) );
+	}
+
+	AttributePtr Attribute::createSampler2d()
+	{
+		return AttributePtr( new Attribute(1, Attribute::SAMPLER2D) );
+	}
+
+	AttributePtr Attribute::createSampler1d()
+	{
+		return AttributePtr( new Attribute(1, Attribute::SAMPLER1D) );
+	}
+
+	AttributePtr Attribute::createMat33()
+	{
+		return AttributePtr( new Attribute(9, Attribute::FLOAT) );
+	}
+
+	AttributePtr Attribute::createMat44()
+	{
+		return AttributePtr( new Attribute(16, Attribute::FLOAT) );
+	}
 
 	AttributePtr Attribute::createVec4f()
 	{
@@ -123,6 +152,11 @@ namespace base
 	AttributePtr Attribute::createVec3f()
 	{
 		return AttributePtr( new Attribute(3, Attribute::FLOAT) );
+	}
+
+	AttributePtr Attribute::createVec2f()
+	{
+		return AttributePtr( new Attribute(2, Attribute::FLOAT) );
 	}
 
 	AttributePtr Attribute::createFloat()

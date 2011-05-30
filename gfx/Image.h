@@ -16,6 +16,9 @@ namespace base
 	{
 		Image();
 
+		int m_width;
+		int m_height;
+		unsigned char *m_data;
 
 
 		static ImagePtr load( const Path &file );

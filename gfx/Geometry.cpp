@@ -10,7 +10,7 @@
 
 namespace base
 {
-	Geometry::Geometry( PrimitiveType pt ) : m_primitiveType(pt), m_numPrimitives(0)
+	Geometry::Geometry( PrimitiveType pt ) : m_primitiveType(pt), m_numPrimitives(0), m_indexBufferIsDirty(true)
 	{
 		// initialize indexbuffer
 		glGenBuffers(1, &m_indexBufferId);
@@ -44,6 +44,16 @@ namespace base
 		return(it != m_attributes.end());
 	}
 
+	void Geometry::bindIndexBuffer()
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBufferId);
+		if( m_indexBufferIsDirty && !m_indexBuffer.empty() )
+		{
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer.size()*sizeof(unsigned int), &m_indexBuffer[0], GL_STATIC_DRAW);
+			m_indexBufferIsDirty = false;
+		}
+	}
+
 	Geometry::PrimitiveType Geometry::primitiveType()
 	{
 		return m_primitiveType;
@@ -63,8 +73,8 @@ namespace base
 	unsigned int Geometry::addPoint( unsigned int vId )
 	{
 		m_indexBuffer.push_back(vId);
-		++m_numPrimitives;
-		return m_numPrimitives;
+		m_indexBufferIsDirty = true;
+		return m_numPrimitives++;
 	}
 
 	unsigned int Geometry::addTriangle( unsigned int vId0, unsigned int vId1, unsigned int vId2 )
@@ -72,8 +82,8 @@ namespace base
 		m_indexBuffer.push_back(vId0);
 		m_indexBuffer.push_back(vId1);
 		m_indexBuffer.push_back(vId2);
-		++m_numPrimitives;
-		return m_numPrimitives;
+		m_indexBufferIsDirty = true;
+		return m_numPrimitives++;
 	}
 
 	unsigned int Geometry::addQuad( unsigned int vId0, unsigned int vId1, unsigned int vId2, unsigned int vId3 )
@@ -82,11 +92,19 @@ namespace base
 		m_indexBuffer.push_back(vId1);
 		m_indexBuffer.push_back(vId2);
 		m_indexBuffer.push_back(vId3);
-		++m_numPrimitives;
-		return m_numPrimitives;
+		m_indexBufferIsDirty = true;
+		return m_numPrimitives++;
 	}
 
 
+
+	GeometryPtr Geometry::createPointGeometry()
+	{
+		GeometryPtr result = GeometryPtr( new Geometry(POINT) );
+		AttributePtr positions = AttributePtr( Attribute::createVec3f() );
+		result->setAttr( "P", positions);
+		return result;
+	}
 
 
 	//
@@ -94,9 +112,9 @@ namespace base
 	//
 	GeometryPtr geo_pointCloud()
 	{
-		GeometryPtr result = GeometryPtr( new PointGeometry() );
+		GeometryPtr result = GeometryPtr( new Geometry(Geometry::POINT) );
 
-		AttributePtr positions = AttributePtr( new Vec3Attribute() );
+		AttributePtr positions = Attribute::createVec3f();
 
 		positions->appendElement( math::Vec3f(0.0f,0.0f,0.0f) );
 		positions->appendElement( math::Vec3f(.5f,0.0f,0.0f) );
@@ -113,10 +131,10 @@ namespace base
 
 	GeometryPtr geo_quad()
 	{
-		GeometryPtr result = GeometryPtr(new QuadGeometry());
+		GeometryPtr result = GeometryPtr(new Geometry(Geometry::QUAD));
 
-		AttributePtr positions = AttributePtr( new Vec3Attribute() );
-		AttributePtr uvs = AttributePtr( new Vec2Attribute() );
+		AttributePtr positions = Attribute::createVec3f();
+		AttributePtr uvs = Attribute::createVec2f();
 
 		positions->appendElement( math::Vec3f(-1.0f,-1.0f,0.0f) );
 		uvs->appendElement( .0f, .0f );
@@ -140,10 +158,10 @@ namespace base
 	{
 		GeometryPtr result = GeometryPtr(new Geometry(primType));
 
-		AttributePtr positions = AttributePtr(new Vec3Attribute());
+		AttributePtr positions = Attribute::createVec3f();
 		result->setAttr( "P", positions);
 
-		AttributePtr uvs = AttributePtr(new Vec2Attribute());
+		AttributePtr uvs = Attribute::createVec2f();
 		result->setAttr( "UV", uvs );
 
 		for( int j=0; j<zres; ++j )
@@ -179,7 +197,7 @@ namespace base
 	{
 		GeometryPtr result = GeometryPtr(new Geometry(Geometry::QUAD));
 
-		AttributePtr positions = AttributePtr(new Vec3Attribute());
+		AttributePtr positions = Attribute::createVec3f();
 
 		positions->appendElement( math::Vec3f(-.5f,-.5f,0.5f) );
 		positions->appendElement( math::Vec3f(-.5f,0.5f,0.5f) );
@@ -202,6 +220,77 @@ namespace base
 
 		return result;
 	}
+
+
+	GeometryPtr geo_sphere( int uSubdivisions, int vSubdivisions, float radius, math::Vec3f center, Geometry::PrimitiveType primType )
+	{
+		GeometryPtr result = GeometryPtr(new Geometry(primType));
+
+		AttributePtr positions = Attribute::createVec3f();
+		result->setAttr( "P", positions);
+
+		AttributePtr uvs = Attribute::createVec2f();
+		result->setAttr( "UV", uvs );
+
+		float dPhi = MATH_2PIf/uSubdivisions;
+		float dTheta = MATH_PIf/vSubdivisions;
+		float theta, phi;
+
+		// y
+		for (theta=MATH_PIf/2.0f+dTheta;theta<=(3.0f*MATH_PIf)/2.0f-dTheta;theta+=dTheta)
+		{
+			math::Vec3f p;
+			float y = sin(theta);
+			// x-z
+			phi = 0.0f;
+			for( int j = 0; j<uSubdivisions; ++j  )
+			{
+				p.x = cos(theta) * cos(phi);
+				p.y = y;
+				p.z = cos(theta) * sin(phi);
+
+				p = p*radius + center;
+
+				positions->appendElement( p );
+				phi+=dPhi;
+			}
+		}
+
+		int pole1 = positions->appendElement( math::Vec3f(0.0f, 1.0f, 0.0f)*radius + center );
+		int pole2 = positions->appendElement( math::Vec3f(0.0f, -1.0f, 0.0f)*radius + center );
+
+		if( primType == Geometry::POINT )
+		{
+			int numVertices = positions->numElements();
+			for( int i=0; i< numVertices; ++i )
+				result->addPoint( i );
+		}else
+		if( primType == Geometry::TRIANGLE )
+		{
+			// add faces
+			for( int j=0; j<vSubdivisions-3;++j )
+			{
+				int offset = j*(uSubdivisions);
+				int i = 0;
+				for( i=0; i<uSubdivisions-1; ++i )
+				{
+					result->addTriangle(offset+i+1, offset+i + uSubdivisions, offset+i);
+					result->addTriangle(offset+i+1, offset+i+uSubdivisions+1, offset+i + uSubdivisions);
+				}
+				result->addTriangle(offset+0,offset+i + uSubdivisions,offset+i);
+				result->addTriangle(offset,offset + uSubdivisions,offset+i + uSubdivisions);
+			}
+			for( int i=0; i<uSubdivisions-1; ++i )
+			{
+				result->addTriangle(i+1, i,pole1);
+				result->addTriangle(uSubdivisions*(vSubdivisions-3)+i, uSubdivisions*(vSubdivisions-3)+i+1, pole2);
+			}
+			result->addTriangle(0, uSubdivisions-1, pole1);
+			result->addTriangle(uSubdivisions*(vSubdivisions-2)-1, uSubdivisions*(vSubdivisions-3), pole2);
+		}
+		return result;
+	}
+
 
 
 
@@ -237,7 +326,7 @@ namespace base
 			return;
 		}
 
-		AttributePtr normalAttr = AttributePtr(new Vec3Attribute());
+		AttributePtr normalAttr = Attribute::createVec3f();
 		AttributePtr positions = geo->getAttr("P");
 		int numPoints = positions->numElements();
 		for( int i=0; i < numPoints; ++i )

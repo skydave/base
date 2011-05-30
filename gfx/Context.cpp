@@ -21,15 +21,15 @@ namespace base
 
 
 		// view projection matrix
-		m_mvpmAttr = AttributePtr(new Mat44Attribute() );
+		m_mvpmAttr = Attribute::createMat44();
 		m_mvpmAttr->appendElement( math::Matrix44f::Identity() );
 
 		// model view matrix inverse transpose
-		m_mvminvtAttr = AttributePtr(new Mat33Attribute() );
+		m_mvminvtAttr = Attribute::createMat33();
 		m_mvminvtAttr->appendElement( math::Matrix33f::Identity() );
 
 		// view matrix inverse (camera transform)
-		m_vminvAttr = AttributePtr(new Mat44Attribute() );
+		m_vminvAttr = Attribute::createMat44();
 		m_vminvAttr->appendElement( math::Matrix44f::Identity() );
 
 
@@ -156,8 +156,7 @@ namespace base
 
 
 		// render primitives
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geo->m_indexBufferId);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, geo->m_indexBuffer.size()*sizeof(unsigned int), &geo->m_indexBuffer[0], GL_STATIC_DRAW);
+		geo->bindIndexBuffer();
 		glDrawElements(geo->m_primitiveType, geo->numPrimitives()*geo->numPrimitiveVertices(), GL_UNSIGNED_INT, 0);
 
 

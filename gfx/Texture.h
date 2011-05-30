@@ -2,6 +2,7 @@
 
 #include <util/shared_ptr.h>
 #include "Attribute.h"
+#include "Image.h"
 
 namespace base
 {
@@ -39,6 +40,7 @@ namespace base
 		void uploadRGBA8( int xres, int yres, unsigned char *pixels );
 		void   uploadRGBAFloat32( int xres, int yres, float *pixels );
 		void       uploadFloat32( int xres, int yres, float *pixels );
+		void                                 upload( ImagePtr image );
 		AttributePtr                                     getUniform();
 
 

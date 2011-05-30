@@ -26,6 +26,7 @@
 #include "RNG.h"
 #include "Noise.h"
 
+#include "PerlinNoise.h"
 
 ///
 /// \brief vectors matrices and mathematical operations

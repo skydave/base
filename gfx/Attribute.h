@@ -3,6 +3,7 @@
 #include <math/Math.h>
 #include <util/shared_ptr.h>
 
+/*
 #define Vec3Attribute() Attribute(3, Attribute::FLOAT)
 #define Vec2Attribute() Attribute(2, Attribute::FLOAT)
 #define Mat44Attribute() Attribute(16, Attribute::FLOAT)
@@ -10,6 +11,7 @@
 #define Sampler1dAttribute() Attribute(1, Attribute::SAMPLER1D)
 #define Sampler2dAttribute() Attribute(1, Attribute::SAMPLER2D)
 #define Sampler3dAttribute() Attribute(1, Attribute::SAMPLER3D)
+*/
 
 namespace base
 {
@@ -109,10 +111,16 @@ namespace base
 		//
 		// static creators
 		//
-		static AttributePtr createVec4f();
-		static AttributePtr createVec3f();
-		static AttributePtr createFloat();
-		static AttributePtr   createInt();
+		static AttributePtr createSampler3d();
+		static AttributePtr createSampler2d();
+		static AttributePtr createSampler1d();
+		static AttributePtr     createMat33();
+		static AttributePtr     createMat44();
+		static AttributePtr     createVec4f();
+		static AttributePtr     createVec3f();
+		static AttributePtr     createVec2f();
+		static AttributePtr     createFloat();
+		static AttributePtr       createInt();
 
 		//
 		// OpenGL
@@ -123,6 +131,7 @@ namespace base
 		void unbindAsUniform( int index );
 
 		unsigned int m_bufferId;
+		bool          m_isDirty;
 	};
 
 
@@ -132,8 +141,7 @@ namespace base
 		unsigned int pos = (unsigned int) m_data.size();
 		m_data.resize( pos + sizeof(T) );
 		*((T *)&m_data[pos]) = value;
-		++m_numElements;
-		return m_numElements;
+		return m_numElements++;
 	}
 
 	template<typename T>
@@ -144,8 +152,7 @@ namespace base
 		T *data = (T*)&m_data[pos];
 		*data = v0;++data;
 		*data = v1;++data;
-		++m_numElements;
-		return m_numElements;
+		return m_numElements++;
 	}
 
 	template<typename T>
@@ -157,8 +164,7 @@ namespace base
 		*data = v0;++data;
 		*data = v1;++data;
 		*data = v2;++data;
-		++m_numElements;
-		return m_numElements;
+		return m_numElements++;
 	}
 
 	template<typename T>
@@ -170,8 +176,7 @@ namespace base
 		*data = v0;++data;
 		*data = v1;++data;
 		*data = v2;++data;
-		++m_numElements;
-		return m_numElements;
+		return m_numElements++;
 	}
 
 	template<typename T>
