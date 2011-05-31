@@ -67,7 +67,7 @@ namespace math
 			// perlin noise
 			for( i1=0; i1<m_octaves;i1++ )
 			{
-				result += abs( interpolatedGradientNoise( s * frequencyFactor, t * frequencyFactor ) * amplitudeFactor );
+				result += fabs( interpolatedGradientNoise( s * frequencyFactor, t * frequencyFactor ) * amplitudeFactor );
 
 				amplitudeFactor *= m_amplitudeRatio;
 				frequencyFactor *= m_frequencyRatio;
@@ -109,7 +109,7 @@ namespace math
 			for( i1=0; i1<m_octaves;i1++ )
 			{
 				//result += interpolatedGradientNoise( u * frequencyFactor, v * frequencyFactor, w * frequencyFactor ) * amplitudeFactor;
-				result += abs(interpolatedGradientNoise( u * frequencyFactor, v * frequencyFactor, w * frequencyFactor ) * amplitudeFactor);
+				result += fabs(interpolatedGradientNoise( u * frequencyFactor, v * frequencyFactor, w * frequencyFactor ) * amplitudeFactor);
 
 				amplitudeFactor *= m_amplitudeRatio;
 				frequencyFactor *= m_frequencyRatio;
@@ -149,7 +149,7 @@ namespace math
 			for( i1=0; i1<m_octaves;i1++ )
 			{
 				//result += interpolatedNoise( u * frequencyFactor, v * frequencyFactor, w * frequencyFactor, x * frequencyFactor ) * amplitudeFactor;
-				result += abs( interpolatedGradientNoise( u * frequencyFactor, v * frequencyFactor, w * frequencyFactor, x * frequencyFactor ) * amplitudeFactor );
+				result += fabs( interpolatedGradientNoise( u * frequencyFactor, v * frequencyFactor, w * frequencyFactor, x * frequencyFactor ) * amplitudeFactor );
 
 				amplitudeFactor *= m_amplitudeRatio;
 				frequencyFactor *= m_frequencyRatio;

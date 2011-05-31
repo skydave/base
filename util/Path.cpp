@@ -26,6 +26,9 @@
 
 namespace base
 {
+	#if defined(_WINDOWS)
+	std::string Path::m_sTmpBuff;
+	#endif
 
 	Path::Path() : m_sPath("")
 	{
@@ -206,8 +209,6 @@ namespace base
 		return m_sPath;
 	#endif
 	}
-
-	std::string Path::m_sTmpBuff;
 	
 	LPCSTR Path::c_str() const
 	{
