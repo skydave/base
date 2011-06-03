@@ -65,6 +65,11 @@ namespace base
 	}
 
 
+
+
+
+
+
 	template <typename T>
 	std::vector<T> sort_from_ref(
 		std::vector<T> const& in,
@@ -78,14 +83,22 @@ namespace base
 
 		return ret;
 	}
-/* // commented out because of compiler error with gcc
+
+	typedef std::vector<float>::const_iterator xIter;
+	// finally sort pair list(order) using custom comparator
+	struct ordering
+	{
+		bool operator ()(std::pair<std::size_t, xIter> const& a, std::pair<std::size_t, xIter> const& b)
+		{
+			return *a.second < *b.second;
+		}
+	};
+
 	//
 	// sorts CP's after increasing x
 	//
 	void FCurve::sort()
 	{
-		typedef std::vector<float>::const_iterator xIter;
-
 		// build list which associates x with index
 		std::vector<std::pair<std::size_t, xIter> > order(m_x.size());
 
@@ -93,21 +106,17 @@ namespace base
 		for (xIter it = m_x.begin(); it != m_x.end(); ++it, ++n)
 			order[n] = std::make_pair(n, it);
 
+		std::sort< std::vector<std::pair<std::size_t, xIter> >::iterator, ordering >(order.begin(), order.end(), ordering());
 
-
-		// finally sort pair list(order) using custom comparator
-		struct ordering
+		n = 0;
+		for( std::vector<std::pair<std::size_t, xIter> >::iterator it = order.begin(); it != order.end(); ++it, ++n )
 		{
-			bool operator ()(std::pair<std::size_t, xIter> const& a, std::pair<std::size_t, xIter> const& b)
-			{
-				return a.second < b.second;
-			}
-		};
-		std::sort(order.begin(), order.end(), ordering());
+			std::pair<std::size_t, xIter> &p = *it;
+			m_x[n] = *p.second;
+		}
 
-		// no sort all other vectors from ref
-		sort_from_ref<float>( m_values, order );
+		// now sort all other vectors from ref
+		m_values = sort_from_ref<float>( m_values, order );
 	}
-*/
 
 }
