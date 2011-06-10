@@ -53,6 +53,8 @@ namespace base
 		static Texture2dPtr createRGBA8( int xres = 64, int yres = 64 );
 		static Texture2dPtr createFloat32( int xres = 64, int yres = 64 );
 		static Texture2dPtr createRGBAFloat32( int xres = 64, int yres = 64 );
+
+		static Texture2dPtr load( const Path &file ); // loads texture from file
 	};
 
 

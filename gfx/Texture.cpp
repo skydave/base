@@ -137,6 +137,16 @@ namespace base
 		return Texture2d::create( GL_FLOAT_R32_NV, xres, yres );
 	}
 
+	// loads texture from file
+	Texture2dPtr Texture2d::load( const Path &file )
+	{
+		ImagePtr img = Image::load( file );
+		//TODO: take image format into account and apply policy. atm rgba8 is assumed
+		Texture2dPtr txt = Texture2d::createRGBA8();
+		txt->upload( img );
+		return txt;
+	}
+
 
 	Texture2d::Texture2d()
 	{
