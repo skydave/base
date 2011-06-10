@@ -51,7 +51,7 @@ namespace base
 		std::vector<int> indicees;
 
 
-		File *file = fs::open( filename );
+		fs::File *file = fs::open( filename );
 
 		// file open?
 		if( !file )
