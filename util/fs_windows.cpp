@@ -86,6 +86,37 @@ namespace base
 				return(retval);
 			}
 
+			bool eof( void *opaque )
+			{
+				sint64 filepos;
+				bool retval = false;
+
+				// get the current position in the file
+				if ((filepos = tell(opaque)) != 0)
+				{
+					// non-zero if eof is equal to the file length
+					retval = filepos == size(opaque);
+				}
+
+				return(retval);
+			}
+
+			sint64 tell( void *opaque )
+			{
+				HANDLE handle = ((WinApiFile *) opaque)->handle;
+				LARGE_INTEGER filepos;
+				LARGE_INTEGER move;
+				move.QuadPart = 0;
+
+				// get current position
+				if( !SetFilePointerEx( handle, move, &filepos, FILE_CURRENT) )
+				{
+					// error
+				}
+
+				return filepos.QuadPart;
+			}
+
 		}
 
 

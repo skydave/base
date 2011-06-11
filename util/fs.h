@@ -19,6 +19,9 @@ namespace base
 		void                                                              close( File *file );
 		uint64                                                             size( File *file ); // returns size of file in byte
 		uint64        read( File *file, void *buffer, unsigned int size, unsigned int count );
+		bool                                                                eof( File *file ); // returns true if end of file is reached
+		sint64                                                             tell( File *file ); // returns current position
+		std::string                                                     getLine( File *file ); // convenience
 
 
 
@@ -32,6 +35,9 @@ namespace base
 			void close( void *opaque );
 			uint64 size( void *opaque );
 			uint64 read( void *opaque, void *buffer, unsigned int size, unsigned int count );
+			bool eof( void *opaque );
+			sint64 tell( void *opaque );
+			//std::string getLine( void *opaque );
 		}
 	}
 

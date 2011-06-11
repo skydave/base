@@ -1,5 +1,6 @@
 #include "fs.h"
-
+#include <iostream>
+#include <sstream>
 
 
 
@@ -53,6 +54,23 @@ namespace base
 				return platform::read(file->opaque, buffer, size, count);
 			}
 			return 0;
+		}
+
+		// returns true if end of file is reached
+		bool eof( File *file )
+		{
+			return platform::eof(file->opaque);
+		}
+
+		std::string getLine( File *f )
+		{
+			std::stringstream os;
+			char c;
+			while( (platform::read( f->opaque, &c, 1, 1 ) == 1) && (c != '\n') )
+			{
+				os << c;
+			}
+			return os.str();
 		}
 	}
 

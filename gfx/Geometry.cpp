@@ -106,6 +106,14 @@ namespace base
 		return result;
 	}
 
+	GeometryPtr Geometry::createTriangleGeometry()
+	{
+		GeometryPtr result = GeometryPtr( new Geometry(TRIANGLE) );
+		AttributePtr positions = AttributePtr( Attribute::createVec3f() );
+		result->setAttr( "P", positions);
+		return result;
+	}
+
 
 	//
 	// useful geometry generation functions

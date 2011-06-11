@@ -67,6 +67,13 @@ namespace base
 			m_numElements = 0;
 		}
 
+		void resize( int numElements )
+		{
+			m_data.resize( numElements*numComponents()*elementComponentSize() );
+			m_numElements = numElements;
+			m_isDirty = true;
+		}
+
 
 		int numElements()
 		{
@@ -117,8 +124,8 @@ namespace base
 		static AttributePtr     createMat33();
 		static AttributePtr     createMat44();
 		static AttributePtr     createVec4f();
-		static AttributePtr     createVec3f();
-		static AttributePtr     createVec2f();
+		static AttributePtr     createVec3f( int numElements = 0 );
+		static AttributePtr     createVec2f( int numElements = 0 );
 		static AttributePtr     createFloat();
 		static AttributePtr       createInt();
 

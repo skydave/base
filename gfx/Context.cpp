@@ -107,6 +107,9 @@ namespace base
 
 	void Context::render( GeometryPtr geo, ShaderPtr shader )
 	{
+		if( !geo )
+			return;
+
 		if(shader && shader->isOk())
 		{
 			glUseProgram(shader->m_glProgram);
