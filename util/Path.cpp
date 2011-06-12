@@ -201,7 +201,7 @@ namespace base
 		return m_sPath.length() > 0 ? true : false;
 	}
 	
-	std::string Path::GetSTLStr()
+	std::string Path::str() const
 	{
 	#if defined(_WINDOWS)
 		return m_sDrive + m_sPath;

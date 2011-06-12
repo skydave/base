@@ -68,7 +68,7 @@ typedef unsigned long UInt32;
 		/**
 		Return a copy of the internal stl string
 		*/
-		std::string GetSTLStr();
+		std::string str() const;
     
 		/**
 		Return the path as a LPCSTR
