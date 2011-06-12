@@ -665,4 +665,123 @@ void Geometry::resetPrimitiveType( int newPrimitiveType )
 	case GL_QUADS: m_numComponents=4;break;
 	};
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+static int getEdgeId( int a, int b, int *edges, int *nedges, Attribute *p )
+{
+	// encode a/b into one integer .. limits number of edges to 2^16
+	// makes it more elegant to look for the edge (its just an integer compare)
+	int n = (a>b)?(a<<16)|b:(b<<16)|a;
+
+	// look for given edge
+	int i;
+	for( i=0; edges[2*i+0]!=n && i<*nedges; i++ );
+	if( i==*nedges )
+	{
+		edges[2*i+0] = n; // set the edge
+		(*nedges)++; // increase number of edges if we just have added the edge
+		p->appendElement( 0.0f, 0.0f, 0.0f ); // append edgepoint
+	}
+	edges[2*i+1]++;   // increase access count (== number of shared faces)
+	return i;
+}
+
+const static float vpw[4] = { 9.0f, 3.0f, 1.0f, 3.0f };
+const static float epw[4] = { 3.0f, 3.0f, 1.0f, 1.0f };
+
+void apply_catmullclark( Geometry *geo, int numIterations )
+{
+	for( int iter=0; iter<numIterations; ++iter )
+	{
+		Geometry *org = geo->copy();
+
+		// original points are  left - we just clear out primitives
+		geo->m_indexBuffer.clear();
+		geo->m_numPrimitives = 0;
+
+
+		//
+		// do catmull clark subdivision
+		//
+		int abcd[4]; // used to rearrange quad indices so that abcd[0] always points to the current vertex
+		int eid[4];
+		int *edges = (int *)mmalloc( sizeof(int)*10000 );
+		int *faceValences = (int *)mmalloc( sizeof(int)*10000 );
+		int numEdges = 0;
+
+		msys_memset( edges, 0, sizeof(int)*10000 );
+		msys_memset( faceValences, 0, sizeof(int)*10000 );
+
+		// zero out vertex points
+		msys_memset( geo->getPAttr()->m_data.m_data, 0, geo->getPAttr()->m_data.size() );
+
+		// add face center points
+		int fpOffset = geo->getPAttr()->numElements();
+		int epOffset = geo->getPAttr()->appendElements( org->m_numPrimitives );
+
+		// for each quad
+		for(int i = 0; i<org->m_numPrimitives; ++i)
+		{
+			math::Vec3f faceCenter;
+			// for each vertex of current quad
+			for(int j=0; j<4;++j)
+			{
+				// rearrange into convenience structure
+				for(int k=0; k<4;++k)
+					abcd[k] = org->m_indexBuffer.m_data[i*4 + (j+k)%4];
+				// get id of edge between current quad vertex with the next quadvertex
+				eid[j] = getEdgeId( abcd[0], abcd[1], edges, &numEdges, geo->getPAttr() );
+				// update face valences of current quad vertex
+				faceValences[abcd[0]]++;
+				// update face center point
+				faceCenter += 0.25f * org->getPAttr()->getVec3f( abcd[0] );
+
+				for( int k=0; k<4; ++k )
+				{
+					// increment vertex point
+					geo->getPAttr()->setElement( abcd[0], &(geo->getPAttr()->getVec3f(abcd[0]) + vpw[k]*org->getPAttr()->getVec3f(abcd[k])) );
+					// increment edge point
+					geo->getPAttr()->setElement( epOffset +eid[j], &(geo->getPAttr()->getVec3f(epOffset +eid[j]) + epw[k]*org->getPAttr()->getVec3f(abcd[k])) );
+				}
+			}
+
+			// set face centerpoint
+			geo->getPAttr()->setElement(fpOffset+i, &faceCenter);
+
+			// add child faces
+			for(int j=0; j<4;++j)
+			//for(int j=3; j>=0;--j)
+				geo->addQuad( fpOffset+i, epOffset+eid[(3+j)&3], org->m_indexBuffer.m_data[i*4+j], epOffset+eid[(0+j)&3] );
+		}
+
+		// for each original point
+		for(int i=0; i<fpOffset;++i)
+		{
+			geo->getPAttr()->setElement( i, &(geo->getPAttr()->getVec3f(i)*(0.0625f/(float)faceValences[i])) );
+			math::Vec3f pp = geo->getPAttr()->getVec3f( i );
+
+		}
+		// for each edge point
+		for(int i=epOffset; i<geo->getPAttr()->numElements();++i)
+		{
+			geo->getPAttr()->setElement( i, &(geo->getPAttr()->getVec3f(i)*(0.1250f/(float)edges[(i-epOffset)*2+1])) );
+			math::Vec3f pp = geo->getPAttr()->getVec3f( i );
+		}
+
+		delete org;
+		mfree(edges);
+		mfree(faceValences);
+	}
+}
 */
