@@ -56,6 +56,15 @@ namespace base
 				return(rc / size);
 			}
 
+
+			sint64 tell( void *opaque )
+			{
+				int fd = *((int *) opaque);
+				sint64 retval;
+				retval = (sint64) lseek(fd, 0, SEEK_CUR);
+				return retval;
+			}
+
 		}
 
 

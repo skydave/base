@@ -35,7 +35,6 @@ namespace base
 			void close( void *opaque );
 			uint64 size( void *opaque );
 			uint64 read( void *opaque, void *buffer, unsigned int size, unsigned int count );
-			bool eof( void *opaque );
 			sint64 tell( void *opaque );
 			//std::string getLine( void *opaque );
 		}

@@ -59,7 +59,17 @@ namespace base
 		// returns true if end of file is reached
 		bool eof( File *file )
 		{
-			return platform::eof(file->opaque);
+			sint64 filepos;
+			bool retval = false;
+
+			// get the current position in the file
+			if ((filepos = platform::tell(file->opaque)) != 0)
+			{
+				// non-zero if eof is equal to the file length
+				retval = filepos == platform::size(file->opaque);
+			}
+
+			return(retval);
 		}
 
 		std::string getLine( File *f )
