@@ -60,6 +60,10 @@ inline Vec2f operator*( const float &lhs, const Vec2f &rhs )
 {
 	return (rhs*lhs);
 }
+inline Vec2f operator*( const Vec2f &lhs, const Vec2f &rhs )
+{
+	return Vec2f( lhs.x*rhs.x, lhs.y*rhs.y );
+}
 
 //
 // global Vec2f related functions

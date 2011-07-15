@@ -2,6 +2,7 @@
 #include <iostream>
 #include <util/fs.h>
 #include <util/stb_image.h>
+#include <math/Math.h>
 
 
 
@@ -22,7 +23,17 @@ namespace base
 
 	math::Color Image::lookup( float u, float v )
 	{
-		return math::Color::Blue();
+		// nearest neighbour
+		int x = int(u*m_width);
+		int y = int(v*m_height);
+
+		if( (x >= 0)&&(x<m_width)&&(y >= 0)&&(y<m_height) )
+		{
+			int pixel = y*m_width*4 + x*4;
+			return math::setRGBColor( m_data[pixel], m_data[pixel+1], m_data[pixel+2], m_data[pixel+3] );
+		}
+
+		return math::Color::Black();
 	}
 
 	ImagePtr Image::load( const Path &file )
