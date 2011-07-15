@@ -86,4 +86,22 @@ namespace base
 	};
 
 
+	BASE_DECL_SMARTPTR(TextureCube);
+
+	struct TextureCube
+	{
+		TextureCube();
+		~TextureCube();
+
+		void                                                         upload( ImagePtr image ); // assumes Image contains all 6 faces
+		AttributePtr                                                             getUniform();
+
+
+		unsigned int                                                                    m_id; // opengl handle
+		AttributePtr                                                               m_uniform; // will be used to attach textures to geometry/or shaders which then will be bound
+		int                                                                  m_textureFormat; // format of texture in gpu memory
+
+		static TextureCubePtr                      createRGBA8(int xres = 64, int yres = 64);
+	};
+
 }

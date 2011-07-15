@@ -15,9 +15,64 @@ namespace base
 
 
 
-	Image::Image()
+	Image::Image() : m_data(0)
 	{
 
+	}
+
+	Image::~Image()
+	{
+		if( m_data )
+			free(m_data);
+	}
+
+	ImagePtr Image::copy( int x, int y, int width, int height )
+	{
+		ImagePtr result = Image::create( width, height );
+
+		// copy scanlines
+		for( int j=0;j<height;++j )
+		{
+			int i1 = (y+j)*m_width*4 + x*4;
+			int i2 = j*width*4;
+			memcpy( &(result->m_data[i2]), &(m_data[i1]), width*4 );
+		}
+
+		return result;
+	}
+
+	void Image::flip( bool vertical, bool horizontal )
+	{
+		ImagePtr temp = copy( 0, 0, m_width, m_height );
+
+		if( vertical )
+		{
+			for( int j=0;j<m_height;++j )
+			{
+				int i1 = j*m_width*4;
+				int i2 = (m_height - j - 1)*m_width*4;
+				memcpy( &(m_data[i2]), &(temp->m_data[i1]), m_width*4 );
+			}
+		}
+
+		if( horizontal )
+		{
+			unsigned char *temp2 = (unsigned char *)malloc( m_width*4*sizeof(unsigned char) );
+			for( int j=0;j<m_height;++j )
+			{
+				int idx = j*m_width*4;
+				memcpy( temp2, &m_data[idx], m_width*4 );
+				for( int i=0;i<m_width;++i )
+				{
+					m_data[idx+i*4] = temp2[(m_width - i - 1)*4];
+					m_data[idx+i*4+1] = temp2[(m_width - i - 1)*4+1];
+					m_data[idx+i*4+2] = temp2[(m_width - i - 1)*4+2];
+					m_data[idx+i*4+3] = temp2[(m_width - i - 1)*4+3];
+				}
+
+			}
+			free(temp2);
+		}
 	}
 
 
@@ -34,6 +89,15 @@ namespace base
 		}
 
 		return math::Color::Black();
+	}
+
+	ImagePtr Image::create( int width, int height )
+	{
+		ImagePtr img = ImagePtr( new Image() );
+		img->m_data = (unsigned char *)malloc( width*height*4*sizeof(char) );
+		img->m_width = width;
+		img->m_height = height;
+		return img;
 	}
 
 	ImagePtr Image::load( const Path &file )

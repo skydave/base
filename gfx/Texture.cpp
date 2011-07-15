@@ -312,4 +312,79 @@ namespace base
 		}
 		return m_uniform;
 	}
+
+
+	//
+	// TextureCube ---------------------------------
+	//
+
+	TextureCubePtr TextureCube::createRGBA8( int xres, int yres )
+	{
+		TextureCubePtr result = TextureCubePtr(new TextureCube());
+
+		result->m_textureFormat = GL_RGBA8;
+
+		return result;
+	}
+
+	TextureCube::TextureCube()
+	{
+
+		glGenTextures(1, &m_id);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_id);
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
+
+	}
+
+	TextureCube::~TextureCube()
+	{
+		glDeleteTextures(1,&m_id);
+	}
+
+
+
+
+
+
+	// assumes Image contains all 6 faces
+	void TextureCube::upload( ImagePtr image )
+	{
+
+		int width = image->m_width/3;
+		int height = image->m_height/4;
+
+		ImagePtr faces[6];
+		faces[0] = image->copy( width*2, height*1, width, height );
+		faces[1] = image->copy( width*0, height*1, width, height );
+		faces[2] = image->copy( width*1, height*0, width, height );
+		faces[3] = image->copy( width*1, height*2, width, height );
+		faces[4] = image->copy( width*1, height*1, width, height );
+		faces[5] = image->copy( width*1, height*3, width, height );
+		faces[5]->flip();
+
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_id);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, m_textureFormat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, faces[0]->m_data);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, m_textureFormat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, faces[1]->m_data);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, m_textureFormat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, faces[2]->m_data);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, m_textureFormat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, faces[3]->m_data);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, m_textureFormat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, faces[4]->m_data);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, m_textureFormat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, faces[5]->m_data);
+
+	}
+
+	AttributePtr TextureCube::getUniform()
+	{
+		if( !m_uniform )
+		{
+			m_uniform = Attribute::createSamplerCube();
+			m_uniform->appendElement( (int)m_id );
+		}
+		return m_uniform;
+	}
+
 }

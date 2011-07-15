@@ -16,15 +16,20 @@ namespace base
 	struct Image
 	{
 		Image();
+		~Image();
 
-		int m_width;
-		int m_height;
-		unsigned char *m_data;
+		int                                                              m_width;
+		int                                                             m_height;
+		unsigned char                                                    *m_data;
 
-		math::Color lookup( float u, float v );
+		math::Color                                   lookup( float u, float v );
+
+		ImagePtr                     copy( int x, int y, int width, int height );
+		void                flip( bool vertical = true, bool horizontal = true );
 
 
-		static ImagePtr load( const Path &file );
+		static ImagePtr                          create( int width, int height );
+		static ImagePtr                                 load( const Path &file );
 	};
 
 
