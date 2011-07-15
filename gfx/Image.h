@@ -2,6 +2,7 @@
 
 #include <util/shared_ptr.h>
 #include <util/Path.h>
+#include <math/Color.h>
 
 
 
@@ -19,6 +20,8 @@ namespace base
 		int m_width;
 		int m_height;
 		unsigned char *m_data;
+
+		math::Color lookup( float u, float v );
 
 
 		static ImagePtr load( const Path &file );

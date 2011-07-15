@@ -20,6 +20,10 @@ namespace base
 	}
 
 
+	math::Color Image::lookup( float u, float v )
+	{
+		return math::Color::Blue();
+	}
 
 	ImagePtr Image::load( const Path &file )
 	{
