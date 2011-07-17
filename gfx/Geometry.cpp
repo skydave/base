@@ -156,7 +156,7 @@ namespace base
 		result->setAttr( "P", positions);
 		result->setAttr( "UV", uvs );
 
-		result->addQuad( 0, 1, 2, 3 );
+		result->addQuad( 3, 2, 1, 0 );
 
 
 		return result;
@@ -219,12 +219,12 @@ namespace base
 
 		result->setAttr( "P", positions);
 
-		result->addQuad( 0, 1, 2, 3 );
-		result->addQuad( 7, 6, 5, 4 );
-		result->addQuad( 3, 2, 6, 7 );
-		result->addQuad( 0, 4, 5, 1 );
-		result->addQuad( 2, 1, 5, 6 );
-		result->addQuad( 0, 3, 7, 4 );
+		result->addQuad( 3, 2, 1, 0 );
+		result->addQuad( 4, 5, 6, 7 );
+		result->addQuad( 7, 6, 2, 3 );
+		result->addQuad( 1, 5, 4, 0 );
+		result->addQuad( 6, 5, 1, 2 );
+		result->addQuad( 4, 7, 3, 0 );
 
 		return result;
 	}
