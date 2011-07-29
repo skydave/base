@@ -263,19 +263,19 @@ namespace base
 	Texture3d::Texture3d()
 	{
 		glGenTextures(1, &m_id);
-		glBindTexture(GL_TEXTURE_3D_EXT, m_id);
+		glBindTexture(GL_TEXTURE_3D, m_id);
 
 		// when texture area is small, bilinear filter the closest mipmap
-		glTexParameterf( GL_TEXTURE_3D_EXT, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+		glTexParameterf( GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
 		//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 		// when texture area is large, bilinear filter the original
-		glTexParameterf( GL_TEXTURE_3D_EXT, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+		glTexParameterf( GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 		//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
 		// the texture wraps over at the edges (repeat)
-		glTexParameterf( GL_TEXTURE_3D_EXT, GL_TEXTURE_WRAP_S, GL_CLAMP );
-		glTexParameterf( GL_TEXTURE_3D_EXT, GL_TEXTURE_WRAP_T, GL_CLAMP );
-		glTexParameterf( GL_TEXTURE_3D_EXT, GL_TEXTURE_WRAP_R, GL_CLAMP );
+		glTexParameterf( GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP );
+		glTexParameterf( GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP );
+		glTexParameterf( GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP );
 	}
 
 	Texture3d::~Texture3d()
@@ -289,8 +289,8 @@ namespace base
 		m_xres = xres;
 		m_yres = yres;
 		m_zres = zres;
-		glBindTexture(GL_TEXTURE_3D_EXT, m_id);
-		glTexImage3DEXT(GL_TEXTURE_3D_EXT, 0, m_textureFormat, m_xres, m_yres, m_zres, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+		glBindTexture(GL_TEXTURE_3D, m_id);
+		glTexImage3DEXT(GL_TEXTURE_3D, 0, m_textureFormat, m_xres, m_yres, m_zres, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 	}
 
 	void Texture3d::uploadRGBAFloat32( int xres, int yres, int zres, float *pixels )
@@ -298,8 +298,17 @@ namespace base
 		m_xres = xres;
 		m_yres = yres;
 		m_zres = zres;
-		glBindTexture(GL_TEXTURE_3D_EXT, m_id);
-		glTexImage3DEXT(GL_TEXTURE_3D_EXT, 0, m_textureFormat, m_xres, m_yres, m_zres, 0, GL_RGBA, GL_FLOAT, pixels);
+		glBindTexture(GL_TEXTURE_3D, m_id);
+		glTexImage3DEXT(GL_TEXTURE_3D, 0, m_textureFormat, m_xres, m_yres, m_zres, 0, GL_RGBA, GL_FLOAT, pixels);
+	}
+
+	void Texture3d::uploadFloat32( int xres, int yres, int zres, float *pixels )
+	{
+		m_xres = xres;
+		m_yres = yres;
+		m_zres = zres;
+		glBindTexture(GL_TEXTURE_3D, m_id);
+		glTexImage3DEXT(GL_TEXTURE_3D, 0, m_textureFormat, m_xres, m_yres, m_zres, 0, GL_ALPHA, GL_FLOAT, pixels);
 	}
 
 

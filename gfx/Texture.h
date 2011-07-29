@@ -70,7 +70,7 @@ namespace base
 
 		void              uploadRGBA8( int xres, int yres, int zres, unsigned char *pixels );
 		void                uploadRGBAFloat32( int xres, int yres, int zres, float *pixels );
-		//void                    uploadFloat32( int xres, int yres, int zres, float *pixels );
+		void                    uploadFloat32( int xres, int yres, int zres, float *pixels );
 		AttributePtr                                                            getUniform();
 
 
