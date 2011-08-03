@@ -238,8 +238,10 @@ namespace base
 		result->m_zres = zres;
 		result->m_textureFormat = textureFormat;
 
-		glBindTexture(GL_TEXTURE_3D_EXT, result->m_id);
-		glTexImage3DEXT(GL_TEXTURE_3D_EXT, 0, result->m_textureFormat, result->m_xres, result->m_yres, result->m_zres, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+		glBindTexture(GL_TEXTURE_3D, result->m_id);
+		glBindBuffer( GL_PIXEL_UNPACK_BUFFER, 0 );
+		//glTexImage3D(GL_TEXTURE_3D, 0, result->m_textureFormat, result->m_xres, result->m_yres, result->m_zres, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+		//glTexImage3D(GL_TEXTURE_3D, 0, result->m_textureFormat, result->m_xres, result->m_yres, result->m_zres, 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
 
 		return result;
 	}
@@ -256,7 +258,7 @@ namespace base
 
 	Texture3dPtr Texture3d::createFloat32( int xres, int yres, int zres )
 	{
-		return Texture3d::create( GL_FLOAT_R32_NV, xres, yres, zres );
+		return Texture3d::create( GL_ALPHA, xres, yres, zres );
 	}
 
 

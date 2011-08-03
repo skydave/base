@@ -81,7 +81,7 @@ namespace base
 
 				// bind texture to given texture unit (index)
 				glActiveTexture(GL_TEXTURE0+index);
-				glBindTexture(GL_TEXTURE_3D_EXT, t);
+				glBindTexture(GL_TEXTURE_3D, t);
 
 				// now set the sampler uniform to point to the textureunit
 				int tt = index; // for now texture unit == unfiform location
