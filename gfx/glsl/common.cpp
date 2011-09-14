@@ -39,12 +39,5 @@ namespace base
 
 			return g_noisePermutationTableTex;
 		}
-
-
-		std::string common()
-		{
-			return std::string( ::common, ::common_size );
-		}
-
 	}
 }
