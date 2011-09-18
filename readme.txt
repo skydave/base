@@ -1,3 +1,67 @@
+
+
+-wir brauchen extrem simples operator framework fuer:
++procedural mesh generation (sphere fuer demo test)
++procedural texture generation (generally usefull)
++expressing rendering as operator graph (fbo, gpu based image processing etc. -> for ssao)
+->requires support for multiple outputs (multirendertarget)
++gpu based particle system graph
++channel operator graph (required for best application of sync data from processing)
+->requires lazy evaluation since we dont want to presample the channels
+
+concept
+-------
+-base/gfx/Object.h
+-base/gfx/Mesh.h (look at cinder, openframework, etc.)
+-base/op/Op.h
+->status execute()
+->std::vector<OperatorPtr> m_inputs
+->schreibt in std::vector<ObjectPtr> m_outputs;
+-base/op/OpGroup.h //derives from op
+->maintains list of all ops it contains
+->status execute(  ) from operator
+->->starts at finalOp and traverses the tree. fully evaluates all input ops
+->input from parent group passed using GroupInputOp (similar to houdini's for each vop)
+->has a finalOp which provides the result of the group
+->status connect( src, dst ) // appends src to inputs of dst
+
+
+stage1:
+SphereOp to create a Mesh
+Mesh::getGeometry() to turn it into a renderable
+and render it
+
+stage2:
+RenderOp (group)
+ClearOp
+RenderMeshOp to display a mesh on screen
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-sound:
+portaudio
+http://nothings.org/stb_vorbis/
+
+
+
+
+
+
+
+
+
+
 TODO:
 
 
