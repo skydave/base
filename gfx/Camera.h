@@ -4,7 +4,7 @@
 
 namespace base
 {
-	BASE_DECL_SMARTPTR(Camera);
+	BASE_DECL_SMARTPTR_STRUCT(Camera);
 
 	struct Camera
 	{

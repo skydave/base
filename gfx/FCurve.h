@@ -11,7 +11,7 @@
 
 namespace base
 {
-	BASE_DECL_SMARTPTR(FCurve);
+	BASE_DECL_SMARTPTR_STRUCT(FCurve);
 
 	struct FCurve
 	{

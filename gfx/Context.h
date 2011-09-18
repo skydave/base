@@ -10,7 +10,7 @@
 
 namespace base
 {
-	BASE_DECL_SMARTPTR(Context);
+	BASE_DECL_SMARTPTR_STRUCT(Context);
 	struct Context
 	{
 

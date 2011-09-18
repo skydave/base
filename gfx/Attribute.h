@@ -8,7 +8,7 @@
 namespace base
 {
 
-	BASE_DECL_SMARTPTR(Attribute);
+	BASE_DECL_SMARTPTR_STRUCT(Attribute);
 
 	// basicly a list manager
 	struct Attribute

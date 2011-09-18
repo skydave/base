@@ -14,7 +14,7 @@
 namespace base
 {
 
-	BASE_DECL_SMARTPTR(Shader);
+	BASE_DECL_SMARTPTR_STRUCT(Shader);
 
 	struct Shader
 	{

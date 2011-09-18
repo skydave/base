@@ -5,7 +5,7 @@
 namespace base
 {
 
-	BASE_DECL_SMARTPTR(FBO);
+	BASE_DECL_SMARTPTR_STRUCT(FBO);
 
 	struct FBO
 	{

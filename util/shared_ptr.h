@@ -2,8 +2,13 @@
 
 
 //
-#define BASE_DECL_SMARTPTR(C)\
+#define BASE_DECL_SMARTPTR_STRUCT(C)\
 	struct C;\
+	BASE_DECL_SMARTPTR_(C)
+
+//
+#define BASE_DECL_SMARTPTR(C)\
+	class C;\
 	BASE_DECL_SMARTPTR_(C)
 
 //

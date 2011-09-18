@@ -229,7 +229,7 @@ namespace base
 		return result;
 	}
 
-
+	//TODO: add uv mapping
 	GeometryPtr geo_sphere( int uSubdivisions, int vSubdivisions, float radius, math::Vec3f center, Geometry::PrimitiveType primType )
 	{
 		GeometryPtr result = GeometryPtr(new Geometry(primType));

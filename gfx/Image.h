@@ -12,7 +12,7 @@
 namespace base
 {
 
-	BASE_DECL_SMARTPTR(Image);
+	BASE_DECL_SMARTPTR_STRUCT(Image);
 	struct Image
 	{
 		Image();

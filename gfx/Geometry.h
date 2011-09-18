@@ -25,7 +25,7 @@ struct Shader;
 namespace base
 {
 
-	BASE_DECL_SMARTPTR(Geometry);
+	BASE_DECL_SMARTPTR_STRUCT(Geometry);
 
 	struct Geometry
 	{

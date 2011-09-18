@@ -6,7 +6,7 @@
 
 namespace base
 {
-	BASE_DECL_SMARTPTR(Texture1d);
+	BASE_DECL_SMARTPTR_STRUCT(Texture1d);
 
 	struct Texture1d
 	{
@@ -30,7 +30,7 @@ namespace base
 		static Texture1dPtr createRGBAFloat32( int xres = 64 );
 	};
 
-	BASE_DECL_SMARTPTR(Texture2d);
+	BASE_DECL_SMARTPTR_STRUCT(Texture2d);
 
 	struct Texture2d
 	{
@@ -61,7 +61,7 @@ namespace base
 
 
 
-	BASE_DECL_SMARTPTR(Texture3d);
+	BASE_DECL_SMARTPTR_STRUCT(Texture3d);
 
 	struct Texture3d
 	{
@@ -86,7 +86,7 @@ namespace base
 	};
 
 
-	BASE_DECL_SMARTPTR(TextureCube);
+	BASE_DECL_SMARTPTR_STRUCT(TextureCube);
 
 	struct TextureCube
 	{
