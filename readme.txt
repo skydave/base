@@ -26,10 +26,10 @@ concept
 ->status connect( src, dst ) // appends src to inputs of dst
 
 
-stage1:
-SphereOp to create a Mesh
-Mesh::getGeometry() to turn it into a renderable
-and render it
+DONE: stage1:
+DONE: SphereOp to create a Mesh
+DONE: Mesh::getGeometry() to turn it into a renderable
+DONE: and render it
 
 stage2:
 RenderOp (group)
