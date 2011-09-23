@@ -27,6 +27,9 @@ namespace base
 {
 	//smart pointers
 	using std::tr1::shared_ptr;
+
+	using std::tr1::dynamic_pointer_cast;
+
 /*
 	//shared-pointer-from-this
 	using boost::enable_shared_from_this;

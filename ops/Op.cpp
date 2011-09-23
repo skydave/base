@@ -34,7 +34,7 @@ namespace base
 			validate();
 			if( outputIndex >= m_outputs.size() )
 				return MeshPtr();
-			return std::dynamic_pointer_cast<Mesh>(m_outputs[outputIndex]);
+			return base::dynamic_pointer_cast<Mesh>(m_outputs[outputIndex]);
 		}
 	}
 }

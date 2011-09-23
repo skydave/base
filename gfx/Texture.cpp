@@ -121,6 +121,18 @@ namespace base
 		return result;
 	}
 
+	int Texture2d::width()
+	{
+		return m_xres;
+	}
+
+
+	int Texture2d::height()
+	{
+		return m_yres;
+	}
+
+
 	Texture2dPtr Texture2d::createRGBA8( int xres, int yres )
 	{
 		return Texture2d::create( GL_RGBA8, xres, yres );

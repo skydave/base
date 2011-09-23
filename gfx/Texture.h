@@ -37,6 +37,9 @@ namespace base
 		Texture2d();
 		~Texture2d();
 
+		int                                                   width();
+		int                                                  height();
+
 		void uploadRGBA8( int xres, int yres, unsigned char *pixels );
 		void   uploadRGBAFloat32( int xres, int yres, float *pixels );
 		void       uploadFloat32( int xres, int yres, float *pixels );
