@@ -77,6 +77,15 @@ namespace base
 		return m_orbitNavigator.m_camera;
 	}
 
+	void GLViewer::setView( math::Vec3f lookat, float distance, float azimuth, float elevation )
+	{
+		m_orbitNavigator.m_lookAt = lookat;
+		m_orbitNavigator.m_distance = distance;
+		m_orbitNavigator.m_azimuth = azimuth;
+		m_orbitNavigator.m_elevation = elevation;
+		m_orbitNavigator.update();
+	}
+
 
 }
 

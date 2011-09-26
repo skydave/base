@@ -31,6 +31,13 @@ namespace math
 	//
 	//
 	//
+	Vec3f::Vec3f( const float &xyz ) : x(xyz), y(xyz), z(xyz)
+	{
+	}
+
+	//
+	//
+	//
 	Vec3f::~Vec3f( )
 	{
 	}

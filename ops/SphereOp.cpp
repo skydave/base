@@ -12,8 +12,9 @@ namespace base
 	namespace ops
 	{
 
-		SphereOp::SphereOp() : Op()
+		SphereOp::SphereOp( float radius ) : Op()
 		{
+			m_radius = radius;
 		}
 
 		SphereOp::~SphereOp()
@@ -24,12 +25,12 @@ namespace base
 		void SphereOp::execute()
 		{
 			if( m_outputs.size() != 1 )
-				m_outputs.push_back( Mesh::sphere() );
+				m_outputs.push_back( Mesh::sphere(m_radius) );
 		}
 
-		SphereOpPtr SphereOp::create()
+		SphereOpPtr SphereOp::create( float radius )
 		{
-			return SphereOpPtr( new SphereOp() );
+			return SphereOpPtr( new SphereOp(radius) );
 		}
 
 	}

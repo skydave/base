@@ -17,6 +17,7 @@ namespace math
 	public:
         Vec3f( );
         Vec3f( const float &x, const float &y, const float &z );
+		Vec3f( const float &xyz );
 
 		~Vec3f( );
 

@@ -15,8 +15,9 @@ namespace base
 		typedef void (*RenderCallback)( CameraPtr );
 		GLViewer( int width, int height, std::string caption, RenderCallback renderCallback = 0 );
 
-		virtual void paintGL();
-		CameraPtr  getCamera();
+		virtual void                                                                   paintGL();
+		CameraPtr                                                                     getCamera();
+		void        setView( math::Vec3f lookat, float distance, float azimuth, float elevation );
 
 
 	private:

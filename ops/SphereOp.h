@@ -15,13 +15,15 @@ namespace base
 		class SphereOp : public Op
 		{
 		public:
-			SphereOp();
+			SphereOp( float radius = 1.0f );
 			virtual ~SphereOp();
 
 			virtual void                             execute(); // creates a sphere mesh
 
-			static SphereOpPtr create();
+			static SphereOpPtr create( float radius = 1.0f );
 		private:
+
+			float m_radius;
 
 
 		};
