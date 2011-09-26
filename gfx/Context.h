@@ -16,6 +16,8 @@ namespace base
 
 		Context();
 
+		static ContextPtr                                                                              current(); // returns current context
+
 
 		//
 		// transform matrix management
@@ -74,5 +76,6 @@ namespace base
 		//Attribute *viewProjectionMatrixAttribute;
 		//Attribute *transformMatrixAttribute;
 		*/
+	private:
 	};
 }
