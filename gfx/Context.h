@@ -51,11 +51,7 @@ namespace base
 		GeometryPtr                         m_screenQuad;
 
 		/*
-		void popCamera();
 
-
-		//void pushModelMatrix( math::Matrix44f modelMatrix = math::Matrix44f::Identity() );
-		//void popModelMatrix();
 
 		void updateModelViewProjection();
 		void updateModelViewMatrixInverseTranspose();
