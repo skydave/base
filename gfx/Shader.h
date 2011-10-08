@@ -26,6 +26,8 @@ namespace base
 			ShaderLoader attach( int shaderType, Path src );
 			ShaderLoader attachPS( const std::string &src);
 			ShaderLoader attachVS( const std::string &src);
+			ShaderLoader attachPS( Path src);
+			ShaderLoader attachVS( Path src);
 			ShaderLoader attachPS( const char *src, const int &srcSize );
 			ShaderLoader attachVS( const char *src, const int &srcSize );
 

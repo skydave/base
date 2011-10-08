@@ -37,6 +37,15 @@ namespace base
 		return *this;
 	}
 
+	Shader::ShaderLoader Shader::ShaderLoader::attachPS( Path src )
+	{
+		return attach( GL_FRAGMENT_SHADER_ARB, src );
+	}
+
+	Shader::ShaderLoader Shader::ShaderLoader::attachVS( Path src )
+	{
+		return attach( GL_VERTEX_SHADER_ARB, src );
+	}
 
 	Shader::ShaderLoader Shader::ShaderLoader::attachPS( const std::string &src )
 	{
