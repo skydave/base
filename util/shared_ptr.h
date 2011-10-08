@@ -30,6 +30,8 @@ namespace base
 
 	using std::tr1::dynamic_pointer_cast;
 
+	using std::tr1::enable_shared_from_this;
+
 /*
 	//shared-pointer-from-this
 	using boost::enable_shared_from_this;

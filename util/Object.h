@@ -9,9 +9,14 @@
 namespace base
 {
 	BASE_DECL_SMARTPTR(Object);
-	class Object
+	class Object : public enable_shared_from_this<Object>
 	{
 	public:
-		virtual ~Object();
+		Object() : enable_shared_from_this<Object>()
+		{
+		}
+		virtual ~Object()
+		{
+		}
 	};
 }

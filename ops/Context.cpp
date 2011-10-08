@@ -33,7 +33,7 @@ namespace base
 		float Context::time()
 		{
 			if( m_time.empty() )
-				return context->getUniform("time")->get<float>(0);
+				return 0.0f;
 			return m_time.top();
 		}
 

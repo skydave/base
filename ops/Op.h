@@ -14,7 +14,7 @@ namespace base
 	namespace ops
 	{
 		BASE_DECL_SMARTPTR(Op);
-		class Op
+		class Op : public Object
 		{
 		public:
 			Op();                                               // constructor
@@ -22,14 +22,21 @@ namespace base
 			virtual void                                                                                 execute(); // computes m_outputs
 
 			void                                                                               plug( OpPtr other ); // connects this operator as an input to the other operator
+			void                                                 plug( OpPtr other, const std::string &inputName ); // connects this operator as an input to the other operator
 
+			void                                                                           addInput( OpPtr other ); //
+			void                                             setInput( OpPtr other, const std::string &inputName ); //
 			bool                                                          hasInput( const std::string &inputName ); // returns true if an operator has been associated with the specified input
 			OpPtr                                                         getInput( const std::string &inputName ); // returns the op which has been plugged to the specified name or invalid OpPtr if name does not exist
+
+			ObjectPtr                                                                       getOutput( int index );
 
 
 
 			MeshPtr                                                                     getMesh( int outputIndex );
 			void                                       get( const std::string &inputName, math::Matrix44f &value );
+			void                                           get( const std::string &inputName, math::Vec3f &value );
+			void                                                 get( const std::string &inputName, float &value );
 		protected:
 			typedef std::list<OpPtr>                                                                        OpList;
 			typedef std::map<std::string, OpPtr>                                                             OpMap;
