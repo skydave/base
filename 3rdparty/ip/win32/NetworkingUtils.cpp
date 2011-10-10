@@ -38,6 +38,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#pragma message("     _Adding library: ws2_32.lib" ) 
+#pragma comment( lib, "ws2_32.lib" )
+
 
 static LONG initCount_ = 0;
 static bool winsockInitialized_ = false;

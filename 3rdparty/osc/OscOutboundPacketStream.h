@@ -97,8 +97,8 @@ public:
     OutboundPacketStream& operator<<( int32 rhs );
 
 #ifndef __x86_64__
-    OutboundPacketStream& operator<<( int rhs )
-            { *this << (int32)rhs; return *this; }
+    //OutboundPacketStream& operator<<( int rhs )
+   //         { *this << (int32)rhs; return *this; }
 #endif
 
     OutboundPacketStream& operator<<( float rhs );
