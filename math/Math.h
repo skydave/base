@@ -173,6 +173,8 @@ inline void dotProduct( float &result, const Vec3f &lhs, const Vec3f &rhs )
 	result = (lhs.x*rhs.x + lhs.y*rhs.y + lhs.z*rhs.z);
 }
 
+
+
 inline Vec3f crossProduct( const Vec3f &lhs, const Vec3f &rhs )
 {
 	return Vec3f( lhs.y*rhs.z - lhs.z*rhs.y,
@@ -187,6 +189,13 @@ inline void crossProduct( Vec3f &result, const Vec3f &lhs, const Vec3f &rhs )
 	result.z = lhs.x*rhs.y - lhs.y*rhs.x;
 }
 
+// For a given incident vector I and surface normal N reflect returns the reflection direction calculated as I - 2.0 * dot(N, I) * N. N should be normalized in order to achieve the desired result.
+inline Vec3f reflect( const math::Vec3f &i, const math::Vec3f &n )
+{
+	return i - 2.0f*dotProduct(n,i)*n;
+}
+
+
 inline double dotProduct( const math::Vec3d &vec1, const math::Vec3d &vec2 )
 {
 	return vec1.x*vec2.x+vec1.y*vec2.y+vec1.z*vec2.z;
@@ -198,6 +207,7 @@ inline math::Vec3d crossProduct( const math::Vec3d &lhs, const math::Vec3d &rhs 
 			  lhs.z*rhs.x - lhs.x*rhs.z,
 			  lhs.x*rhs.y - lhs.y*rhs.x );
 }
+
 
 
 //
