@@ -1,3 +1,4 @@
+#ifdef _WINDOWS
 /*
  * Interface for dynamically loading directsound and providing a dummy
  * implementation if it isn't present.
@@ -222,3 +223,5 @@ void PaWinDs_TerminateDSoundEntryPoints(void)
         paWinDsDSoundEntryPoints.hInstance_ = NULL;
     }
 }
+
+#endif // _WINDOWS

@@ -1,3 +1,4 @@
+#ifdef linux
 #ifndef PA_LINUX_ALSA_H
 #define PA_LINUX_ALSA_H
 
@@ -105,3 +106,5 @@ void PaAlsa_SetLibraryPathName( const char *pathName );
 #endif
 
 #endif
+
+#endif //linux

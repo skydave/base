@@ -1,3 +1,4 @@
+#ifdef _WINDOWS
 /*
  * $Id: pa_win_util.c 1584 2011-02-02 18:58:17Z rossb $
  * Portable Audio I/O Library
@@ -151,3 +152,5 @@ double PaUtil_GetTime( void )
 #endif                
     }
 }
+
+#endif // _WINDOWS

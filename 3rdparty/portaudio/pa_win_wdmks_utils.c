@@ -1,3 +1,4 @@
+#ifdef _WINDOWS
 /*
  * PortAudio Portable Real-Time Audio Library
  * Windows WDM KS utilities
@@ -295,3 +296,5 @@ int PaWin_WDMKS_QueryFilterMaximumChannelCount( void *wcharDevicePath, int isInp
     CloseHandle( deviceHandle );
     return result;
 }
+
+#endif //_WINDOWS

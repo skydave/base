@@ -1,10 +1,12 @@
-#ifdef _WINDOWS
+#ifdef linux
+
+
 /*
- * $Id: pa_win_hostapis.c 1728 2011-08-18 03:31:51Z rossb $
- * Portable Audio I/O Library Windows initialization table
+ * $Id: pa_unix_hostapis.c 1740 2011-08-25 07:17:48Z philburk $
+ * Portable Audio I/O Library UNIX initialization table
  *
  * Based on the Open Source API proposed by Ross Bencina
- * Copyright (c) 1999-2008 Ross Bencina, Phil Burk
+ * Copyright (c) 1999-2002 Ross Bencina, Phil Burk
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files
@@ -38,68 +40,69 @@
  */
 
 /** @file
- @ingroup win_src
-
-    @brief Win32 host API initialization function table.
+ @ingroup unix_src
 */
-
-/* This is needed to make this source file depend on CMake option changes
-   and at the same time make it transparent for clients not using CMake.
-*/
-#ifdef PORTAUDIO_CMAKE_GENERATED
-#include "options_cmake.h"
-#endif
 
 #include "pa_hostapi.h"
 
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
+PaError PaJack_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
+PaError PaAlsa_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
+PaError PaOSS_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
+/* Added for IRIX, Pieter, oct 2, 2003: */
+PaError PaSGI_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
+/* Linux AudioScience HPI */
+PaError PaAsiHpi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
+PaError PaMacCore_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
 PaError PaSkeleton_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
-PaError PaWinMme_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
-PaError PaWinDs_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
-PaError PaAsio_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
-PaError PaWinWdm_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
-PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
+/** Note that on Linux, ALSA is placed before OSS so that the former is preferred over the latter.
+ */
 
 PaUtilHostApiInitializer *paHostApiInitializers[] =
     {
+#ifdef __linux__
 
-#if PA_USE_WMME
-        PaWinMme_Initialize,
+#if PA_USE_ALSA
+        PaAlsa_Initialize,
 #endif
 
-#if PA_USE_DS
-        PaWinDs_Initialize,
+#if PA_USE_OSS
+        PaOSS_Initialize,
 #endif
 
-#if PA_USE_ASIO
-        PaAsio_Initialize,
+#else   /* __linux__ */
+
+#if PA_USE_OSS
+        PaOSS_Initialize,
 #endif
 
-#if PA_USE_WASAPI
-		PaWasapi_Initialize,
+#if PA_USE_ALSA
+        PaAlsa_Initialize,
 #endif
 
-#if PA_USE_WDMKS
-        PaWinWdm_Initialize,
+#endif  /* __linux__ */
+
+#if PA_USE_JACK
+        PaJack_Initialize,
+#endif
+                    /* Added for IRIX, Pieter, oct 2, 2003: */
+#if PA_USE_SGI 
+        PaSGI_Initialize,
+#endif
+
+#if PA_USE_ASIHPI
+        PaAsiHpi_Initialize,
+#endif
+
+#if PA_USE_COREAUDIO
+        PaMacCore_Initialize,
 #endif
 
 #if PA_USE_SKELETON
-        PaSkeleton_Initialize, /* just for testing. last in list so it isn't marked as default. */
+        PaSkeleton_Initialize,
 #endif
 
         0   /* NULL terminated array */
     };
 
-
-
-#endif //_WINDOWS
+#endif // linux

@@ -1,3 +1,4 @@
+#ifdef _WINDOWS
 /*
  * Microsoft COM initialization routines
  * Copyright (c) 1999-2011 Ross Bencina, Dmitry Kostjuchenko
@@ -142,3 +143,5 @@ void PaWinUtil_CoUninitialize( PaHostApiTypeId hostApiType, PaWinUtilComInitiali
 		}
     }
 }
+
+#endif // _WINDOWS

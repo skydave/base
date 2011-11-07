@@ -1,5 +1,5 @@
 
-#include "3rdparty\stblib\stb_vorbis.h"
+#include "stb_vorbis.h"
 
 #ifndef STB_VORBIS_HEADER_ONLY
 
