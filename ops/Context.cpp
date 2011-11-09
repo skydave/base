@@ -12,54 +12,33 @@ namespace base
 	namespace ops
 	{
 
-		std::stack<float>       Context::m_time;
-		std::stack<CameraPtr> Context::m_camera;
+		float          Context::m_time;
+		CameraPtr    Context::m_camera;
 
-		// pushes a new time onto the stack
-		void Context::pushTime( float time )
+		// sets time
+		void Context::setTime( float time )
 		{
-			m_time.push( time );
+			m_time = time;
 		}
 
-		// removes time from the time stack
-		float Context::popTime()
-		{
-			float t = time();
-			m_time.pop();
-			return t;
-		}
-
-		// returns current time, if stack is empty it will return base::Context::getUniform("time")
+		// returns current time
 		float Context::time()
 		{
-			if( m_time.empty() )
-				return 0.0f;
-			return m_time.top();
+			return m_time;
 		}
 
 
 		
-		void Context::pushCamera( CameraPtr camera )
+		void Context::setCamera( CameraPtr camera )
 		{
-			m_camera.push( camera );
-			context->setView( camera->m_viewMatrix, camera->m_transform, camera->m_projectionMatrix );
-		}
-
-		CameraPtr Context::popCamera()
-		{
-			CameraPtr c = camera();
-			m_camera.pop();
-			CameraPtr current = camera();
-			if( current )
-				context->setView( current->m_viewMatrix, current->m_transform, current->m_projectionMatrix );
-			return c;
+			m_camera = camera;
+			if(m_camera)
+				context->setView( camera->m_viewMatrix, camera->m_transform, camera->m_projectionMatrix );
 		}
 
 		CameraPtr Context::camera()
 		{
-			if( m_camera.empty() )
-				return CameraPtr();
-			return m_camera.top();
+			return m_camera;
 		}
 	}
 }
