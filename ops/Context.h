@@ -3,6 +3,7 @@
 
 #include <stack>
 #include <gfx/Camera.h>
+#include <gfx/Context.h>
 
 
 
@@ -17,6 +18,9 @@ namespace base
 		class Context
 		{
 		public:
+			static base::ContextPtr                      context();
+			static     void setContext( base::ContextPtr context );
+
 			// timing info
 			static float                                    time(); // returns current time
 			static void                      setTime( float time ); // sets current time
@@ -31,6 +35,7 @@ namespace base
 		private:
 			static float                                    m_time;
 			static CameraPtr                              m_camera;
+			static base::ContextPtr                      m_context; // I dont like the idea of merging the low level gfx stuff with the ops - so there we are
 		};
 	}
 }

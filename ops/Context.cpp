@@ -4,16 +4,25 @@
 #include <gfx/Context.h>
 
 
-extern base::ContextPtr context;
-
 
 namespace base
 {
 	namespace ops
 	{
 
-		float          Context::m_time;
-		CameraPtr    Context::m_camera;
+		float                        Context::m_time;
+		CameraPtr                  Context::m_camera;
+		base::ContextPtr          Context::m_context;
+
+		void Context::setContext( base::ContextPtr context )
+		{
+			m_context = context;
+		}
+
+		base::ContextPtr Context::context()
+		{
+			return m_context;
+		}
 
 		// sets time
 		void Context::setTime( float time )
@@ -33,7 +42,7 @@ namespace base
 		{
 			m_camera = camera;
 			if(m_camera)
-				context->setView( camera->m_viewMatrix, camera->m_transform, camera->m_projectionMatrix );
+				m_context->setView( camera->m_viewMatrix, camera->m_transform, camera->m_projectionMatrix );
 		}
 
 		CameraPtr Context::camera()
