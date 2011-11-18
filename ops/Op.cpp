@@ -20,18 +20,27 @@ namespace base
 		// connects this operator as an input to the other operator
 		void Op::plug( OpPtr other )
 		{
-			other->addInput( dynamic_pointer_cast<Op>(shared_from_this()) );
+			//other->addInput( dynamic_pointer_cast<Op>(shared_from_this()) );
+			plugLast(other);
 		}
+
+		// connects this operator as an input to the other operator
+		void Op::plugFirst( OpPtr other )
+		{
+			other->m_opList.push_front( dynamic_pointer_cast<Op>(shared_from_this()) );
+		}
+
+		// connects this operator as an input to the other operator
+		void Op::plugLast( OpPtr other )
+		{
+			other->m_opList.push_back( dynamic_pointer_cast<Op>(shared_from_this()) );
+		}
+
 
 		// connects this operator as an input to the other operator
 		void Op::plug( OpPtr other, const std::string &inputName )
 		{
 			other->setInput( dynamic_pointer_cast<Op>(shared_from_this()), inputName );
-		}
-
-		void Op::addInput( OpPtr other )
-		{
-			m_opList.push_back( other );
 		}
 
 		//

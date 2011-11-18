@@ -7,7 +7,7 @@ namespace base
 	{
 		m_znear = 0.1f;
 		m_zfar  = 1000.0f;
-		m_focalLength = 10.0;
+		m_focalLength = 10.0; // ? this should be derived from m_fov
 		m_fov   = 45.0f;
 		m_aspectRatio = 1.333f;
 		m_transform = math::Matrix44f::Identity();

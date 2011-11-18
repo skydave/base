@@ -5,6 +5,7 @@
 #include "Attribute.h"
 #include "Shader.h"
 #include "Geometry.h"
+#include "Camera.h"
 
 
 
@@ -16,23 +17,17 @@ namespace base
 
 		Context();
 
-		static ContextPtr                                                                              current(); // returns current context
+		static ContextPtr                                                  current(); // returns current context
 
 
-		//
-		// transform matrix management
-		//
-		void setView( const math::Matrix44f &view, const math::Matrix44f &viewinv, const math::Matrix44f &proj );
+		// timing info
+		float                                                                 time(); // returns current time
+		void                                                   setTime( float time ); // sets current time
 
-		math::Matrix44f           m_modelMatrix; // object to world
-		math::Matrix44f     m_viewInverseMatrix; // world to camera
-		math::Matrix44f            m_viewMatrix; // camera to world
-		math::Matrix44f      m_projectionMatrix; // camera to view
+		// viewport info
+		CameraPtr                                                           camera();
+		void                                           setCamera( CameraPtr camera );
 
-
-		AttributePtr    m_mvpmAttr; // model view projection matrix (world to screen)
-		AttributePtr   m_vminvAttr; // view matrix inverse (camera to world)
-		AttributePtr m_mvminvtAttr; // model view matrix inverse transpose (model view matrix without scaling/shearing) used to transform vectors
 
 		//
 		// global uniform manangement
@@ -46,32 +41,27 @@ namespace base
 		// rendering
 		//
 		void render( GeometryPtr geo, ShaderPtr shader );
-		void renderScreen( ShaderPtr shader );
+		void            renderScreen( ShaderPtr shader );
 
 		GeometryPtr                         m_screenQuad;
 
-		/*
-
-
-		void updateModelViewProjection();
-		void updateModelViewMatrixInverseTranspose();
-
-
-
-		math::Matrix44f m_modelMatrix;
-		math::Matrix44f m_viewMatrix;
-		math::Matrix44f m_viewInverseMatrix;
-		math::Matrix44f m_projectionMatrix;
-
-
-
-
-
-		//Attribute *projectionMatrixAttribute;
-		//Attribute *viewMatrixAttribute;
-		//Attribute *viewProjectionMatrixAttribute;
-		//Attribute *transformMatrixAttribute;
-		*/
 	private:
+		// view =======================
+		void setView( const math::Matrix44f &view, const math::Matrix44f &viewinv, const math::Matrix44f &proj );
+
+		math::Matrix44f                                    m_modelMatrix; // object to world
+		math::Matrix44f                              m_viewInverseMatrix; // world to camera
+		math::Matrix44f                                     m_viewMatrix; // camera to world
+		math::Matrix44f                               m_projectionMatrix; // camera to view
+
+
+		AttributePtr                                          m_mvpmAttr; // model view projection matrix (world to screen)
+		AttributePtr                                         m_vminvAttr; // view matrix inverse (camera to world)
+		AttributePtr                                       m_mvminvtAttr; // model view matrix inverse transpose (model view matrix without scaling/shearing) used to transform vectors
+
+		CameraPtr                                               m_camera;
+
+		// time =========================
+		float                                    m_time;
 	};
 }

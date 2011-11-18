@@ -22,9 +22,10 @@ namespace base
 			virtual void                                                                                 execute(); // computes m_outputs
 
 			void                                                                               plug( OpPtr other ); // connects this operator as an input to the other operator
+			void                                                                          plugFirst( OpPtr other ); // connects this operator as an input to the other operator
+			void                                                                           plugLast( OpPtr other ); // connects this operator as an input to the other operator
 			void                                                 plug( OpPtr other, const std::string &inputName ); // connects this operator as an input to the other operator
 
-			void                                                                           addInput( OpPtr other ); //
 			void                                             setInput( OpPtr other, const std::string &inputName ); //
 			bool                                                          hasInput( const std::string &inputName ); // returns true if an operator has been associated with the specified input
 			OpPtr                                                         getInput( const std::string &inputName ); // returns the op which has been plugged to the specified name or invalid OpPtr if name does not exist

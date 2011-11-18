@@ -60,6 +60,31 @@ namespace base
 		return ContextPtr();
 	}
 
+	// sets time
+	void Context::setTime( float time )
+	{
+		m_time = time;
+	}
+
+	// returns current time
+	float Context::time()
+	{
+		return m_time;
+	}
+
+
+
+	void Context::setCamera( CameraPtr camera )
+	{
+		m_camera = camera;
+		if(m_camera)
+			setView( camera->m_viewMatrix, camera->m_transform, camera->m_projectionMatrix );
+	}
+
+	CameraPtr Context::camera()
+	{
+		return m_camera;
+	}
 
 	void Context::setView( const math::Matrix44f &view, const math::Matrix44f &viewInv, const math::Matrix44f &proj )
 	{

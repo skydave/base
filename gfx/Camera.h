@@ -15,7 +15,7 @@ namespace base
 
 
 		float                                           m_znear;
-		float                                     m_focalLength; // used for dof
+		float                                     m_focalLength; // used for dof - TODO: infer from fov
 		float                                            m_zfar;
 		float                                             m_fov;
 		float                                     m_aspectRatio;
