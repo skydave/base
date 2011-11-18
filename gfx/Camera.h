@@ -17,7 +17,7 @@ namespace base
 		float                                           m_znear;
 		float                                     m_focalLength; // used for dof - TODO: infer from fov
 		float                                            m_zfar;
-		float                                             m_fov;
+		float                                             m_fov; // in radians
 		float                                     m_aspectRatio;
 
 		math::Matrix44f                      m_projectionMatrix;
