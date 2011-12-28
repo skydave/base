@@ -28,6 +28,13 @@ namespace base
 		m_mvminvtAttr = Attribute::createMat33();
 		m_mvminvtAttr->appendElement( math::Matrix33f::Identity() );
 
+		m_mmAttr = Attribute::createMat44();
+		m_mmAttr->appendElement( math::Matrix44f::Identity() );
+
+
+		m_vmAttr = Attribute::createMat44();
+		m_vmAttr->appendElement( math::Matrix44f::Identity() );
+
 		// view matrix inverse (camera transform)
 		m_vminvAttr = Attribute::createMat44();
 		m_vminvAttr->appendElement( math::Matrix44f::Identity() );
@@ -40,6 +47,8 @@ namespace base
 		m_globalUniforms.insert( std::make_pair( "mvpm", m_mvpmAttr ) );
 		m_globalUniforms.insert( std::make_pair( "mvminvt", m_mvminvtAttr ) );
 		m_globalUniforms.insert( std::make_pair( "vminv", m_vminvAttr ) );
+		m_globalUniforms.insert( std::make_pair( "vm", m_vmAttr ) );
+		m_globalUniforms.insert( std::make_pair( "mm", m_mmAttr ) );
 		////Shader::setGlobalUniform( "vm", cam->viewMatrixAttribute ); // view matrix
 		//Shader::setGlobalUniform( "vminv", cam->transformMatrixAttribute ); // inverse view matrix (camera world transform)
 		//Shader::setGlobalUniform( "mm", mmAttr ); // model matrix (object to world transform)
@@ -89,6 +98,8 @@ namespace base
 	void Context::setView( const math::Matrix44f &view, const math::Matrix44f &viewInv, const math::Matrix44f &proj )
 	{
 		m_viewMatrix = view;
+		m_vmAttr->set( 0, m_viewMatrix );
+
 		m_projectionMatrix = proj;
 
 		// update camera transform
@@ -122,6 +133,8 @@ namespace base
 	void Context::setModelMatrix( const math::Matrix44f &modelMatrix )
 	{
 		m_modelMatrix = modelMatrix;
+		m_mmAttr->set( 0, m_modelMatrix );
+
 		// updateModelViewProjection
 		m_modelViewProjectionMatrix = m_modelMatrix * m_viewMatrix * m_projectionMatrix;
 		m_mvpmAttr->set( 0, m_modelViewProjectionMatrix );
@@ -157,8 +170,10 @@ namespace base
 	}
 	void Context::setTransformState( const math::Matrix44f &modelMatrix, const math::Matrix44f &viewMatrix, math::Matrix44f &projectionMatrix, const math::Matrix44f &modelViewProjectionMatrix, const math::Matrix44f &viewInverseMatrix, const math::Matrix33f &modelViewInverseTranspose )
 	{
-		m_modelMatrix = modelMatrix; // object to world
+		m_modelMatrix = modelMatrix; // model/object to world
+		m_mmAttr->set( 0, m_modelMatrix );
 		m_viewMatrix = viewMatrix; // camera to world
+		m_vmAttr->set( 0, m_viewMatrix );
 		m_projectionMatrix = projectionMatrix; // camera to view
 		m_modelViewProjectionMatrix = modelViewProjectionMatrix; // model view projection matrix (world to screen)
 		m_mvpmAttr->set( 0, m_modelViewProjectionMatrix );
