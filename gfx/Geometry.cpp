@@ -370,9 +370,21 @@ namespace base
 	}
 
 
+	//
+	// removes all attributes and primitives
+	//
+	void Geometry::clear()
+	{
+		//for( int i=0; i<GEO_ATTRIBUTEHASH_COUNT;++i )m_attributes[i] = 0;
+		for( std::map< std::string, AttributePtr >::iterator it = m_attributes.begin(); it != m_attributes.end(); ++it )
+			it->second->clear();
+
+		m_indexBuffer.clear();
+		m_numPrimitives = 0;
+		m_indexBufferIsDirty = true;
+	}
 
 }
-
 
 
 
@@ -449,15 +461,7 @@ void Geometry::render( Shader *shader )
 		getPAttr()->unbindAsAttribute(ATTR_P);
 }
 
-//
-// removes all attributes and primitives
-//
-void Geometry::clear()
-{
-	for( int i=0; i<GEO_ATTRIBUTEHASH_COUNT;++i )m_attributes[i] = 0;
-	m_indexBuffer.clear();
-	resetPrimitiveType( GL_POINTS );
-}
+
 
 
 //

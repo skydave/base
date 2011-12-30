@@ -41,7 +41,7 @@ namespace base
 
 
 		//virtual void render( Shader *shader = 0 );
-		//void clear(); // removes all attributes and primitives
+		void clear(); // removes all attributes and primitives
 		//Geometry *copy();
 
 

@@ -58,6 +58,7 @@ namespace base
 		{
 			m_data.clear();
 			m_numElements = 0;
+			m_isDirty = true;
 		}
 
 		void resize( int numElements )
