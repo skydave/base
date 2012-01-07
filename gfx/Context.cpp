@@ -6,6 +6,7 @@
 
 namespace base
 {
+	ContextPtr Context::m_currentContext = ContextPtr();
 
 	Context::Context()
 	{
@@ -58,15 +59,18 @@ namespace base
 		m_screenQuad = geo_quad();
 
 
-		// TODO: if no context has been made current, we set this
-		//if( !m_current )
-		//	m_current = m_current
 	}
 
 	// TODO: returns current context
 	ContextPtr Context::current()
 	{
-		return ContextPtr();
+		return m_currentContext;
+	}
+
+	// sets current context
+	void Context::setCurrentContext( ContextPtr context )
+	{
+		m_currentContext = context;
 	}
 
 	// sets time

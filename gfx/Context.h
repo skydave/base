@@ -23,6 +23,7 @@ namespace base
 		Context();
 
 		static ContextPtr                                                  current(); // returns current context
+		static void                          setCurrentContext( ContextPtr context ); // sets current context
 
 
 		// timing info
@@ -84,5 +85,8 @@ namespace base
 
 		// time =========================
 		float                                                                                             m_time;
+
+		// misc =========================
+		static ContextPtr                                                                       m_currentContext;
 	};
 }
