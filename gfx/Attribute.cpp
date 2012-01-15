@@ -1,6 +1,7 @@
 #include "Attribute.h"
 
 #include <gltools/gl.h>
+#include <iostream>
 
 namespace base
 {
