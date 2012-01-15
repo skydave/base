@@ -16,23 +16,19 @@ namespace base
 
 	Shader::ShaderLoader Shader::ShaderLoader::attach( int shaderType, const std::string &src)
 	{
-		GLhandleARB s = glCreateShader(shaderType);
-		const char* vsSrcList[1];
-		vsSrcList[0] = src.c_str();
-		int length = (int) src.size();
-		glShaderSource(s, 1, (const GLchar **)&vsSrcList, &length);
-		glCompileShader(s);
-
-		glAttachShader(m_shader->m_glProgram, s);
+		Shader::ShaderObject &so = m_shader->createShaderObject();
+		so.init(shaderType);
+		so.compile(src);
+		glAttachShader(m_shader->m_glProgram, so.m_id);
 
 		return *this;
 	}
 
-	Shader::ShaderLoader Shader::ShaderLoader::attach( int shaderType, Path src )
+	Shader::ShaderLoader Shader::ShaderLoader::attach( int shaderType, Path srcFile )
 	{
 		Shader::ShaderObject &so = m_shader->createShaderObject();
 		so.init(shaderType);
-		so.compile(src);
+		so.compile(srcFile);
 		glAttachShader(m_shader->m_glProgram, so.m_id);
 		return *this;
 	}
@@ -97,16 +93,14 @@ namespace base
 		m_id = glCreateShader(m_shaderType);
 	}
 
-	bool Shader::ShaderObject::compile( Path source )
+	bool Shader::ShaderObject::compile( Path sourceFile )
 	{
-		m_source = source;
-
-		// get source from path
-		// TODO: use filesystem to abstract away fileaccess
+		m_source = sourceFile;
 
 		// read vertex shader file content
+		// TODO: use filesystem to abstract away fileaccess
 		std::string src;
-		std::ifstream file(source.c_str() );
+		std::ifstream file(m_source.c_str() );
 		if (file.is_open())
 		{
 			std::stringstream buffer;
@@ -115,6 +109,11 @@ namespace base
 			file.close();
 		}
 
+		return compile(src);
+	}
+
+	bool Shader::ShaderObject::compile( std::string src )
+	{
 		const char* vsSrcList[1];
 		vsSrcList[0] = src.c_str();
 		int length = (int) src.size();
@@ -122,13 +121,19 @@ namespace base
 
 		glCompileShader(m_id);
 
+		//TODO: error check
+
 		return true;
 	}
 
 	bool Shader::ShaderObject::reload()
 	{
-		compile(m_source);
-		return true;
+		if( m_source.IsValid() )
+		{
+			compile(m_source);
+			return true;
+		}
+		return false;
 	}
 
 	void Shader::reload()
@@ -297,30 +302,50 @@ namespace base
 
 	void Shader::setUniform( const std::string &name, float v0, float v1, float v2, float v3 )
 	{
-		AttributePtr u = Attribute::createVec4f();
-		u->appendElement<float>(v0,v1,v2,v3);
-		setUniform(name, u);
+		AttributePtr u = getUniform(name);
+		if(!u)
+		{
+			u = Attribute::createVec4f();
+			u->appendElement<float>(v0,v1,v2,v3);
+			setUniform(name, u);
+		}else
+			u->set<float>(0, v0, v1, v2, v3);
 	}
 
 	void Shader::setUniform( const std::string &name, math::Vec3f value )
 	{
-		AttributePtr u = Attribute::createVec3f();
-		u->appendElement<math::Vec3f>(value);
-		setUniform(name, u);
+		AttributePtr u = getUniform(name);
+		if(!u)
+		{
+			u = Attribute::createVec3f();
+			u->appendElement<math::Vec3f>(value);
+			setUniform(name, u);
+		}else
+			u->set<math::Vec3f>(0, value);
 	}
 
 	void Shader::setUniform( const std::string &name, float value )
 	{
-		AttributePtr u = Attribute::createFloat();
-		u->appendElement<float>(value);
-		setUniform(name, u);
+		AttributePtr u = getUniform(name);
+		if(!u)
+		{
+			u = Attribute::createFloat();
+			u->appendElement<float>(value);
+			setUniform(name, u);
+		}else
+			u->set<float>(0, value );
 	}
 
 	void Shader::setUniform( const std::string &name, int value )
 	{
-		AttributePtr u = Attribute::createInt();
-		u->appendElement<int>(value);
-		setUniform(name, u);
+		AttributePtr u = getUniform(name);
+		if(!u)
+		{
+			u = Attribute::createInt();
+			u->appendElement<int>(value);
+			setUniform(name, u);
+		}else
+			u->set<int>(0, value);
 	}
 
 	bool Shader::hasUniform( const std::string &name )

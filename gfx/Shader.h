@@ -23,7 +23,7 @@ namespace base
 			ShaderLoader( ShaderPtr shader );
 
 			ShaderLoader attach( int shaderType, const std::string &src);
-			ShaderLoader attach( int shaderType, Path src );
+			ShaderLoader attach( int shaderType, Path srcFile );
 			ShaderLoader attachPS( const std::string &src);
 			ShaderLoader attachVS( const std::string &src);
 			ShaderLoader attachPS( Path src);
@@ -38,7 +38,8 @@ namespace base
 		{
 			ShaderObject();
 			void init(int shaderType);
-			bool compile( Path source );
+			bool compile( Path sourceFile );
+			bool compile( std::string src );
 			bool reload();
 			Path m_source;
 			int m_shaderType;

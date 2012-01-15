@@ -4,6 +4,8 @@
 //#include "Shader.h"
 
 
+#include "glsl/noise.h"
+
 namespace base
 {
 	ContextPtr Context::m_currentContext = ContextPtr();
@@ -59,6 +61,8 @@ namespace base
 		m_screenQuad = geo_quad();
 
 
+		// initialize noise glsl module
+		setUniform("noise_permTexture", base::glsl::noisePermutationTableTex()->getUniform());
 	}
 
 	// TODO: returns current context
