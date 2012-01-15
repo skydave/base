@@ -93,3 +93,21 @@ float perlinnoise3d( vec3 P )
 	// We're done, return the final noise value.
 	return n_xyz;
 }
+
+
+
+
+float fbm3d( vec3 p, int octaves, float lacunarity, float gain )
+{
+	float amp = 1.0;
+	float sum = 0.0;
+	vec3 point = p;
+	for(int i = 0; i<octaves; ++i)
+	{
+		float noise = perlinnoise3d(point);
+		sum += (noise * amp);
+		amp *= gain;
+		point *= lacunarity;
+	}
+	return sum;
+}
