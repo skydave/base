@@ -2,14 +2,13 @@ varying vec4 pw;  // position in worldspace
 //varying vec3 n;
 varying vec2 uv;
 
-//uniform sampler2D color;
+uniform sampler2D color;
 
 
 void main()
 {
-	//vec3 c = texture2D(color,uv).xyz;
-	//vec3 c = vec3(0.5, 0.5, 0.1);
-	vec3 c = vec3(uv.x, uv.y, 0.1);
+	vec3 c = texture2D(color,uv).xyz;
+	//vec3 c = vec3(uv.x, uv.y, 0.1);
 	//vec3 n = vec3(0.1, 0.1, 0.1);
 	//gl_FragData[0] = vec4(n.x, n.y, n.z, 1.0);
 	//gl_FragColor = vec4(n.x, n.y, n.z, 1.0);
