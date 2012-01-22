@@ -140,8 +140,8 @@ namespace base
 
 	Texture2dPtr Texture2d::createRGBAFloat32( int xres, int yres )
 	{
-		return Texture2d::create( GL_RGBA_FLOAT32_ATI, xres, yres );
-		//return Texture2d::create( GL_RGBA32F_ARB, xres, yres );
+		//return Texture2d::create( GL_RGBA_FLOAT32_ATI, xres, yres );
+		return Texture2d::create( GL_RGBA16F_ARB, xres, yres );
 	}
 
 	Texture2dPtr Texture2d::createFloat32( int xres, int yres )
