@@ -22,21 +22,22 @@ namespace base
 
 		Context();
 
-		static ContextPtr                                                  current(); // returns current context
-		static void                          setCurrentContext( ContextPtr context ); // sets current context
+		static ContextPtr                                                                              current(); // returns current context
+		static void                                                      setCurrentContext( ContextPtr context ); // sets current context
 
 
 		// timing info
-		float                                                                 time(); // returns current time
-		void                                                   setTime( float time ); // sets current time
+		float                                                                                             time(); // returns current time
+		void                                                                               setTime( float time ); // sets current time
 
 		// transform info
-		CameraPtr                                                           camera();
-		void                                           setCamera( CameraPtr camera );
+		CameraPtr                                                                                       camera();
+		void                                                                       setCamera( CameraPtr camera );
+		void setView( const math::Matrix44f &view, const math::Matrix44f &viewinv, const math::Matrix44f &proj ); // convinience function for updating transformState from view matrices
 
-		void                    setModelMatrix( const math::Matrix44f &modelMatrix );
-		void                                                         setViewMatrix();
-		void                                                   setProjectionMatrix();
+		void                                                setModelMatrix( const math::Matrix44f &modelMatrix );
+		void                                                                                     setViewMatrix();
+		void                                                                               setProjectionMatrix();
 
 		void getTransformState( math::Matrix44f &modelMatrix, math::Matrix44f &viewMatrix, math::Matrix44f &projectionMatrix, math::Matrix44f &modelViewProjectionMatrix, math::Matrix44f &viewInverseMatrix, math::Matrix33f &modelViewInverseTranspose );
 		void setTransformState( const math::Matrix44f &modelMatrix, const math::Matrix44f &viewMatrix, math::Matrix44f &projectionMatrix, const math::Matrix44f &modelViewProjectionMatrix, const math::Matrix44f &viewInverseMatrix, const math::Matrix33f &modelViewInverseTranspose );
@@ -44,9 +45,9 @@ namespace base
 		//
 		// global uniform manangement
 		//
-		void setUniform( const std::string &name, AttributePtr uniform );
-		AttributePtr               getUniform( const std::string &name );
-		std::map<std::string, AttributePtr> m_globalUniforms;
+		void                                         setUniform( const std::string &name, AttributePtr uniform );
+		AttributePtr                                                       getUniform( const std::string &name );
+		std::map<std::string, AttributePtr>                                                     m_globalUniforms;
 
 
 		//
@@ -61,10 +62,6 @@ namespace base
 		GeometryPtr                         m_screenQuad;
 
 	private:
-		// view =======================
-		void setView( const math::Matrix44f &view, const math::Matrix44f &viewinv, const math::Matrix44f &proj ); // convinience function for updating transformState from view matrices
-
-
 		math::Matrix44f                                                                            m_modelMatrix; // object to world
 		math::Matrix44f                                                                             m_viewMatrix; // world to camera
 		math::Matrix44f                                                                       m_projectionMatrix; // camera to view
