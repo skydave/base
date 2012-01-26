@@ -28,6 +28,7 @@ namespace math
 		float                         getSquaredLength( void )const; ///< returns the un-square-rooted length of the vector 
 		void                      setLength( const float &fLength ); ///< scales the vector to the specified length
 		void                                      normalize( void ); ///< normalizes the vector
+		Vec3f                                    normalized( void ); ///< returnes normalized version if this the vector
 		void                                         negate( void ); ///< negates the vector
 
 		void                         reflect( const Vec3f &normal ); ///< reflects the vector at the given normal

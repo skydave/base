@@ -100,6 +100,17 @@ namespace math
 		}
 	}
 
+	///< returnes normalized version if this the vector
+	Vec3f Vec3f::normalized( void )
+	{
+		float length = getLength();
+
+		if( length != 0.0f )
+			return Vec3f(x/length, y/length, z/length);
+		else
+			return Vec3f(0.0f, 0.0f, 0.0f);
+	}
+
 	//
 	//
 	//
