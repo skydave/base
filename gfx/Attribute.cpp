@@ -75,6 +75,20 @@ namespace base
 								// this will be bad with higher number of uniforms in shader
 								// need more clever texture unit management
 				glUniform1iv( index, 1, &tt);
+			}else if( elementComponentType() == SAMPLER2DARRAY )
+			{
+				// get gl textureid
+				unsigned int t = (unsigned int) (*(int*)getRawPointer());
+
+				// bind texture to given texture unit (index)
+				glActiveTexture(GL_TEXTURE0+index);
+				glBindTexture(GL_TEXTURE_2D_ARRAY, t);
+
+				// now set the sampler uniform to point to the textureunit
+				int tt = index; // for now texture unit == unfiform location
+								// this will be bad with higher number of uniforms in shader
+								// need more clever texture unit management
+				glUniform1iv( index, 1, &tt);
 			}else if( elementComponentType() == SAMPLER3D )
 			{
 				// get gl textureid
@@ -146,6 +160,11 @@ namespace base
 	AttributePtr Attribute::createSampler2d()
 	{
 		return AttributePtr( new Attribute(1, Attribute::SAMPLER2D) );
+	}
+
+	AttributePtr Attribute::createSampler2dArray()
+	{
+		return AttributePtr( new Attribute(1, Attribute::SAMPLER2DARRAY) );
 	}
 
 	AttributePtr Attribute::createSampler1d()

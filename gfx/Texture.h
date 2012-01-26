@@ -56,6 +56,7 @@ namespace base
 		static Texture2dPtr createRGBA8( int xres = 64, int yres = 64 );
 		static Texture2dPtr createFloat32( int xres = 64, int yres = 64 );
 		static Texture2dPtr createRGBAFloat32( int xres = 64, int yres = 64 );
+		static Texture2dPtr createRGBAFloat16( int xres = 64, int yres = 64 );
 
 		static Texture2dPtr load( const Path &file ); // loads texture from file
 	};
@@ -88,6 +89,30 @@ namespace base
 		static Texture3dPtr createRGBAFloat32( int xres = 64, int yres = 64, int zres = 64 );
 	};
 
+	BASE_DECL_SMARTPTR_STRUCT(Texture2dArray);
+
+	struct Texture2dArray
+	{
+		Texture2dArray();
+		~Texture2dArray();
+
+		void              uploadRGBA8( int xres, int yres, int zres, unsigned char *pixels );
+		void                uploadRGBAFloat32( int xres, int yres, int zres, float *pixels );
+		void                    uploadFloat32( int xres, int yres, int zres, float *pixels );
+		AttributePtr                                                            getUniform();
+
+
+		unsigned int                                                                    m_id; // opengl handle
+		AttributePtr                                                               m_uniform; // will be used to attach textures to geometry/or shaders which then will be bound
+		int                                                           m_xres, m_yres, m_zres; // texture info just for the record
+		int                                                                  m_textureFormat; // format of texture in gpu memory
+
+		static Texture2dArrayPtr create( int textureFormat, int xres = 64, int yres = 64, int zres = 64 );
+		static Texture2dArrayPtr createRGBA8( int xres = 64, int yres = 64, int zres = 64 );
+		static Texture2dArrayPtr createFloat32( int xres = 64, int yres = 64, int zres = 64 );
+		static Texture2dArrayPtr createRGBAFloat32( int xres = 64, int yres = 64, int zres = 64 );
+		static Texture2dArrayPtr createRGBAFloat16( int xres = 64, int yres = 64, int zres = 64 );
+	};
 
 	BASE_DECL_SMARTPTR_STRUCT(TextureCube);
 

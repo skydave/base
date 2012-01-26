@@ -19,6 +19,7 @@ namespace base
 			FLOAT = 0x1406,
 			SAMPLER1D,
 			SAMPLER2D,
+			SAMPLER2DARRAY,
 			SAMPLER3D,
 			SAMPLERCUBE
 		};
@@ -112,17 +113,18 @@ namespace base
 		//
 		// static creators
 		//
-		static AttributePtr createSamplerCube();
-		static AttributePtr createSampler3d();
-		static AttributePtr createSampler2d();
-		static AttributePtr createSampler1d();
-		static AttributePtr     createMat33();
-		static AttributePtr     createMat44();
-		static AttributePtr     createVec4f();
+		static AttributePtr                    createSamplerCube();
+		static AttributePtr                      createSampler3d();
+		static AttributePtr                      createSampler2d();
+		static AttributePtr                 createSampler2dArray();
+		static AttributePtr                      createSampler1d();
+		static AttributePtr                          createMat33();
+		static AttributePtr                          createMat44();
+		static AttributePtr                          createVec4f();
 		static AttributePtr     createVec3f( int numElements = 0 );
 		static AttributePtr     createVec2f( int numElements = 0 );
-		static AttributePtr     createFloat();
-		static AttributePtr       createInt();
+		static AttributePtr                          createFloat();
+		static AttributePtr                            createInt();
 
 		//
 		// OpenGL

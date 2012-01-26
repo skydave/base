@@ -12,6 +12,7 @@ namespace base
 		FBO( int _width, int _height );
 
 		void setOutputs( Texture2dPtr out0, Texture2dPtr out1 = Texture2dPtr(), Texture2dPtr out2 = Texture2dPtr(), Texture2dPtr out3 = Texture2dPtr() );
+		void setOutputs( Texture2dArrayPtr out );
 		void setSize( int newXres, int newYres );
 		void finalize();
 

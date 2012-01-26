@@ -141,6 +141,11 @@ namespace base
 	Texture2dPtr Texture2d::createRGBAFloat32( int xres, int yres )
 	{
 		//return Texture2d::create( GL_RGBA_FLOAT32_ATI, xres, yres );
+		return Texture2d::create( GL_RGBA32F_ARB, xres, yres );
+	}
+
+	Texture2dPtr Texture2d::createRGBAFloat16( int xres, int yres )
+	{
 		return Texture2d::create( GL_RGBA16F_ARB, xres, yres );
 	}
 
@@ -339,6 +344,122 @@ namespace base
 		return m_uniform;
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+	//
+	// Texture2dArray ---------------------------------
+	//
+
+
+
+	Texture2dArrayPtr Texture2dArray::create( int textureFormat, int xres, int yres, int zres )
+	{
+		Texture2dArrayPtr result = Texture2dArrayPtr(new Texture2dArray());
+
+		result->m_xres = xres;
+		result->m_yres = yres;
+		result->m_zres = zres;
+		result->m_textureFormat = textureFormat;
+
+		glBindTexture(GL_TEXTURE_2D_ARRAY, result->m_id);
+		//glBindBuffer( GL_PIXEL_UNPACK_BUFFER, 0 );
+		//glTexImage3D(GL_TEXTURE_3D, 0, result->m_textureFormat, result->m_xres, result->m_yres, result->m_zres, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+		//glTexImage3D(GL_TEXTURE_3D, 0, result->m_textureFormat, result->m_xres, result->m_yres, result->m_zres, 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
+
+		return result;
+	}
+
+	Texture2dArrayPtr Texture2dArray::createRGBA8( int xres, int yres, int zres )
+	{
+		return Texture2dArray::create( GL_RGBA8, xres, yres, zres );
+	}
+
+	Texture2dArrayPtr Texture2dArray::createRGBAFloat32( int xres, int yres, int zres )
+	{
+		return Texture2dArray::create( GL_RGBA_FLOAT32_ATI, xres, yres, zres );
+	}
+
+	Texture2dArrayPtr Texture2dArray::createRGBAFloat16( int xres, int yres, int zres )
+	{
+		return Texture2dArray::create( GL_RGBA16F_ARB, xres, yres, zres );
+	}
+
+	Texture2dArrayPtr Texture2dArray::createFloat32( int xres, int yres, int zres )
+	{
+		return Texture2dArray::create( GL_ALPHA, xres, yres, zres );
+	}
+
+
+	Texture2dArray::Texture2dArray()
+	{
+		glGenTextures(1, &m_id);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
+
+		// when texture area is small, bilinear filter the closest mipmap
+		//glTexParameterf( GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+		glTexParameterf( GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+		// when texture area is large, bilinear filter the original
+		//glTexParameterf( GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+		glTexParameterf( GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+
+		// the texture wraps over at the edges (repeat)
+		glTexParameterf( GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+		glTexParameterf( GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+		//glTexParameterf( GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE );
+	}
+
+	Texture2dArray::~Texture2dArray()
+	{
+		glDeleteTextures(1,&m_id);
+	}
+
+
+	void Texture2dArray::uploadRGBA8( int xres, int yres, int zres, unsigned char *pixels )
+	{
+		m_xres = xres;
+		m_yres = yres;
+		m_zres = zres;
+		glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
+		glTexImage3DEXT(GL_TEXTURE_2D_ARRAY, 0, m_textureFormat, m_xres, m_yres, m_zres, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+	}
+
+	void Texture2dArray::uploadRGBAFloat32( int xres, int yres, int zres, float *pixels )
+	{
+		m_xres = xres;
+		m_yres = yres;
+		m_zres = zres;
+		glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
+		glTexImage3DEXT(GL_TEXTURE_2D_ARRAY, 0, m_textureFormat, m_xres, m_yres, m_zres, 0, GL_RGBA, GL_FLOAT, pixels);
+	}
+
+	void Texture2dArray::uploadFloat32( int xres, int yres, int zres, float *pixels )
+	{
+		m_xres = xres;
+		m_yres = yres;
+		m_zres = zres;
+		glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
+		glTexImage3DEXT(GL_TEXTURE_2D_ARRAY, 0, m_textureFormat, m_xres, m_yres, m_zres, 0, GL_ALPHA, GL_FLOAT, pixels);
+	}
+
+
+	AttributePtr Texture2dArray::getUniform()
+	{
+		if( !m_uniform )
+		{
+			m_uniform = Attribute::createSampler2dArray();
+			m_uniform->appendElement( (int)m_id );
+		}
+		return m_uniform;
+	}
 
 	//
 	// TextureCube ---------------------------------
