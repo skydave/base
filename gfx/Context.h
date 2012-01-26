@@ -39,6 +39,8 @@ namespace base
 		void                                                                                     setViewMatrix();
 		void                                                                               setProjectionMatrix();
 
+		math::Matrix44f                                                                    getModelViewInverse();
+
 		void getTransformState( math::Matrix44f &modelMatrix, math::Matrix44f &viewMatrix, math::Matrix44f &projectionMatrix, math::Matrix44f &modelViewProjectionMatrix, math::Matrix44f &viewInverseMatrix, math::Matrix33f &modelViewInverseTranspose );
 		void setTransformState( const math::Matrix44f &modelMatrix, const math::Matrix44f &viewMatrix, math::Matrix44f &projectionMatrix, const math::Matrix44f &modelViewProjectionMatrix, const math::Matrix44f &viewInverseMatrix, const math::Matrix33f &modelViewInverseTranspose );
 
@@ -67,6 +69,7 @@ namespace base
 		math::Matrix44f                                                                       m_projectionMatrix; // camera to view
 		math::Matrix44f                                                              m_modelViewProjectionMatrix; // model view projection matrix (world to screen)
 		math::Matrix44f                                                                      m_viewInverseMatrix; // view matrix inverse (camera to world)
+		math::Matrix44f                                                                       m_modelViewInverse; // model view matrix inverse
 		math::Matrix33f                                                              m_modelViewInverseTranspose; // model view matrix inverse transpose (model view matrix without scaling/shearing) used to transform vectors
 
 

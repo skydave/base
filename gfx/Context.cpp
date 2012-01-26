@@ -121,6 +121,7 @@ namespace base
 		//updateModelViewMatrixInverseTranspose
 		math::Matrix44f m = m_modelMatrix * m_viewMatrix;
 		m.invert();
+		m_modelViewInverse = m;
 		m.transpose();
 
 		// we do the transpose when we extract the orientation from 44f matrix
@@ -150,6 +151,7 @@ namespace base
 		//updateModelViewMatrixInverseTranspose
 		math::Matrix44f m = m_modelMatrix * m_viewMatrix;
 		m.invert();
+		m_modelViewInverse = m;
 		m.transpose();
 
 		// we do the transpose when we extract the orientation from 44f matrix
@@ -164,6 +166,11 @@ namespace base
 		m_modelViewInverseTranspose.ma[8] = m.m[2][2];
 
 		m_mvminvtAttr->set( 0, m_modelViewInverseTranspose );
+	}
+
+	math::Matrix44f Context::getModelViewInverse()
+	{
+		return m_modelViewInverse;
 	}
 
 
