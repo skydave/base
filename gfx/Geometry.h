@@ -34,7 +34,8 @@ namespace base
 			POINT = 0, // GL_POINTS
 			LINE = 1,
 			TRIANGLE = 4,
-			QUAD = 7
+			QUAD = 7,
+			POLYGON = 9
 		};
 
 		Geometry( PrimitiveType pt = TRIANGLE );
@@ -91,6 +92,7 @@ namespace base
 		unsigned int addPoint( unsigned int vId );
 		unsigned int addTriangle( unsigned int vId0, unsigned int vId1, unsigned int vId2 );
 		unsigned int addQuad( unsigned int vId0, unsigned int vId1, unsigned int vId2, unsigned int vId3 );
+		unsigned int addPolygonVertex( unsigned int v );
 
 
 
@@ -101,7 +103,7 @@ namespace base
 		std::vector<unsigned int>        m_indexBuffer;
 		bool                      m_indexBufferIsDirty;
 		unsigned int                   m_numPrimitives;
-		unsigned int            m_numPrimitiveVertices; // Point=1; Line=2; Triangle=3; Quad=4
+		unsigned int            m_numPrimitiveVertices; // Point=1; Line=2; Triangle=3; Quad=4; polygon:*
 
 		//
 		// OpenGL specific
@@ -114,6 +116,7 @@ namespace base
 		static GeometryPtr       createPointGeometry();
 		static GeometryPtr    createTriangleGeometry();
 		static GeometryPtr        createQuadGeometry();
+		static GeometryPtr        createPolyGeometry();
 	};
 
 

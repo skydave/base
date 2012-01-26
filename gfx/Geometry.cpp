@@ -22,6 +22,7 @@ namespace base
 		default:
 		case Geometry::TRIANGLE:m_numPrimitiveVertices = 3;break;
 		case Geometry::QUAD:m_numPrimitiveVertices = 4;break;
+		case Geometry::POLYGON:m_numPrimitiveVertices = 0;break;
 		}
 	}
 
@@ -64,7 +65,7 @@ namespace base
 		return m_numPrimitives;
 	}
 
-	// Point=1; Line=2; Triangle=3; Quad=4
+	// Point=1; Line=2; Triangle=3; Quad=4; polygon=*
 	unsigned int Geometry::numPrimitiveVertices()
 	{
 		return m_numPrimitiveVertices;
@@ -96,6 +97,17 @@ namespace base
 		return m_numPrimitives++;
 	}
 
+	unsigned int Geometry::addPolygonVertex( unsigned int v )
+	{
+		m_indexBuffer.push_back(v);
+		++m_numPrimitiveVertices;
+		m_indexBufferIsDirty = true;
+		if( !m_numPrimitives )
+			// only 0 or 1 number of primitives allowed with polygons
+			m_numPrimitives = 1;
+		return m_numPrimitives;
+	}
+
 
 
 	GeometryPtr Geometry::createPointGeometry()
@@ -117,6 +129,14 @@ namespace base
 	GeometryPtr Geometry::createQuadGeometry()
 	{
 		GeometryPtr result = GeometryPtr( new Geometry(QUAD) );
+		AttributePtr positions = AttributePtr( Attribute::createVec3f() );
+		result->setAttr( "P", positions);
+		return result;
+	}
+
+	GeometryPtr Geometry::createPolyGeometry()
+	{
+		GeometryPtr result = GeometryPtr( new Geometry(POLYGON) );
 		AttributePtr positions = AttributePtr( Attribute::createVec3f() );
 		result->setAttr( "P", positions);
 		return result;
