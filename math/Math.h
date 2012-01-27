@@ -141,7 +141,7 @@ inline Vec3f operator+( const float &lhs, const Vec3f &rhs )
 }
 inline Vec3f operator-( const float &lhs, const Vec3f &rhs )
 {
-	return (rhs-lhs);
+	return Vec3f( lhs-rhs.x, lhs-rhs.y, lhs-rhs.z );
 }
 inline Vec3f operator*( const float &lhs, const Vec3f &rhs )
 {
