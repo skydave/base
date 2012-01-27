@@ -324,6 +324,18 @@ namespace base
 			u->set<math::Vec3f>(0, value);
 	}
 
+	void Shader::setUniform( const std::string &name, math::Matrix44f value )
+	{
+		AttributePtr u = getUniform(name);
+		if(!u)
+		{
+			u = Attribute::createMat44();
+			u->appendElement<math::Matrix44f>(value);
+			setUniform(name, u);
+		}else
+			u->set<math::Matrix44f>(0, value);
+	}
+
 	void Shader::setUniform( const std::string &name, float value )
 	{
 		AttributePtr u = getUniform(name);

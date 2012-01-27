@@ -68,6 +68,7 @@ namespace math
 		// public methods
 		void                                                                        transpose( void );
 		void                                                                           invert( void );
+		Matrix44f                                                                    inverted( void );
 
 		Vec3f                                          getRight( const bool &normalized=true ) const;
 		Vec3f                                             getUp( const bool &normalized=true ) const;

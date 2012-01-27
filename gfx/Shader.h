@@ -68,6 +68,7 @@ namespace base
 		//
 		void                      setUniform( const std::string &name, AttributePtr uniform );
 		void                         setUniform( const std::string &name, math::Vec3f value ); // convinience function
+		void                     setUniform( const std::string &name, math::Matrix44f value ); // convinience function
 		void                               setUniform( const std::string &name, float value ); // convinience function
 		void                                 setUniform( const std::string &name, int value ); // convinience function
 		void    setUniform( const std::string &name, float v0, float v1, float v2, float v3 ); // convinience function
