@@ -64,6 +64,7 @@ namespace math
 		static Matrix44f          TranslationMatrix( const float &x, const float &y, const float &z );  ///< returns a matrix which defines a translation of the specified translation vector
 		static Matrix44f                                     ScaleMatrix( const float &uniformScale );  ///< returns a matrix which defines a uniform scale
 		static Matrix44f                ScaleMatrix( const float &x, const float &y, const float &z );  ///< returns a matrix which defines a non-uniform scale
+		static Matrix44f                                          ScaleMatrix( const math::Vec3f &s );  ///< returns a matrix which defines a non-uniform scale
 
 		// public methods
 		void                                                                        transpose( void );

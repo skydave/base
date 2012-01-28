@@ -181,6 +181,17 @@ namespace math
 	}
 
 	//
+	///< returns a matrix which defines a non-uniform scale
+	//
+	Matrix44f Matrix44f::ScaleMatrix( const math::Vec3f &s )
+	{
+		return Matrix44f( s.x, 0.0f, 0.0f, 0.0f,
+			              0.0f, s.y, 0.0f, 0.0f,
+						  0.0f, 0.0f, s.z, 0.0f,
+						  0.0f, 0.0f, 0.0f, 1.0f);
+	}
+
+	//
 	//
 	//
 	void Matrix44f::rotateX( const float &angle )
