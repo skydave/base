@@ -17,6 +17,23 @@ namespace base
 			return platform::exists(path);
 		}
 
+		// returns contenst of path specified as string
+		std::string read( const Path &path )
+		{
+			if( !exists( path ) )
+				return "";
+			File *f = open( path );
+			if(!f)
+				return "";
+			uint64 l = size(f);
+			char *buffer = (char*)malloc( l*sizeof(char) );
+			read( f, buffer, sizeof(char), (unsigned int)l );
+			close(f);
+			std::string result( buffer, l );
+			free( buffer );
+			return result;
+		}
+
 		File *open( const Path &path )
 		{
 			File *f = 0;

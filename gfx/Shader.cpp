@@ -1,4 +1,5 @@
 #include "Shader.h"
+#include <util\fs.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -98,16 +99,7 @@ namespace base
 		m_source = sourceFile;
 
 		// read vertex shader file content
-		// TODO: use filesystem to abstract away fileaccess
-		std::string src;
-		std::ifstream file(m_source.c_str() );
-		if (file.is_open())
-		{
-			std::stringstream buffer;
-			buffer << file.rdbuf();
-			src = buffer.str();
-			file.close();
-		}
+		std::string src = base::fs::read( sourceFile );
 
 		return compile(src);
 	}
@@ -154,15 +146,8 @@ namespace base
 
 		{
 			// read vertex shader file content
-			std::ifstream vsFile(vertexShaderPath.c_str() );
-			if (vsFile.is_open())
-			{
-				std::stringstream buffer;
-				buffer << vsFile.rdbuf();
-				vsSrc = buffer.str();
-				vsFile.close();
-			}
-			else
+			vsSrc = base::fs::read( vertexShaderPath );
+			if( vsSrc.empty() )
 			{
 				std::cout << "Unable to open vertexshader file\n";
 				return Shader::ShaderLoader(ShaderPtr());
@@ -171,15 +156,8 @@ namespace base
 
 		{
 			// read pixel shader file content
-			std::ifstream psFile(pixelShaderPath.c_str());
-			if (psFile.is_open())
-			{
-				std::stringstream buffer;
-				buffer << psFile.rdbuf();
-				psSrc = buffer.str();
-				psFile.close();
-			}
-			else
+			psSrc = base::fs::read( pixelShaderPath );
+			if (psSrc.empty())
 			{
 				std::cout << "Unable to open pixelshader file\n";
 				return Shader::ShaderLoader(ShaderPtr());
