@@ -97,7 +97,7 @@ namespace base
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	}
 
-	void FBO::begin( bool clear )
+	void FBO::begin( unsigned int clearBits )
 	{
 		// make framebuffer active
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fboId);
@@ -110,10 +110,10 @@ namespace base
 		GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT, GL_COLOR_ATTACHMENT3_EXT };
 		glDrawBuffers(numAttachments, buffers);
 
-		if( clear )
+		if( clearBits )
 		{
 			glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
-			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glClear( clearBits );
 		}//else
 		//	glDisable( GL_DEPTH_TEST );
 	}

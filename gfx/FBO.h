@@ -1,5 +1,6 @@
 #pragma once
 #include <util/shared_ptr.h>
+#include <gltools/gl.h>
 #include "Texture.h"
 
 namespace base
@@ -17,7 +18,7 @@ namespace base
 		void finalize();
 
 
-		void begin( bool clear = true );
+		void begin( unsigned int clearBits = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 		void end();
 
 		unsigned int fboId;
