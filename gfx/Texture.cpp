@@ -281,6 +281,11 @@ namespace base
 		return Texture3d::create( GL_ALPHA, xres, yres, zres );
 	}
 
+	Texture3dPtr Texture3d::createFloat16( int xres, int yres, int zres )
+	{
+		return Texture3d::create( GL_ALPHA16F_ARB, xres, yres, zres );
+	}
+
 
 	Texture3d::Texture3d()
 	{

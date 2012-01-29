@@ -86,6 +86,7 @@ namespace base
 		static Texture3dPtr create( int textureFormat, int xres = 64, int yres = 64, int zres = 64 );
 		static Texture3dPtr createRGBA8( int xres = 64, int yres = 64, int zres = 64 );
 		static Texture3dPtr createFloat32( int xres = 64, int yres = 64, int zres = 64 );
+		static Texture3dPtr createFloat16( int xres = 64, int yres = 64, int zres = 64 );
 		static Texture3dPtr createRGBAFloat32( int xres = 64, int yres = 64, int zres = 64 );
 	};
 
