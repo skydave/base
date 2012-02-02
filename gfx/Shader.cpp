@@ -1,5 +1,5 @@
 #include "Shader.h"
-#include <util\fs.h>
+#include <util/fs.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
