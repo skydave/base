@@ -195,6 +195,7 @@ namespace base
 	{
 		T *data = (T*)&m_data[index * sizeof(T)];
 		*data = value;
+		m_isDirty = true;
 	}
 
 	template<typename T>
@@ -204,6 +205,7 @@ namespace base
 		*data++ = v0;
 		*data++ = v1;
 		*data++ = v2;
+		m_isDirty = true;
 	}
 
 	template<typename T>
@@ -214,6 +216,7 @@ namespace base
 		*data++ = v1;
 		*data++ = v2;
 		*data++ = v3;
+		m_isDirty = true;
 	}
 
 } // namespace base
