@@ -354,10 +354,10 @@ namespace base
 	//
 	void apply_normals( GeometryPtr geo )
 	{
-		// only works with triangles
-		if( geo->primitiveType() != Geometry::TRIANGLE )
+		// only works with triangles and quads
+		if( !((geo->primitiveType() == Geometry::TRIANGLE)||(geo->primitiveType() == Geometry::QUAD)) )
 		{
-			std::cerr << "apply_normals: cant compute normals on non triangulated geometry\n";
+			std::cerr << "apply_normals: can compute normals only on non triangle or quad geometry\n";
 			return;
 		}
 
@@ -368,12 +368,13 @@ namespace base
 			normalAttr->appendElement( math::Vec3f(0.0f, 0.0f, 0.0f) );
 
 		int numPrimitives = geo->numPrimitives();
+		int numPrimitiveVertices = geo->numPrimitiveVertices();
 		for( int i=0; i < numPrimitives; ++i )
 		{
 			int idx[3];
-			idx[0] = geo->m_indexBuffer[i*3];
-			idx[1] = geo->m_indexBuffer[i*3+1];
-			idx[2] = geo->m_indexBuffer[i*3+2];
+			idx[0] = geo->m_indexBuffer[i*numPrimitiveVertices];
+			idx[1] = geo->m_indexBuffer[i*numPrimitiveVertices+1];
+			idx[2] = geo->m_indexBuffer[i*numPrimitiveVertices+2];
 
 			math::Vec3f v1 = positions->get<math::Vec3f>( idx[1] )-positions->get<math::Vec3f>( idx[0] );
 			math::Vec3f v2 = positions->get<math::Vec3f>( idx[2] )-positions->get<math::Vec3f>( idx[0] );
