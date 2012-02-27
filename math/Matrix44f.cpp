@@ -37,10 +37,17 @@ namespace math
 	//
 	Matrix44f::Matrix44f( const Vec3f &right, const Vec3f &up, const Vec3f &forward )
 	{
+		/*
 		this->_11=right.x; this->_12=up.x; this->_13=forward.x; this->_14=0.0f;
         this->_21=right.y; this->_22=up.y; this->_23=forward.y; this->_24=0.0f;
         this->_31=right.z; this->_32=up.z; this->_33=forward.z; this->_34=0.0f;
         this->_41=0.0f; this->_42=0.0f; this->_43=0.0f; this->_44=1.0f;
+		*/
+		this->_11=right.x; this->_12=right.y; this->_13=right.z; this->_14=0.0f;
+        this->_21=up.x; this->_22=up.y; this->_23=up.z; this->_24=0.0f;
+        this->_31=forward.x; this->_32=forward.y; this->_33=forward.z; this->_34=0.0f;
+        this->_41=0.0f; this->_42=0.0f; this->_43=0.0f; this->_44=1.0f;
+
 	}
 
 
