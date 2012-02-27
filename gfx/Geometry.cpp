@@ -361,7 +361,13 @@ namespace base
 			return;
 		}
 
-		AttributePtr normalAttr = Attribute::createVec3f();
+		AttributePtr normalAttr = geo->getAttr("N");
+		
+		if( !normalAttr )
+			normalAttr = Attribute::createVec3f();
+		else
+			normalAttr->clear();
+
 		AttributePtr positions = geo->getAttr("P");
 		int numPoints = positions->numElements();
 		for( int i=0; i < numPoints; ++i )
@@ -396,7 +402,6 @@ namespace base
 	//
 	void Geometry::clear()
 	{
-		//for( int i=0; i<GEO_ATTRIBUTEHASH_COUNT;++i )m_attributes[i] = 0;
 		for( std::map< std::string, AttributePtr >::iterator it = m_attributes.begin(); it != m_attributes.end(); ++it )
 			it->second->clear();
 
