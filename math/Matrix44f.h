@@ -60,6 +60,7 @@ namespace math
 		static Matrix44f                                        RotationMatrixY( const float &angle );  ///< returns a matrix which defines a rotation around the y axis with the float-specified amount
 		static Matrix44f                                        RotationMatrixZ( const float &angle );  ///< returns a matrix which defines a rotation around the z axis with the float-specified amount
 		static Matrix44f                      RotationMatrix( const Vec3f &axis, const float &angle );  ///< returns a matrix with a transformation that rotates around a certain axis which starts at the origin
+		static Matrix44f                           RotationMatrix( const Vec3f &v1, const Vec3f &v2 );  ///< returns a matrix with a transformation that rotates from v1 to v2
 		static Matrix44f                                TranslationMatrix( const Vec3f &translation );  ///< returns a matrix which defines a translation of the specified translation vector
 		static Matrix44f          TranslationMatrix( const float &x, const float &y, const float &z );  ///< returns a matrix which defines a translation of the specified translation vector
 		static Matrix44f                                     ScaleMatrix( const float &uniformScale );  ///< returns a matrix which defines a uniform scale
