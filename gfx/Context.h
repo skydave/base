@@ -40,6 +40,7 @@ namespace base
 		void                                                                               setProjectionMatrix();
 
 		math::Matrix44f                                                                    getModelViewInverse();
+		math::Matrix44f                                                                         getViewInverse();
 
 		void getTransformState( math::Matrix44f &modelMatrix, math::Matrix44f &viewMatrix, math::Matrix44f &projectionMatrix, math::Matrix44f &modelViewProjectionMatrix, math::Matrix44f &viewInverseMatrix, math::Matrix33f &modelViewInverseTranspose );
 		void setTransformState( const math::Matrix44f &modelMatrix, const math::Matrix44f &viewMatrix, math::Matrix44f &projectionMatrix, const math::Matrix44f &modelViewProjectionMatrix, const math::Matrix44f &viewInverseMatrix, const math::Matrix33f &modelViewInverseTranspose );

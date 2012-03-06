@@ -173,6 +173,11 @@ namespace base
 		return m_modelViewInverse;
 	}
 
+	math::Matrix44f Context::getViewInverse()
+	{
+		return m_viewInverseMatrix;
+	}
+
 
 	void Context::getTransformState( math::Matrix44f &modelMatrix, math::Matrix44f &viewMatrix, math::Matrix44f &projectionMatrix, math::Matrix44f &modelViewProjectionMatrix, math::Matrix44f &viewInverseMatrix, math::Matrix33f &modelViewInverseTranspose )
 	{
