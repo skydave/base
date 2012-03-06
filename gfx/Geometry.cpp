@@ -205,7 +205,7 @@ namespace base
 				float u = i/(float)(xres-1);
 				float v = j/(float)(zres-1);
 				positions->appendElement( math::Vec3f(u-0.5f,0.0f,v-0.5f) );
-				uvs->appendElement( u, v );
+				uvs->appendElement( u, 1.0f - v ); // 1.0 - v because opengl texture space
 			}
 
 		if( primType == Geometry::POINT )
