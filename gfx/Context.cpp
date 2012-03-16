@@ -58,7 +58,11 @@ namespace base
 
 
 		//
+		// initialize standard resources ====================
+		//
 		m_screenQuad = geo_quad();
+
+		m_simpleTextureShader = Shader::create().attachPS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.ps.glsl").attachVS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.vs.glsl");
 
 
 		// initialize noise glsl module
@@ -362,6 +366,14 @@ namespace base
 	void Context::renderScreen( ShaderPtr shader )
 	{
 		render( m_screenQuad, shader );
+	}
+
+	void Context::renderScreen( Texture2dPtr texture )
+	{
+		// set texture to shader
+		m_simpleTextureShader->setUniform( "texture", texture->getUniform() );
+
+		render( m_screenQuad, m_simpleTextureShader );
 	}
 
 
