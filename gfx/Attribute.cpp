@@ -39,7 +39,10 @@ namespace base
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_bufferId);
 		glEnableVertexAttribArray(index);
-		glVertexAttribPointer(index, numComponents(), elementComponentType(), false, 0, 0);
+		if( m_componentType != INT )
+			glVertexAttribPointer(index, numComponents(), elementComponentType(), false, 0, 0);
+		else
+			glVertexAttribIPointer(index, numComponents(), elementComponentType(), 0, 0);
 
 	}
 	void Attribute::unbindAsAttribute( int index )
