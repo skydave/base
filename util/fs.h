@@ -1,6 +1,7 @@
 #pragma once
 #include "Path.h"
 #include "types.h"
+#include <vector>
 
 
 
@@ -23,6 +24,7 @@ namespace base
 		bool                                                                eof( File *file ); // returns true if end of file is reached
 		sint64                                                             tell( File *file ); // returns current position
 		std::string                                                     getLine( File *file ); // convenience
+		void                     getLines( const Path &path, std::vector<std::string> &lines); // convenience
 
 
 
