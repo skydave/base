@@ -21,7 +21,7 @@
 #include "Matrix33f.h"
 #include "Matrix44f.h"
 #include "Color.h"
-#include "BoundingBox.h"
+#include "BoundingBox3d.h"
 #include "BoundingBox2d.h"
 #include "RNG.h"
 #include "Noise.h"

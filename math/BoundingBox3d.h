@@ -16,10 +16,10 @@ namespace math
 	/// \brief The BoundingBox class is a very simple utility class for working
 	/// with axis aligned bounding boxes
 	///
-	struct BoundingBox
+	struct BoundingBox3d
 	{
-		BoundingBox();                                                          ///< constructor
-		BoundingBox( math::Vec3f _minPoint, math::Vec3f _maxPoint );            ///< constructor
+		BoundingBox3d();                                                          ///< constructor
+		BoundingBox3d( math::Vec3f _minPoint, math::Vec3f _maxPoint );            ///< constructor
 
 		math::Vec3f                                        size( void ) const;  ///< returns a vector which represents the dimension in each axis
 		void                           extend( const math::Vec3f &nextPoint );  ///< adobts the bounding borders if neccessary so that the given point lies within the bounding box

@@ -4,7 +4,7 @@ The BoundingBox class is a very simple utility class for working with
 axis aligned bounding boxes
 
 ----------------------------------------------------------------------*/
-#include "BoundingBox.h"
+#include "BoundingBox3d.h"
 
 
 
@@ -14,7 +14,7 @@ namespace math
 	//
 	// constructor
 	//
-	BoundingBox::BoundingBox()
+	BoundingBox3d::BoundingBox3d()
 	{
 		minPoint = math::Vec3f( 99999999999.0f, 99999999999.0f, 99999999999.0f );
 		maxPoint = math::Vec3f( -99999999999.0f, -99999999999.0f, -99999999999.0f );
@@ -23,7 +23,7 @@ namespace math
 	//
 	// constructor
 	//
-	BoundingBox::BoundingBox( math::Vec3f _minPoint, math::Vec3f _maxPoint )
+	BoundingBox3d::BoundingBox3d( math::Vec3f _minPoint, math::Vec3f _maxPoint )
 	{
 		minPoint = _minPoint;
 		maxPoint = _maxPoint;
@@ -32,7 +32,7 @@ namespace math
 	//
 	// returns a vector which represents the dimension in each axis
 	//
-	math::Vec3f BoundingBox::size( void ) const
+	math::Vec3f BoundingBox3d::size( void ) const
 	{
 		return math::Vec3f( maxPoint - minPoint );
 	}
@@ -41,7 +41,7 @@ namespace math
 	// adobts the bounding borders if neccessary so that the given point lies within
 	// the bounding box
 	//
-    void BoundingBox::extend( const math::Vec3f &nextPoint )
+    void BoundingBox3d::extend( const math::Vec3f &nextPoint )
 	{
 		if( nextPoint.x > maxPoint.x )
 			maxPoint.x = nextPoint.x;
@@ -62,7 +62,7 @@ namespace math
 	//
 	// returns the geometrical center of the box
 	//
-    math::Vec3f BoundingBox::getCenter( void ) const
+    math::Vec3f BoundingBox3d::getCenter( void ) const
 	{
 		return (minPoint + maxPoint)*0.5f;
 	}
@@ -71,7 +71,7 @@ namespace math
 	// this utility function checks wether the given point
 	// is within the volume descripted by the bounding box
 	//
-	bool BoundingBox::encloses( const math::Vec3f &point ) const
+	bool BoundingBox3d::encloses( const math::Vec3f &point ) const
 	{
 		// check each dimension
 		if( (point.x > minPoint.x)&&(point.x < maxPoint.x)&&
@@ -86,7 +86,7 @@ namespace math
 	// this utility function checks wether the given box
 	// is within the volume descripted by the bounding box
 	//
-	bool BoundingBox::encloses( const math::Vec3f &min, const math::Vec3f &max ) const
+	bool BoundingBox3d::encloses( const math::Vec3f &min, const math::Vec3f &max ) const
 	{
 		// check each dimension for each point
 		if( (min.x >= minPoint.x)&&(min.y >= minPoint.y)&&(min.z >= minPoint.z)&&

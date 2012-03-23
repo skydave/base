@@ -109,6 +109,18 @@ namespace base
 	}
 
 
+	//
+	// removes all attributes and primitives
+	//
+	void Geometry::clear()
+	{
+		for( std::map< std::string, AttributePtr >::iterator it = m_attributes.begin(); it != m_attributes.end(); ++it )
+			it->second->clear();
+
+		m_indexBuffer.clear();
+		m_numPrimitives = 0;
+		m_indexBufferIsDirty = true;
+	}
 
 	GeometryPtr Geometry::createPointGeometry()
 	{
@@ -397,19 +409,18 @@ namespace base
 	}
 
 
-	//
-	// removes all attributes and primitives
-	//
-	void Geometry::clear()
+
+
+
+	math::BoundingBox3d compute_bound( GeometryPtr geo )
 	{
-		for( std::map< std::string, AttributePtr >::iterator it = m_attributes.begin(); it != m_attributes.end(); ++it )
-			it->second->clear();
-
-		m_indexBuffer.clear();
-		m_numPrimitives = 0;
-		m_indexBufferIsDirty = true;
+		math::BoundingBox3d bbox;
+		AttributePtr p = geo->getAttr( "P" );
+		int numElements = p->numElements();
+		for( int i=0;i<numElements;++i )
+			bbox.extend(p->get<math::Vec3f>(i));
+		return bbox;
 	}
-
 }
 
 

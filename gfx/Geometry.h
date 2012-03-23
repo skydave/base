@@ -138,4 +138,7 @@ namespace base
 	void apply_transform( GeometryPtr geo, math::Matrix44f tm );
 	void apply_normals( GeometryPtr geo );
 
+	// geometry utility functions
+	math::BoundingBox3d compute_bound( GeometryPtr geo );
+
 }
