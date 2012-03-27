@@ -21,7 +21,7 @@
 #include "Matrix33f.h"
 #include "Matrix44f.h"
 #include "Color.h"
-#include "BoundingBox.h"
+#include "BoundingBox3d.h"
 #include "BoundingBox2d.h"
 #include "RNG.h"
 #include "Noise.h"
@@ -441,7 +441,7 @@ inline float frobeniusNorm( const Matrix44f &lhs )
 }
 
 
-Matrix44f createLookAtMatrix( const Vec3f &position, const Vec3f &target, const Vec3f &_up );
+Matrix44f createLookAtMatrix( const Vec3f &position, const Vec3f &target, const Vec3f &_up, bool orientationOnly = true );
 Matrix44f createMatrixFromPolarCoordinates( const float &azimuth, const float &elevation, const float &distance );
 
 

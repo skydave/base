@@ -219,7 +219,7 @@ namespace math
 	//
 	// upVector must be normalized
 	//
-	Matrix44f createLookAtMatrix( const Vec3f &position, const Vec3f &target, const Vec3f &_up )
+	Matrix44f createLookAtMatrix( const Vec3f &position, const Vec3f &target, const Vec3f &_up, bool orientationOnly )
 	{
 		math::Vec3f forward = normalize( target - position );
 
@@ -227,7 +227,11 @@ namespace math
 
 		math::Vec3f up = crossProduct( forward, right );
 
-		return math::Matrix44f( right, up, forward );
+		math::Matrix44f m = math::Matrix44f( right, up, forward );
+		if( orientationOnly )
+			return m;
+
+		return math::Matrix44f::TranslationMatrix(math::Vec3f(0.0f, 0.0f, position.getLength()))*m;
 	}
 
 	//

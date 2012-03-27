@@ -2,6 +2,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "StringManip.h"
+
 
 
 
@@ -17,7 +19,7 @@ namespace base
 			return platform::exists(path);
 		}
 
-		// returns contenst of path specified as string
+		// returns contenst of file at path specified as string
 		std::string read( const Path &path )
 		{
 			if( !exists( path ) )
@@ -98,6 +100,14 @@ namespace base
 				os << c;
 			}
 			return os.str();
+		}
+
+		// convenience
+		void getLines( const Path &path, std::vector<std::string> &lines)
+		{
+			lines.clear();
+			std::string content = read( path );
+			splitString( content, lines, "\n", false);
 		}
 	}
 

@@ -109,6 +109,18 @@ namespace base
 	}
 
 
+	//
+	// removes all attributes and primitives
+	//
+	void Geometry::clear()
+	{
+		for( std::map< std::string, AttributePtr >::iterator it = m_attributes.begin(); it != m_attributes.end(); ++it )
+			it->second->clear();
+
+		m_indexBuffer.clear();
+		m_numPrimitives = 0;
+		m_indexBufferIsDirty = true;
+	}
 
 	GeometryPtr Geometry::createPointGeometry()
 	{
@@ -205,7 +217,7 @@ namespace base
 				float u = i/(float)(xres-1);
 				float v = j/(float)(zres-1);
 				positions->appendElement( math::Vec3f(u-0.5f,0.0f,v-0.5f) );
-				uvs->appendElement( u, v );
+				uvs->appendElement( u, 1.0f - v ); // 1.0 - v because opengl texture space
 			}
 
 		if( primType == Geometry::POINT )
@@ -397,19 +409,18 @@ namespace base
 	}
 
 
-	//
-	// removes all attributes and primitives
-	//
-	void Geometry::clear()
+
+
+
+	math::BoundingBox3d compute_bound( GeometryPtr geo )
 	{
-		for( std::map< std::string, AttributePtr >::iterator it = m_attributes.begin(); it != m_attributes.end(); ++it )
-			it->second->clear();
-
-		m_indexBuffer.clear();
-		m_numPrimitives = 0;
-		m_indexBufferIsDirty = true;
+		math::BoundingBox3d bbox;
+		AttributePtr p = geo->getAttr( "P" );
+		int numElements = p->numElements();
+		for( int i=0;i<numElements;++i )
+			bbox.extend(p->get<math::Vec3f>(i));
+		return bbox;
 	}
-
 }
 
 

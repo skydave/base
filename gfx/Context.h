@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "Geometry.h"
 #include "Camera.h"
+#include "Texture.h"
 
 
 
@@ -40,6 +41,7 @@ namespace base
 		void                                                                               setProjectionMatrix();
 
 		math::Matrix44f                                                                    getModelViewInverse();
+		math::Matrix44f                                                                         getViewInverse();
 
 		void getTransformState( math::Matrix44f &modelMatrix, math::Matrix44f &viewMatrix, math::Matrix44f &projectionMatrix, math::Matrix44f &modelViewProjectionMatrix, math::Matrix44f &viewInverseMatrix, math::Matrix33f &modelViewInverseTranspose );
 		void setTransformState( const math::Matrix44f &modelMatrix, const math::Matrix44f &viewMatrix, math::Matrix44f &projectionMatrix, const math::Matrix44f &modelViewProjectionMatrix, const math::Matrix44f &viewInverseMatrix, const math::Matrix33f &modelViewInverseTranspose );
@@ -55,13 +57,18 @@ namespace base
 		//
 		// rendering
 		//
-		void render( GeometryPtr geo, ShaderPtr shader );
-		void            renderScreen( ShaderPtr shader );
+		void                 render( GeometryPtr geo, ShaderPtr shader );
+		void                            renderScreen( ShaderPtr shader );
+		void                        renderScreen( Texture2dPtr texture );
 
 		void   bind( ShaderPtr shader, GeometryPtr geo = GeometryPtr() );
 		void unbind( ShaderPtr shader, GeometryPtr geo = GeometryPtr() );
 
-		GeometryPtr                         m_screenQuad;
+		//
+		// some standard resources
+		//
+		GeometryPtr                                         m_screenQuad;
+		ShaderPtr                                  m_simpleTextureShader;
 
 	private:
 		math::Matrix44f                                                                            m_modelMatrix; // object to world

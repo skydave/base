@@ -101,7 +101,7 @@ namespace math
 	}
 
 	///< returnes normalized version if this the vector
-	Vec3f Vec3f::normalized( void )
+	Vec3f Vec3f::normalized( void ) const
 	{
 		float length = getLength();
 

@@ -143,6 +143,19 @@ namespace math
 						  0.0f, 0.0f, 0.0f, 1.0f);
 	}
 
+	///< returns a matrix with a transformation that rotates from v1 to v2
+	Matrix44f Matrix44f::RotationMatrix( const Vec3f &v1, const Vec3f &v2 )
+	{
+		math::Vec3f v1n = v1.normalized();
+		math::Vec3f v2n = v2.normalized();
+		// get angle between vectors
+		float cosAngle = math::dotProduct( v1.normalized(), v2.normalized() );
+		// get rotation axis
+		math::Vec3f axis = math::crossProduct( v1n, v2n );
+		// construct rotation
+		return Matrix44f::RotationMatrix( axis, acosf(cosAngle) );
+	}
+
 	//
 	// returns a matrix which defines a translation of the specified translation vector
 	//

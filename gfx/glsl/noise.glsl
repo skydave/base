@@ -46,6 +46,21 @@ float perlinnoise2d( vec2 P )
   return n_xy;
 }
 
+float fbm2d( vec2 p, int octaves, float lacunarity, float gain )
+{
+	float amp = 1.0;
+	float sum = 0.0;
+	vec2 point = p;
+	for(int i = 0; i<octaves; ++i)
+	{
+		float noise = perlinnoise2d(point);
+		sum += (noise * amp);
+		amp *= gain;
+		point *= lacunarity;
+	}
+	return sum;
+}
+
 
 float perlinnoise3d( vec3 P )
 {
@@ -93,7 +108,6 @@ float perlinnoise3d( vec3 P )
 	// We're done, return the final noise value.
 	return n_xyz;
 }
-
 
 
 
