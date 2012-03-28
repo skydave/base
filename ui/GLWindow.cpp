@@ -9,34 +9,52 @@
 namespace base
 {
 
+	// when using this constructor the window will be created when show is called first time
+	GLWindow::GLWindow() : Window(), m_init(0), m_numSamples(-1), m_sampleBuffers(false)
+	{
+		setSize( 800, 600 );
+		setCaption( "app" );
+	}
 
-	GLWindow::GLWindow( int width, int height, std::string caption ) : Window()
+	GLWindow::GLWindow( int width, int height, std::string caption, InitCallback init ) : Window(), m_numSamples(-1), m_sampleBuffers(false), m_init(init)
+	{
+		setSize( width, height );
+		setCaption( caption );
+		createWindow();
+	}
+
+	// shows the window (creates the window when shown the first time)
+	void GLWindow::show()
+	{
+		if(!m_hwnd)
+			createWindow();
+		Window::show();
+	}
+
+	void GLWindow::createWindow()
 	{
 		// intitialisierung
-		m_hdc         =  NULL;
-		m_hrc         =  NULL;
-		m_bpp         =    32;
-		m_fsbpp       =    32;
-		m_fullscreen  = false;
-		m_zdepth      =    32;
+		m_hdc           =            NULL;
+		m_hrc           =            NULL;
+		m_bpp           =              32;
+		m_fsbpp         =              32;
+		m_fullscreen    =           false;
+		m_zdepth        =              32;
+
 		m_pixelformat =     0;
 
 		m_windowRect.left       =      100;
 		m_windowRect.top        =      100;
-		m_windowRect.right      =  m_windowRect.left + width;
-		m_windowRect.bottom     = m_windowRect.top + height;
+		m_windowRect.right      =  m_windowRect.left + m_width;
+		m_windowRect.bottom     = m_windowRect.top + m_height;
 		
-		m_fullscreenRect.left   =      0;
-		m_fullscreenRect.top    =      0;
-		m_fullscreenRect.right  =  width;
-		m_fullscreenRect.bottom = height;
+		m_fullscreenRect.left   =        0;
+		m_fullscreenRect.top    =        0;
+		m_fullscreenRect.right  =  m_width;
+		m_fullscreenRect.bottom = m_height;
 
 		// Save The Current Display State
 		EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &this->m_DMsaved); 
-
-		// convert std::wstring to std::string
-		m_caption             = std::wstring( caption.begin(), caption.end() );
-
 
 		m_hinstance          = GetModuleHandle(NULL);
 
@@ -71,7 +89,7 @@ namespace base
 		AdjustWindowRectEx( &m_windowRect , m_dwstyle , FALSE , m_dwExstyle );
 
 
-		m_hwnd = CreateWindowEx(m_dwExstyle, "mf window class" , caption.c_str() ,
+		m_hwnd = CreateWindowEx(m_dwExstyle, "mf window class" , m_caption.c_str() ,
 								m_dwstyle | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
 								m_windowRect.left, m_windowRect.top, 			 
 								m_windowRect.right  - m_windowRect.left,	
@@ -124,6 +142,10 @@ namespace base
 		return true;
 */
 		Application::registerWindow( this );
+
+		// now that we (hopefully) have valid gl...
+		if( m_init )
+			m_init();
 	}
 
 
@@ -149,6 +171,37 @@ namespace base
 	{
 		glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
+	void GLWindow::setCaption( std::string caption )
+	{
+		Window::setCaption( caption );
+		//TODO: set caption when window already exists
+	}
+
+	void GLWindow::setSize( int width, int height )
+	{
+		Window::setSize( width, height );
+		// tODO: set size when window already exists
+	}
+
+	// specifies whether a glcontext with samplebuffer support is to be created
+	void GLWindow::setSampleBuffers( bool enabled )
+	{
+		m_sampleBuffers = enabled;
+		// TODO: handle the case when the context already has been created
+	}
+
+	// specifies the number of samples we want
+	void GLWindow::setSamples( int numSamples )
+	{
+		m_numSamples = numSamples;
+		// TODO: handle the case when the context already has been created
+	}
+
+	void GLWindow::setInitCallback( InitCallback init )
+	{
+		m_init = init;
 	}
 
 

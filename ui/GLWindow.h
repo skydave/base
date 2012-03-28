@@ -11,31 +11,46 @@ namespace base
 	class GLWindow : public Window
 	{
 	public:
-		GLWindow( int width, int height, std::string caption );
+		typedef void (*InitCallback)( void );
 
-		virtual void paint();
-		virtual void paintGL();
+		GLWindow();                                                           // when using this constructor the window will be created when show is called first time
+		GLWindow( int width, int height, std::string caption, InitCallback init = 0 );
+
+		virtual void                                                  show(); // shows the window (creates the window when shown the first time)
+		virtual void                                                 paint();
+		virtual void                                               paintGL();
+		virtual void                       setCaption( std::string caption );
+		virtual void                        setSize( int width, int height );
+		void                                setSampleBuffers( bool enabled ); // specifies whether a glcontext with samplebuffer support is to be created
+		void                                    setSamples( int numSamples ); // specifies the number of samples we want
+		void                            setInitCallback( InitCallback init );
 
 
 	private:
-		HDC                                              m_hdc; // device context
-		HGLRC                                            m_hrc; // render context
-		HINSTANCE                                  m_hinstance; // program instance
-		WNDCLASS                                          m_wc; // window class
+		void                                                  createWindow();
+		HDC                                                            m_hdc; // device context
+		HGLRC                                                          m_hrc; // render context
+		HINSTANCE                                                m_hinstance; // program instance
+		WNDCLASS                                                        m_wc; // window class
 
-		unsigned int                             m_pixelformat;
-		unsigned long                              m_dwExstyle;	
-		unsigned long                                m_dwstyle;
+		unsigned int                                           m_pixelformat;
+		unsigned long                                            m_dwExstyle;	
+		unsigned long                                              m_dwstyle;
 
-		int                                     m_bpp, m_fsbpp;
-		int                                           m_zdepth;
+		// format options
+		int                                                   m_bpp, m_fsbpp;
+		int                                                         m_zdepth;
+		bool                                                 m_sampleBuffers;
+		int                                                     m_numSamples; // -1 indicates: maximum possible
 
-		bool                                      m_fullscreen;
-		std::wstring                                 m_caption; // caption text of the window
-		RECT                                      m_windowRect;
-		RECT                                  m_fullscreenRect;
+		bool                                                    m_fullscreen;
+		RECT                                                    m_windowRect;
+		RECT                                                m_fullscreenRect;
 
-		DEVMODE	                                     m_DMsaved; // Saves The Previous Screen Settings (NEW)
+		DEVMODE	                                                   m_DMsaved; // Saves The Previous Screen Settings (NEW)
+
+		// callbacks
+		InitCallback                                                  m_init;
 	};
 }
 #endif

@@ -41,6 +41,20 @@ namespace base
 		DestroyWindow(m_hwnd);
 	}
 
+	void Window::setCaption( std::string caption )
+	{
+		// convert std::wstring to std::string
+		//m_caption = std::wstring( caption.begin(), caption.end() );
+		m_caption = caption;
+	}
+
+	void Window::setSize( int width, int height )
+	{
+		m_width = width;
+		m_height = height;
+	}
+
+
 }
 #endif
 

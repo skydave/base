@@ -4,6 +4,7 @@
 
 #include <windows.h>
 #include <windowsx.h>
+#include <string>
 
 namespace base
 {
@@ -13,13 +14,18 @@ namespace base
 
 		Window();
 		HWND                                       getHandle();
-		void                                            show(); // shows the window
+		virtual void                                    show(); // shows the window
 
 		virtual void                                   paint();
 		virtual void                                 destroy(); // closes and destroys the window
+		virtual void         setCaption( std::string caption );
+		virtual void          setSize( int width, int height );
 
 	protected:
 		HWND                                            m_hwnd; // window handle
+		int                                            m_width;
+		int                                           m_height;
+		std::string                                  m_caption; // caption text of the window
 	};
 }
 #endif

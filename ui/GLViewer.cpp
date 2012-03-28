@@ -11,12 +11,13 @@
 namespace base
 {
 
-
-	GLViewer::GLViewer( int width, int height, std::string caption, InitCallback init, RenderCallback render ) : GLWindow( width, height, caption ), m_init(init), m_render(render)
+	// when using this constructor the window will be created when show is called first time
+	GLViewer::GLViewer(): GLWindow(), m_render(0)
 	{
-		// after base (GLWindow) is constructed we have valid opengl
-		if( m_init )
-			m_init();
+	}
+
+	GLViewer::GLViewer( int width, int height, std::string caption, GLWindow::InitCallback init, RenderCallback render ) : GLWindow( width, height, caption, init ), m_render(render)
+	{
 	}
 
 
@@ -87,6 +88,11 @@ namespace base
 		m_orbitNavigator.m_azimuth = azimuth;
 		m_orbitNavigator.m_elevation = elevation;
 		m_orbitNavigator.update();
+	}
+
+	void GLViewer::setRenderCallback( RenderCallback render )
+	{
+		m_render = render;
 	}
 
 
