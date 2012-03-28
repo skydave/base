@@ -134,6 +134,10 @@ namespace base
 	{
 		Window *w = getRegisteredWindow( hWnd );
 
+		// we may get invalid windows (e.g. when using GLTemporaryContext)
+		if(!w)
+			return DefWindowProc( hWnd, uMsg, wParam, lParam );
+
 		switch( uMsg )
 		{
 		case WM_CLOSE:								
