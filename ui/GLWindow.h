@@ -28,6 +28,7 @@ namespace base
 
 	private:
 		void                                                  createWindow();
+		int    choosePixelFormat( HDC pdc, PIXELFORMATDESCRIPTOR *dummyPfd );
 		HDC                                                            m_hdc; // device context
 		HGLRC                                                          m_hrc; // render context
 		HINSTANCE                                                m_hinstance; // program instance

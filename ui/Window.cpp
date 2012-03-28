@@ -55,6 +55,17 @@ namespace base
 	}
 
 
+	std::string getRegisteredWndClass()
+	{
+		return "mf window class";
+	}
+
+	// will return the winappinstance
+	HINSTANCE getWinAppInstance()
+	{
+		return GetModuleHandle(NULL);
+	}
+
 }
 #endif
 

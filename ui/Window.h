@@ -27,6 +27,12 @@ namespace base
 		int                                           m_height;
 		std::string                                  m_caption; // caption text of the window
 	};
+
+	// this function will return the classid of the default windows class
+	std::string getRegisteredWndClass();
+
+	// will return the winappinstance
+	HINSTANCE getWinAppInstance();
 }
 #endif
 

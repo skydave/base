@@ -1,9 +1,11 @@
 #ifdef _WINDOWS
 #include "GLWindow.h"
+#include "GLExtensions.h"
+#include "GLTemporaryContext.h"
 
 #include <gltools/gl.h>
-
 #include <string>
+#include <iostream>
 
 
 namespace base
@@ -39,7 +41,7 @@ namespace base
 		m_bpp           =              32;
 		m_fsbpp         =              32;
 		m_fullscreen    =           false;
-		m_zdepth        =              32;
+		m_zdepth        =              24; // http://www.gamedev.net/topic/601212-wglchoosepixelformatarb-problem/
 
 		m_pixelformat =     0;
 
@@ -89,7 +91,7 @@ namespace base
 		AdjustWindowRectEx( &m_windowRect , m_dwstyle , FALSE , m_dwExstyle );
 
 
-		m_hwnd = CreateWindowEx(m_dwExstyle, "mf window class" , m_caption.c_str() ,
+		m_hwnd = CreateWindowEx(m_dwExstyle, getRegisteredWndClass().c_str(), m_caption.c_str() ,
 								m_dwstyle | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
 								m_windowRect.left, m_windowRect.top, 			 
 								m_windowRect.right  - m_windowRect.left,	
@@ -116,7 +118,7 @@ namespace base
 			0,									// Shift Bit Ignored
 			0,									// No Accumulation Buffer
 			0, 0, 0, 0,							// Accumulation Bits Ignored
-			m_zdepth,								// 16Bit Z-Buffer (Depth Buffer)  
+			m_zdepth,							// 16Bit Z-Buffer (Depth Buffer)  
 			0,									// No Stencil Buffer
 			0,									// No Auxiliary Buffer
 			PFD_MAIN_PLANE,						// Main Drawing Layer
@@ -126,7 +128,7 @@ namespace base
 
 		m_hdc = GetDC(m_hwnd);
 
-		m_pixelformat = ChoosePixelFormat( m_hdc , &pfd );
+		m_pixelformat = choosePixelFormat( m_hdc , &pfd );
 
 		SetPixelFormat( m_hdc , m_pixelformat , &pfd );
 
@@ -146,6 +148,123 @@ namespace base
 		// now that we (hopefully) have valid gl...
 		if( m_init )
 			m_init();
+	}
+
+	typedef bool (APIENTRY *PFNWGLGETPIXELFORMATATTRIBIVARB)(HDC hdc,
+                                                         int iPixelFormat,
+                                                         int iLayerPlane,
+                                                         unsigned int nAttributes,
+                                                         const int *piAttributes,
+                                                         int *piValues);
+	typedef bool (APIENTRY *PFNWGLCHOOSEPIXELFORMATARB)(HDC hdc,
+                                                    const int *piAttribList,
+                                                    const float *pfAttribFList,
+                                                    unsigned int nMaxFormats,
+                                                    int *piFormats,
+                                                    unsigned int *nNumFormats);
+
+	int GLWindow::choosePixelFormat( HDC pdc, PIXELFORMATDESCRIPTOR *dummyPfd )
+	{
+		// we want to use wglChoosePixelFormatARB which is a replacement for the windows function ChoosePixelFormat
+		// it allows a dynamic list of ints for specifying the pixelformat. In addition it allows us to specify
+		// this like samplebuffers etc.
+		// the problem however is, that we need to be in a working opengl context in order to use wglGetProcAddress and
+		// wglChoosePixelFormatARB. Otherwise these functions wont work. This is a henn/egg problem because we want to choose
+		// the pixelformat in order to create the context. the solution is to create a temporary opengl context
+		GLTemporaryContext tempGlContext;
+
+		PFNWGLCHOOSEPIXELFORMATARB wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATARB) wglGetProcAddress("wglChoosePixelFormatARB");
+		int chosenPfi = 0;
+		if (wglChoosePixelFormatARB)
+		{
+			bool valid;
+			int pixelFormat = 0;
+			unsigned int numFormats = 0;
+			int iAttributes[40];
+			int i = 0;
+			iAttributes[i++] = WGL_ACCELERATION_ARB;
+			iAttributes[i++] = WGL_FULL_ACCELERATION_ARB;
+			iAttributes[i++] = WGL_SUPPORT_OPENGL_ARB;
+			iAttributes[i++] = TRUE;
+			iAttributes[i++] = WGL_DRAW_TO_WINDOW_ARB;
+			iAttributes[i++] = TRUE;
+			iAttributes[i++] = WGL_COLOR_BITS_ARB;
+			iAttributes[i++] = 24;
+			iAttributes[i++] = WGL_DOUBLE_BUFFER_ARB;
+			iAttributes[i++] = TRUE;
+			iAttributes[i++] = WGL_DEPTH_BITS_ARB;
+			iAttributes[i++] = m_zdepth;
+
+			iAttributes[i++] = WGL_PIXEL_TYPE_ARB;
+			iAttributes[i++] = WGL_TYPE_RGBA_ARB;
+
+			// ignoring color bits
+			//if (d->glFormat.redBufferSize() != -1) {
+			//	iAttributes[i++] = WGL_RED_BITS_ARB;
+			//	iAttributes[i++] = d->glFormat.redBufferSize();
+			//}
+			//if (d->glFormat.greenBufferSize() != -1) {
+			//	iAttributes[i++] = WGL_GREEN_BITS_ARB;
+			//	iAttributes[i++] = d->glFormat.greenBufferSize();
+			//}
+			//if (d->glFormat.blueBufferSize() != -1) {
+			//	iAttributes[i++] = WGL_BLUE_BITS_ARB;
+			//	iAttributes[i++] = d->glFormat.blueBufferSize();
+			//}
+
+			// no alpha buffer
+			//iAttributes[i++] = WGL_ALPHA_BITS_ARB;
+			//iAttributes[i++] = d->glFormat.alphaBufferSize() == -1 ? 8 : d->glFormat.alphaBufferSize();
+
+			// no accumulation bits
+			//iAttributes[i++] = WGL_ACCUM_BITS_ARB;
+			//	iAttributes[i++] = d->glFormat.accumBufferSize() == -1 ? 16 : d->glFormat.accumBufferSize();
+
+			// no stencil bits
+			//iAttributes[i++] = WGL_STENCIL_BITS_ARB;
+			//iAttributes[i++] = d->glFormat.stencilBufferSize() == -1 ? 8 : d->glFormat.stencilBufferSize();
+
+			// no idea what this is about
+			//iAttributes[i++] = WGL_NUMBER_OVERLAYS_ARB;
+			//iAttributes[i++] = 1;
+
+			/*
+			int si = 0;
+			bool trySampleBuffers = GLExtensions::glExtensions() & GLExtensions::SampleBuffers;
+			if (trySampleBuffers && this->)
+			{
+				iAttributes[i++] = WGL_SAMPLE_BUFFERS_ARB;
+				iAttributes[i++] = TRUE;
+				iAttributes[i++] = WGL_SAMPLES_ARB;
+				si = i;
+				iAttributes[i++] = d->glFormat.samples() == -1 ? 4 : d->glFormat.samples();
+			}
+			*/
+
+			// finish
+			iAttributes[i] = 0;
+
+			wglChoosePixelFormatARB(pdc, iAttributes, 0, 1, &pixelFormat, &numFormats);
+
+			//do {
+				//valid = wglChoosePixelFormatARB(pdc, iAttributes.constData(), 0, 1, &pixelFormat, &numFormats);
+				//if (trySampleBuffers  && (!valid || numFormats < 1) && d->glFormat.sampleBuffers())
+				//	iAttributes[si] /= 2; // try different no. samples - we aim for the best one
+				//else
+				//	break;
+			//} while ((!valid || numFormats < 1) && iAttributes[si] > 1);
+
+			chosenPfi = pixelFormat;
+		}
+
+		if(!chosenPfi)
+		{
+			// fallback (call the windows function)
+			chosenPfi = ChoosePixelFormat( m_hdc , dummyPfd );
+		}else
+			std::cout << "CHECK!!\n";
+
+		return chosenPfi;
 	}
 
 

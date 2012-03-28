@@ -7,6 +7,7 @@
 #ifdef _WINDOWS
 	#include <windows.h>
 	#include <gl/gl.h>
+	#include "wglew.h"
 #else
 	#include "glxew.h"
 	#include <GL/gl.h>
