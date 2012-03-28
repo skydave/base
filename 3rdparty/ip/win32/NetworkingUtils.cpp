@@ -42,6 +42,9 @@
 #pragma comment( lib, "ws2_32.lib" )
 
 
+#include "../IpEndpointName.h"
+
+
 static LONG initCount_ = 0;
 static bool winsockInitialized_ = false;
 
@@ -95,5 +98,34 @@ unsigned long GetHostByName( const char *name )
     return result;
 }
 
+
+void SockaddrFromIpEndpointName( struct sockaddr_in& sockAddr, const IpEndpointName& endpoint )
+{
+    memset( (char *)&sockAddr, 0, sizeof(sockAddr ) );
+    sockAddr.sin_family = AF_INET;
+
+	sockAddr.sin_addr.s_addr = 
+		(endpoint.address == IpEndpointName::ANY_ADDRESS)
+		? INADDR_ANY
+		: htonl( endpoint.address );
+
+	sockAddr.sin_port =
+		(endpoint.port == IpEndpointName::ANY_PORT)
+		? (short)0
+		: htons( (short)endpoint.port );
+}
+
+
+IpEndpointName IpEndpointNameFromSockaddr( const struct sockaddr_in& sockAddr )
+{
+	return IpEndpointName( 
+		(sockAddr.sin_addr.s_addr == INADDR_ANY) 
+			? IpEndpointName::ANY_ADDRESS 
+			: ntohl( sockAddr.sin_addr.s_addr ),
+		(sockAddr.sin_port == 0)
+			? IpEndpointName::ANY_PORT
+			: ntohs( sockAddr.sin_port )
+		);
+}
 
 #endif // _WINDOWS

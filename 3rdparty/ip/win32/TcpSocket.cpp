@@ -27,38 +27,11 @@
 
 typedef int socklen_t;
 
-/*
-static void SockaddrFromIpEndpointName( struct sockaddr_in& sockAddr, const IpEndpointName& endpoint )
-{
-    memset( (char *)&sockAddr, 0, sizeof(sockAddr ) );
-    sockAddr.sin_family = AF_INET;
-
-	sockAddr.sin_addr.s_addr = 
-		(endpoint.address == IpEndpointName::ANY_ADDRESS)
-		? INADDR_ANY
-		: htonl( endpoint.address );
-
-	sockAddr.sin_port =
-		(endpoint.port == IpEndpointName::ANY_PORT)
-		? (short)0
-		: htons( (short)endpoint.port );
-}
+extern void SockaddrFromIpEndpointName( struct sockaddr_in& sockAddr, const IpEndpointName& endpoint );
+extern IpEndpointName IpEndpointNameFromSockaddr( const struct sockaddr_in& sockAddr );
 
 
-static IpEndpointName IpEndpointNameFromSockaddr( const struct sockaddr_in& sockAddr )
-{
-	return IpEndpointName( 
-		(sockAddr.sin_addr.s_addr == INADDR_ANY) 
-			? IpEndpointName::ANY_ADDRESS 
-			: ntohl( sockAddr.sin_addr.s_addr ),
-		(sockAddr.sin_port == 0)
-			? IpEndpointName::ANY_PORT
-			: ntohs( sockAddr.sin_port )
-		);
-}
-
-
-class UdpSocket::Implementation{
+class TcpSocket::Implementation{
     NetworkInitializer networkInitializer_;
 
 	bool isBound_;
@@ -75,7 +48,7 @@ public:
 		, isConnected_( false )
 		, socket_( INVALID_SOCKET )
 	{
-		if( (socket_ = socket( AF_INET, SOCK_DGRAM, 0 )) == INVALID_SOCKET ){
+		if( (socket_ = socket( AF_INET, SOCK_STREAM, 0 )) == INVALID_SOCKET ){
             throw std::runtime_error("unable to create udp socket\n");
         }
 
@@ -87,7 +60,7 @@ public:
 	{
 		if (socket_ != INVALID_SOCKET) closesocket(socket_);
 	}
-
+	/*
 	IpEndpointName LocalEndpointFor( const IpEndpointName& remoteEndpoint ) const
 	{
 		assert( isBound_ );
@@ -131,18 +104,20 @@ public:
 
 		return IpEndpointNameFromSockaddr( sockAddr );
 	}
+	*/
 
 	void Connect( const IpEndpointName& remoteEndpoint )
 	{
 		SockaddrFromIpEndpointName( connectedAddr_, remoteEndpoint );
        
-        if (connect(socket_, (struct sockaddr *)&connectedAddr_, sizeof(connectedAddr_)) < 0) {
+		int result = connect(socket_, (struct sockaddr *)&connectedAddr_, sizeof(connectedAddr_));
+        if ( result == SOCKET_ERROR) {
             throw std::runtime_error("unable to connect udp socket\n");
         }
 
 		isConnected_ = true;
 	}
-
+	/*
 	void Send( const char *data, int size )
 	{
 		assert( isConnected_ );
@@ -189,30 +164,32 @@ public:
 
 		return result;
 	}
-
+	*/
 	SOCKET& Socket() { return socket_; }
 };
 
-UdpSocket::UdpSocket()
+
+TcpSocket::TcpSocket()
 {
 	impl_ = new Implementation();
 }
 
-UdpSocket::~UdpSocket()
+TcpSocket::~TcpSocket()
 {
 	delete impl_;
 }
 
+/*
 IpEndpointName UdpSocket::LocalEndpointFor( const IpEndpointName& remoteEndpoint ) const
 {
 	return impl_->LocalEndpointFor( remoteEndpoint );
 }
-
-void UdpSocket::Connect( const IpEndpointName& remoteEndpoint )
+*/
+void TcpSocket::Connect( const IpEndpointName& remoteEndpoint )
 {
 	impl_->Connect( remoteEndpoint );
 }
-
+/*
 void UdpSocket::Send( const char *data, int size )
 {
 	impl_->Send( data, size );

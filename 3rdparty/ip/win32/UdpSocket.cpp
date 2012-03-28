@@ -54,34 +54,8 @@
 typedef int socklen_t;
 
 
-static void SockaddrFromIpEndpointName( struct sockaddr_in& sockAddr, const IpEndpointName& endpoint )
-{
-    memset( (char *)&sockAddr, 0, sizeof(sockAddr ) );
-    sockAddr.sin_family = AF_INET;
-
-	sockAddr.sin_addr.s_addr = 
-		(endpoint.address == IpEndpointName::ANY_ADDRESS)
-		? INADDR_ANY
-		: htonl( endpoint.address );
-
-	sockAddr.sin_port =
-		(endpoint.port == IpEndpointName::ANY_PORT)
-		? (short)0
-		: htons( (short)endpoint.port );
-}
-
-
-static IpEndpointName IpEndpointNameFromSockaddr( const struct sockaddr_in& sockAddr )
-{
-	return IpEndpointName( 
-		(sockAddr.sin_addr.s_addr == INADDR_ANY) 
-			? IpEndpointName::ANY_ADDRESS 
-			: ntohl( sockAddr.sin_addr.s_addr ),
-		(sockAddr.sin_port == 0)
-			? IpEndpointName::ANY_PORT
-			: ntohs( sockAddr.sin_port )
-		);
-}
+extern void SockaddrFromIpEndpointName( struct sockaddr_in& sockAddr, const IpEndpointName& endpoint );
+extern IpEndpointName IpEndpointNameFromSockaddr( const struct sockaddr_in& sockAddr );
 
 
 class UdpSocket::Implementation{

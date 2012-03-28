@@ -48,8 +48,8 @@ public:
 */
 
 class TcpSocket{
-    //class Implementation;
-    //Implementation *impl_;
+    class Implementation;
+    Implementation *impl_;
     
 	//friend class SocketReceiveMultiplexer::Implementation;
     
@@ -57,8 +57,8 @@ public:
 
 	// ctor throws std::runtime_error if there's a problem
 	// initializing the socket.
-	//TcpSocket();
-	//virtual ~TcpSocket();
+	TcpSocket();
+	virtual ~TcpSocket();
 
 	// the socket is created in an unbound, unconnected state
 	// such a socket can only be used to send to an arbitrary
@@ -70,10 +70,11 @@ public:
 	/*
 	// retrieve the local endpoint name when sending to 'to'
     IpEndpointName LocalEndpointFor( const IpEndpointName& remoteEndpoint ) const;
-
+	*/
 	// Connect to a remote endpoint which is used as the target
 	// for calls to Send()
 	void Connect( const IpEndpointName& remoteEndpoint );	
+	/*
 	void Send( const char *data, int size );
     void SendTo( const IpEndpointName& remoteEndpoint, const char *data, int size );
 
