@@ -13,7 +13,7 @@ namespace base
 	public:
 		typedef void (*InitCallback)( void );
 		typedef void (*RenderCallback)( CameraPtr );
-		GLViewer( int width, int height, std::string caption, RenderCallback renderCallback = 0 );
+		GLViewer( int width, int height, std::string caption, InitCallback init = 0, RenderCallback render = 0 );
 
 		virtual void                                                                   paintGL();
 		CameraPtr                                                                     getCamera();
@@ -22,6 +22,7 @@ namespace base
 
 	private:
 		OrbitNavigator m_orbitNavigator;
+		InitCallback             m_init;
 		RenderCallback         m_render;
 	};
 }

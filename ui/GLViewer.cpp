@@ -12,8 +12,11 @@ namespace base
 {
 
 
-	GLViewer::GLViewer( int width, int height, std::string caption, RenderCallback render ) : GLWindow( width, height, caption ), m_render(render)
+	GLViewer::GLViewer( int width, int height, std::string caption, InitCallback init, RenderCallback render ) : GLWindow( width, height, caption ), m_init(init), m_render(render)
 	{
+		// after base (GLWindow) is constructed we have valid opengl
+		if( m_init )
+			m_init();
 	}
 
 
