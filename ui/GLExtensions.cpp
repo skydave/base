@@ -30,11 +30,8 @@ namespace base
 		std::vector<std::string> supportedExtensions;
 		base::splitString( supported, supportedExtensions );
 		for( std::vector<std::string>::iterator it = supportedExtensions.begin();it<supportedExtensions.end();++it )
-		{
-			std::cout << *it<< std::endl;
 			if( extension == *it )
 				return true;
-		}
 
 		return false;
 	}
