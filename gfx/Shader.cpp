@@ -351,6 +351,11 @@ namespace base
 		return AttributePtr();
 	}
 
+	ShaderPtr Shader::createSimpleTextureShader()
+	{
+		return Shader::create().attachPS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.ps.glsl").attachVS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.vs.glsl");
+	}
+
 }
 
 

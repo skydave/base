@@ -77,13 +77,6 @@ namespace base
 		std::map<std::string, AttributePtr>                                        m_uniforms; // list of uniforms
 
 
-		//
-		// creation functions
-		//
-		static ShaderLoader create( const std::string &id = "" );
-		static ShaderLoader load( const std::string &vertexShaderPath, const std::string &pixelShaderPath, const std::string &id = "" );
-		static ShaderLoader load( const char *vsSrc, const int &vsSrcSize, const char *psSrc, const int &psSrcSize, const std::string &id = "" );
-		static ShaderLoader load( Path vertexShaderPath, Path pixelShaderPath, const std::string &id = "" );
 
 		// list of glshaders which are linked into the glprogram
 		ShaderObject &createShaderObject();
@@ -92,6 +85,20 @@ namespace base
 
 		GLhandleARB m_glProgram;
 		bool             m_isOk;
+
+		//
+		// creation functions
+		//
+		static ShaderLoader create( const std::string &id = "" );
+		static ShaderLoader load( const std::string &vertexShaderPath, const std::string &pixelShaderPath, const std::string &id = "" );
+		static ShaderLoader load( const char *vsSrc, const int &vsSrcSize, const char *psSrc, const int &psSrcSize, const std::string &id = "" );
+		static ShaderLoader load( Path vertexShaderPath, Path pixelShaderPath, const std::string &id = "" );
+
+		//
+		// some useful default shaders
+		//
+		static ShaderPtr createSimpleTextureShader();
+
 	};
 
 
