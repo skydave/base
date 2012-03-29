@@ -3,13 +3,14 @@
 #include "GLExtensions.h"
 #include "GLTemporaryContext.h"
 #include <gltools\gl.h>
+#include <util\StringManip.h>
 
 
 namespace base
 {
-	bool WGLisExtensionSupported(const char *extension)
+	bool WGLisExtensionSupported( const std::string &extension )
 	{
-		const size_t extlen = strlen(extension);
+		//const size_t extlen = strlen(extension);
 		const char *supported = NULL;
  
 		// Try To Use wglGetExtensionStringARB On Current DC, If Possible
@@ -26,24 +27,16 @@ namespace base
 		if (supported == NULL)
 			return false;
  
-		// Begin Examination At Start Of String, Increment By 1 On False Match
-		for (const char* p = supported; ; p++)
+		std::vector<std::string> supportedExtensions;
+		base::splitString( supported, supportedExtensions );
+		for( std::vector<std::string>::iterator it = supportedExtensions.begin();it<supportedExtensions.end();++it )
 		{
-			// Advance p Up To The Next Possible Match
-			p = strstr(p, extension);
- 
-			if (p == NULL)
-			return false;                       // No Match
- 
-			// Make Sure That Match Is At The Start Of The String Or That
-			// The Previous Char Is A Space, Or Else We Could Accidentally
-			// Match "wglFunkywglExtension" With "wglExtension"
- 
-			// Also, Make Sure That The Following Character Is Space Or NULL
-			// Or Else "wglExtensionTwo" Might Match "wglExtension"
-			if ((p==supported || p[-1]==' ') && (p[extlen]=='\0' || p[extlen]==' '))
-				return true;                        // Match
+			std::cout << *it<< std::endl;
+			if( extension == *it )
+				return true;
 		}
+
+		return false;
 	}
 
 	//
@@ -58,7 +51,7 @@ namespace base
 
 		if (WGLisExtensionSupported("GL_ARB_texture_rectangle"))
 			glExtensions |= TextureRectangle;
-		if (WGLisExtensionSupported("GL_ARB_multisample"))
+		if (WGLisExtensionSupported("WGL_ARB_multisample"))
 			glExtensions |= SampleBuffers;
 		if (WGLisExtensionSupported("GL_SGIS_generate_mipmap"))
 			glExtensions |= GenerateMipmap;
