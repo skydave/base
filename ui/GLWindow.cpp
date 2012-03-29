@@ -228,18 +228,16 @@ namespace base
 			//iAttributes[i++] = WGL_NUMBER_OVERLAYS_ARB;
 			//iAttributes[i++] = 1;
 
-			/*
 			int si = 0;
 			bool trySampleBuffers = GLExtensions::glExtensions() & GLExtensions::SampleBuffers;
-			if (trySampleBuffers && this->)
+			if (trySampleBuffers && this->m_sampleBuffers)
 			{
 				iAttributes[i++] = WGL_SAMPLE_BUFFERS_ARB;
 				iAttributes[i++] = TRUE;
 				iAttributes[i++] = WGL_SAMPLES_ARB;
 				si = i;
-				iAttributes[i++] = d->glFormat.samples() == -1 ? 4 : d->glFormat.samples();
+				iAttributes[i++] = this->m_numSamples == -1 ? 4 : this->m_numSamples;
 			}
-			*/
 
 			// finish
 			iAttributes[i] = 0;
