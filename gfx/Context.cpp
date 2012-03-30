@@ -62,8 +62,10 @@ namespace base
 		//
 		m_screenQuad = geo_quad();
 
+		// we initialize mvpm uniform to identity. we can do this here because currently m_simpleTextureShader is only used for
+		// screenquad rendering
 		m_simpleTextureShader = Shader::create().attachPS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.ps.glsl").attachVS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.vs.glsl");
-
+		m_simpleTextureShader->setUniform( "mvpm", math::Matrix44f::Identity() );
 
 		// initialize noise glsl module
 		setUniform("noise_permTexture", base::glsl::noisePermutationTableTex()->getUniform());
