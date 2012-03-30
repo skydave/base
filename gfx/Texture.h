@@ -34,7 +34,7 @@ namespace base
 
 	struct Texture2d
 	{
-		Texture2d();
+		Texture2d( bool multisampled = false, int numSamples = 4 );
 		~Texture2d();
 
 		int                                                   width();
@@ -51,14 +51,18 @@ namespace base
 		AttributePtr                                        m_uniform; // will be used to attach textures to geometry/or shaders which then will be bound
 		int                                            m_xres, m_yres; // texture info just for the record
 		int                                           m_textureFormat; // format of texture in gpu memory
+		int                                                  m_target; // this is either GL_TEXTURE_2D or GL_TEXTURE_2D_MULTISAMPLE
+		bool                                           m_multiSampled;
 
-		static Texture2dPtr create( int textureFormat, int xres = 64, int yres = 64 );
+		static Texture2dPtr create( int textureFormat, int xres = 64, int yres = 64, bool multisampled = false, int numSamples = 4 );
 		static Texture2dPtr createRGBA8( int xres = 64, int yres = 64 );
 		static Texture2dPtr createFloat32( int xres = 64, int yres = 64 );
-		static Texture2dPtr createRGBAFloat32( int xres = 64, int yres = 64 );
+		static Texture2dPtr createRGBAFloat32( int xres = 64, int yres = 64, bool multisampled = false, int numSamples = 4 );
 		static Texture2dPtr createRGBAFloat16( int xres = 64, int yres = 64 );
 
+
 		static Texture2dPtr load( const Path &file ); // loads texture from file
+		static Texture2dPtr createUVRefTexture(); // reference  texture
 	};
 
 

@@ -107,16 +107,19 @@ namespace base
 
 
 
-	Texture2dPtr Texture2d::create( int textureFormat, int xres, int yres )
+	Texture2dPtr Texture2d::create( int textureFormat, int xres, int yres, bool multisampled, int numSamples )
 	{
-		Texture2dPtr result = Texture2dPtr(new Texture2d());
+		Texture2dPtr result = Texture2dPtr(new Texture2d(multisampled, numSamples));
 
 		result->m_xres = xres;
 		result->m_yres = yres;
 		result->m_textureFormat = textureFormat;
 
-		glBindTexture(GL_TEXTURE_2D, result->m_id);
-		glTexImage2D(GL_TEXTURE_2D, 0, result->m_textureFormat, result->m_xres, result->m_yres, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+		glBindTexture(result->m_target, result->m_id);
+		if( !multisampled )
+			glTexImage2D(GL_TEXTURE_2D, 0, result->m_textureFormat, result->m_xres, result->m_yres, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+		else
+			glTexImage2DMultisample( GL_TEXTURE_2D_MULTISAMPLE, numSamples, result->m_textureFormat, result->m_xres, result->m_yres, true );
 
 		return result;
 	}
@@ -138,10 +141,10 @@ namespace base
 		return Texture2d::create( GL_RGBA8, xres, yres );
 	}
 
-	Texture2dPtr Texture2d::createRGBAFloat32( int xres, int yres )
+	Texture2dPtr Texture2d::createRGBAFloat32( int xres, int yres, bool multisampled, int numSamples )
 	{
 		//return Texture2d::create( GL_RGBA_FLOAT32_ATI, xres, yres );
-		return Texture2d::create( GL_RGBA32F_ARB, xres, yres );
+		return Texture2d::create( GL_RGBA32F_ARB, xres, yres, multisampled, numSamples );
 	}
 
 	Texture2dPtr Texture2d::createRGBAFloat16( int xres, int yres )
@@ -151,7 +154,7 @@ namespace base
 
 	Texture2dPtr Texture2d::createFloat32( int xres, int yres )
 	{
-		return Texture2d::create( GL_FLOAT_R32_NV, xres, yres );
+		return Texture2d::create( GL_FLOAT_R32_NV, xres, yres);
 	}
 
 	// loads texture from file
@@ -164,25 +167,37 @@ namespace base
 		return txt;
 	}
 
-
-	Texture2d::Texture2d()
+	// reference  texture
+	Texture2dPtr Texture2d::createUVRefTexture()
 	{
+		return load( base::Path( BASE_PATH ) + "/data/uvref.png" );
+	}
+
+
+	Texture2d::Texture2d(bool multisampled, int numSamples) : m_multiSampled(multisampled)
+	{
+		if(m_multiSampled)
+			m_target = GL_TEXTURE_2D_MULTISAMPLE;
+		else
+			m_target = GL_TEXTURE_2D;
+
+
 		glGenTextures(1, &m_id);
-		glBindTexture(GL_TEXTURE_2D, m_id);
+		glBindTexture(m_target, m_id);
 
 		// when texture area is small, bilinear filter the closest mipmap
 		//glTexParameteri( GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 		//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+		glTexParameterf( m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 		//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
 		// when texture area is large, bilinear filter the original
 		//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+		glTexParameterf( m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 		//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR );
 
 		// the texture wraps over at the edges (repeat)
-		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+		glTexParameterf( m_target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+		glTexParameterf( m_target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 
 	}
 
@@ -196,35 +211,41 @@ namespace base
 	{
 		m_xres = xres;
 		m_yres = yres;
-		glBindTexture(GL_TEXTURE_2D, m_id);
-		glTexImage2D(GL_TEXTURE_2D, 0, m_textureFormat, m_xres, m_yres, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+		glBindTexture(m_target, m_id);
+		if( !m_multiSampled )
+			glTexImage2D(m_target, 0, m_textureFormat, m_xres, m_yres, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 	}
 
 	void Texture2d::uploadRGBAFloat32( int xres, int yres, float *pixels )
 	{
 		m_xres = xres;
 		m_yres = yres;
-		glBindTexture(GL_TEXTURE_2D, m_id);
-		glTexImage2D(GL_TEXTURE_2D, 0, m_textureFormat, m_xres, m_yres, 0, GL_RGBA, GL_FLOAT, pixels);
+		glBindTexture(m_target, m_id);
+		if( !m_multiSampled )
+			glTexImage2D(m_target, 0, m_textureFormat, m_xres, m_yres, 0, GL_RGBA, GL_FLOAT, pixels);
 	}
 
 	void Texture2d::uploadFloat32( int xres, int yres, float *pixels )
 	{
 		m_xres = xres;
 		m_yres = yres;
-		glBindTexture(GL_TEXTURE_2D, m_id);
-		glTexImage2D(GL_TEXTURE_2D, 0, m_textureFormat, m_xres, m_yres, 0, GL_RED, GL_FLOAT, pixels);
+		glBindTexture(m_target, m_id);
+		if( !m_multiSampled )
+			glTexImage2D(m_target, 0, m_textureFormat, m_xres, m_yres, 0, GL_RED, GL_FLOAT, pixels);
 	}
 
 	void Texture2d::upload( ImagePtr image )
 	{
 		m_xres = image->m_width;
 		m_yres = image->m_height;
-		glBindTexture(GL_TEXTURE_2D, m_id);
-		glTexParameteri( GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-		glTexImage2D(GL_TEXTURE_2D, 0, m_textureFormat, m_xres, m_yres, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->m_data);
-		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
-		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+		glBindTexture(m_target, m_id);
+		
+		glTexParameteri( m_target, GL_GENERATE_MIPMAP, GL_TRUE);
+		glTexParameterf( m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+		glTexParameterf( m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+
+		if( !m_multiSampled )
+			glTexImage2D(m_target, 0, m_textureFormat, m_xres, m_yres, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->m_data);
 	}
 
 
