@@ -42,6 +42,8 @@ namespace base
 			bool                                       m_multisampled;
 			int                                          m_numSamples;
 			bool                                      m_stencilBuffer;
+			float                                     m_clearColor[4];
+			int                                        m_clearStencil;
 		};
 
 		FBO( const FBOSetup &setup );

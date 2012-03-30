@@ -12,6 +12,8 @@ namespace base
 		m_multisampled = false;
 		m_numSamples = -1;
 		m_stencilBuffer = false;
+		m_clearColor[0] = m_clearColor[1] = m_clearColor[2] = m_clearColor[3] = 0.0f;
+		m_clearStencil = 0;
 	}
 
 	int FBO::FBOSetup::getWidth() const{return m_width;}
@@ -312,10 +314,10 @@ namespace base
 
 		if( clearBits )
 		{
-			glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+			glClearColor( m_setup.m_clearColor[0], m_setup.m_clearColor[1], m_setup.m_clearColor[2], m_setup.m_clearColor[3]);
+			glClearStencil( m_setup.m_clearStencil );
 			glClear( clearBits );
-		}//else
-		//	glDisable( GL_DEPTH_TEST );
+		}
 	}
 
 	void FBO::end()
