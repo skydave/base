@@ -177,7 +177,6 @@ namespace base
 		int chosenPfi = 0;
 		if (wglChoosePixelFormatARB)
 		{
-			bool valid;
 			int pixelFormat = 0;
 			unsigned int numFormats = 0;
 			int iAttributes[40];
@@ -220,16 +219,18 @@ namespace base
 			//iAttributes[i++] = WGL_ACCUM_BITS_ARB;
 			//	iAttributes[i++] = d->glFormat.accumBufferSize() == -1 ? 16 : d->glFormat.accumBufferSize();
 
-			// no stencil bits
-			//iAttributes[i++] = WGL_STENCIL_BITS_ARB;
-			//iAttributes[i++] = d->glFormat.stencilBufferSize() == -1 ? 8 : d->glFormat.stencilBufferSize();
+			if(m_stencilBuffer)
+			{
+				iAttributes[i++] = WGL_STENCIL_BITS_ARB;
+				iAttributes[i++] = 8;
+			}
 
 			// no idea what this is about
 			//iAttributes[i++] = WGL_NUMBER_OVERLAYS_ARB;
 			//iAttributes[i++] = 1;
 
 			int si = 0;
-			bool trySampleBuffers = GLExtensions::glExtensions() & GLExtensions::SampleBuffers;
+			bool trySampleBuffers = (GLExtensions::glExtensions() & GLExtensions::SampleBuffers) != 0;
 			if (trySampleBuffers && this->m_sampleBuffers)
 			{
 				iAttributes[i++] = WGL_SAMPLE_BUFFERS_ARB;
@@ -259,8 +260,7 @@ namespace base
 		{
 			// fallback (call the windows function)
 			chosenPfi = ChoosePixelFormat( m_hdc , dummyPfd );
-		}else
-			std::cout << "CHECK!!\n";
+		}
 
 		return chosenPfi;
 	}
@@ -314,6 +314,12 @@ namespace base
 	{
 		m_numSamples = numSamples;
 		// TODO: handle the case when the context already has been created
+	}
+
+	// specifies whether a glcontext with stencil support is to be created
+	void GLWindow::setStencilBuffer( bool enabled )
+	{
+		m_stencilBuffer = enabled;
 	}
 
 	void GLWindow::setInitCallback( InitCallback init )
