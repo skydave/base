@@ -15,16 +15,20 @@ namespace base
 	{
 		enum ComponentType
 		{
-			INT = 0x1404,
-			FLOAT = 0x1406,
+			INT,
+			FLOAT,
+			SAMPLER
+			/*
 			SAMPLER1D,
 			SAMPLER2D,
+			SAMPLER2DMultisample,
 			SAMPLER2DARRAY,
 			SAMPLER3D,
 			SAMPLERCUBE
+			*/
 		};
 
-		Attribute( char numComponents=3, ComponentType componentType = FLOAT );
+		Attribute( char numComponents=3, ComponentType componentType = FLOAT, int textureTarget = 0 );
 		~Attribute();
 
 		//Attribute *copy();
@@ -80,10 +84,10 @@ namespace base
 			return m_numComponents;
 		}
 
-		int elementComponentType()
-		{
-			return m_componentType;
-		}
+		//int elementComponentType()
+		//{
+		//	return m_componentType;
+		//}
 
 		int elementComponentSize()
 		{
@@ -106,7 +110,8 @@ namespace base
 
 		std::vector<unsigned char> m_data;
 		char              m_componentSize; // size in memory of a component of an element in byte
-		ComponentType     m_componentType;
+		int               m_componentType;
+		int               m_textureTarget; // will hold the textureTarget when componentType is sampler
 		char              m_numComponents; // number of components per element
 		int                 m_numElements;
 
@@ -116,6 +121,7 @@ namespace base
 		static AttributePtr                    createSamplerCube();
 		static AttributePtr                      createSampler3d();
 		static AttributePtr                      createSampler2d();
+		static AttributePtr                    createSampler2dMS();
 		static AttributePtr                 createSampler2dArray();
 		static AttributePtr                      createSampler1d();
 		static AttributePtr                          createMat33();

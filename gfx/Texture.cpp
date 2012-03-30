@@ -253,7 +253,10 @@ namespace base
 	{
 		if( !m_uniform )
 		{
-			m_uniform = Attribute::createSampler2d();
+			if( !m_multiSampled )
+				m_uniform = Attribute::createSampler2d();
+			else
+				m_uniform = Attribute::createSampler2dMS();
 			m_uniform->appendElement( (int)m_id );
 		}
 		return m_uniform;

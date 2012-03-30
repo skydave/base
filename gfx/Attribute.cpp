@@ -5,16 +5,26 @@
 
 namespace base
 {
-	Attribute::Attribute( char numComponents, ComponentType componentType ) : m_numElements(0), m_numComponents(numComponents), m_componentType(componentType), m_isDirty(true)
+	Attribute::Attribute( char numComponents, ComponentType componentType, int textureTarget ) : m_numElements(0), m_numComponents(numComponents), m_isDirty(true), m_textureTarget(textureTarget)
 	{
 		switch(componentType)
 		{
-		case SAMPLER1D:
-		case SAMPLER2D:
-		case SAMPLER3D:
-		case INT:m_componentSize=sizeof(int);break;
+		case INT:
+			{
+				m_componentType = GL_INT;
+				m_componentSize=sizeof(int);
+			}break;
 		default:
-		case FLOAT:m_componentSize=sizeof(float);break;
+		case FLOAT:
+			{
+				m_componentType = GL_FLOAT;
+				m_componentSize=sizeof(float);
+			}break;
+		case SAMPLER:
+			{
+				m_componentType = SAMPLER;
+				m_componentSize=sizeof(int);
+			}break;
 		};
 
 		glGenBuffers(1, &m_bufferId);
@@ -40,9 +50,9 @@ namespace base
 		glBindBuffer(GL_ARRAY_BUFFER, m_bufferId);
 		glEnableVertexAttribArray(index);
 		if( m_componentType != INT )
-			glVertexAttribPointer(index, numComponents(), elementComponentType(), false, 0, 0);
+			glVertexAttribPointer(index, numComponents(), m_componentType, false, 0, 0);
 		else
-			glVertexAttribIPointer(index, numComponents(), elementComponentType(), 0, 0);
+			glVertexAttribIPointer(index, numComponents(), m_componentType, 0, 0);
 
 	}
 	void Attribute::unbindAsAttribute( int index )
@@ -56,64 +66,22 @@ namespace base
 		switch( numComponents() )
 		{
 		case 1:
-			if( elementComponentType() == FLOAT )
+			if( m_componentType == GL_FLOAT )
 			{
 				//printf("setting uniform tmp: %f at uniform location %i\n", *((float *)getRawPointer()), index );
 				glUniform1fv( index, numElements(), (float *)getRawPointer());
 			}
-			else if( elementComponentType() == INT )
+			else if( m_componentType == GL_INT )
 			{
 				glUniform1iv( index, numElements(), (int*)getRawPointer());
-			}else if( elementComponentType() == SAMPLER2D )
+			}else if( m_componentType == SAMPLER )
 			{
 				// get gl textureid
 				unsigned int t = (unsigned int) (*(int*)getRawPointer());
 
 				// bind texture to given texture unit (index)
 				glActiveTexture(GL_TEXTURE0+index);
-				glBindTexture(GL_TEXTURE_2D, t);
-
-				// now set the sampler uniform to point to the textureunit
-				int tt = index; // for now texture unit == unfiform location
-								// this will be bad with higher number of uniforms in shader
-								// need more clever texture unit management
-				glUniform1iv( index, 1, &tt);
-			}else if( elementComponentType() == SAMPLER2DARRAY )
-			{
-				// get gl textureid
-				unsigned int t = (unsigned int) (*(int*)getRawPointer());
-
-				// bind texture to given texture unit (index)
-				glActiveTexture(GL_TEXTURE0+index);
-				glBindTexture(GL_TEXTURE_2D_ARRAY, t);
-
-				// now set the sampler uniform to point to the textureunit
-				int tt = index; // for now texture unit == unfiform location
-								// this will be bad with higher number of uniforms in shader
-								// need more clever texture unit management
-				glUniform1iv( index, 1, &tt);
-			}else if( elementComponentType() == SAMPLER3D )
-			{
-				// get gl textureid
-				unsigned int t = (unsigned int) (*(int*)getRawPointer());
-
-				// bind texture to given texture unit (index)
-				glActiveTexture(GL_TEXTURE0+index);
-				glBindTexture(GL_TEXTURE_3D, t);
-
-				// now set the sampler uniform to point to the textureunit
-				int tt = index; // for now texture unit == unfiform location
-								// this will be bad with higher number of uniforms in shader
-								// need more clever texture unit management
-				glUniform1iv( index, 1, &tt);
-			}else if( elementComponentType() == SAMPLERCUBE )
-			{
-				// get gl textureid
-				unsigned int t = (unsigned int) (*(int*)getRawPointer());
-
-				// bind texture to given texture unit (index)
-				glActiveTexture(GL_TEXTURE0+index);
-				glBindTexture(GL_TEXTURE_CUBE_MAP, t);
+				glBindTexture(m_textureTarget, t);
 
 				// now set the sampler uniform to point to the textureunit
 				int tt = index; // for now texture unit == unfiform location
@@ -123,15 +91,15 @@ namespace base
 			}
 			break;
 		case 2:
-			if( elementComponentType() == GL_FLOAT )
+			if( m_componentType == GL_FLOAT )
 				glUniform2fv( index, numElements(), (float *)getRawPointer());
 			break;
 		case 3:
-			if( elementComponentType() == GL_FLOAT )
+			if( m_componentType == GL_FLOAT )
 				glUniform3fv( index, numElements(), (float *)getRawPointer());
 			break;
 		case 4:
-			if( elementComponentType() == GL_FLOAT )
+			if( m_componentType == GL_FLOAT )
 				glUniform4fv( index, numElements(), (float *)getRawPointer());
 			break;
 		case 9:
@@ -152,27 +120,32 @@ namespace base
 	
 	AttributePtr Attribute::createSamplerCube()
 	{
-		return AttributePtr( new Attribute(1, Attribute::SAMPLERCUBE) );
+		return AttributePtr( new Attribute(1, Attribute::SAMPLER, GL_TEXTURE_CUBE_MAP) );
 	}
 
 	AttributePtr Attribute::createSampler3d()
 	{
-		return AttributePtr( new Attribute(1, Attribute::SAMPLER3D) );
+		return AttributePtr( new Attribute(1, Attribute::SAMPLER, GL_TEXTURE_3D) );
 	}
 
 	AttributePtr Attribute::createSampler2d()
 	{
-		return AttributePtr( new Attribute(1, Attribute::SAMPLER2D) );
+		return AttributePtr( new Attribute(1, Attribute::SAMPLER, GL_TEXTURE_2D) );
+	}
+
+	AttributePtr Attribute::createSampler2dMS()
+	{
+		return AttributePtr( new Attribute(1, Attribute::SAMPLER, GL_TEXTURE_2D_MULTISAMPLE) );
 	}
 
 	AttributePtr Attribute::createSampler2dArray()
 	{
-		return AttributePtr( new Attribute(1, Attribute::SAMPLER2DARRAY) );
+		return AttributePtr( new Attribute(1, Attribute::SAMPLER, GL_TEXTURE_2D_ARRAY) );
 	}
 
 	AttributePtr Attribute::createSampler1d()
 	{
-		return AttributePtr( new Attribute(1, Attribute::SAMPLER1D) );
+		return AttributePtr( new Attribute(1, Attribute::SAMPLER, GL_TEXTURE_1D) );
 	}
 
 	AttributePtr Attribute::createMat33()
