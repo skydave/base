@@ -23,6 +23,7 @@ namespace base
 			bool                               isMultisampled() const;
 			int                                 getNumSamples() const;
 			int                                 getNumOutputs() const;
+			bool                             hasStencilBuffer() const;
 
 			FBOSetup                              &width( int width );
 			FBOSetup                            &height( int height );
@@ -30,6 +31,7 @@ namespace base
 			FBOSetup                    &numSamples( int numSamples );
 			FBOSetup                   &attach( Texture2dPtr output );
 			FBOSetup             &attach( Texture2dArrayPtr outputs );
+			FBOSetup                   &stencilBuffer( bool enabled );
 
 			operator FBOPtr ();
 
@@ -39,6 +41,7 @@ namespace base
 			int                                              m_height;
 			bool                                       m_multisampled;
 			int                                          m_numSamples;
+			bool                                      m_stencilBuffer;
 		};
 
 		FBO( const FBOSetup &setup );

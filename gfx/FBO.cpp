@@ -11,6 +11,7 @@ namespace base
 		m_height = 512;
 		m_multisampled = false;
 		m_numSamples = -1;
+		m_stencilBuffer = false;
 	}
 
 	int FBO::FBOSetup::getWidth() const{return m_width;}
@@ -26,6 +27,11 @@ namespace base
 		else
 			return 0;
 	};
+
+	bool FBO::FBOSetup::hasStencilBuffer() const
+	{
+		return m_stencilBuffer;
+	}
 
 	FBO::FBOSetup &FBO::FBOSetup::width( int width )
 	{
@@ -65,6 +71,12 @@ namespace base
 		return *this;
 	}
 
+	FBO::FBOSetup &FBO::FBOSetup::stencilBuffer( bool enabled )
+	{
+		m_stencilBuffer = enabled;
+		return *this;
+	}
+
 	
 	FBO::FBOSetup::operator FBOPtr()
 	{
@@ -81,23 +93,32 @@ namespace base
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fboId);
 
 
-		// create depth buffer and attach it to FBO ==========================
-		// create render buffer for depth (A renderbuffer is a simple 2D graphics image in a specified format. This format usually is defined as color, depth or stencil data.)
+
+
+		// create depth renderbuffer ===========================
+		// if we also have a stencil buffer request, we will try to combine depth and stencil into one buffer
 		glGenRenderbuffersEXT(1, &m_depthbufferId);
 		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_depthbufferId);
 
+		int depthComponent = GL_DEPTH_COMPONENT;
 
-		// initialize renderbuffer so that it can hold depth ( glRenderbufferStorage — establish data storage, format and dimensions of a renderbuffer object's image -> create depthmap buffer)
+		// if stencil buffer has been requested, we will use a combined depth-stencil component
+		if( setup.hasStencilBuffer() )
+			depthComponent = GL_DEPTH_STENCIL_EXT;
+
+
 		if( !m_setup.isMultisampled() )
-			glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, m_setup.getWidth(), m_setup.getHeight());
+			glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, depthComponent, m_setup.getWidth(), m_setup.getHeight());
 		else
-			glRenderbufferStorageMultisample( GL_RENDERBUFFER_EXT, m_setup.getNumSamples(), GL_DEPTH_COMPONENT, m_setup.getWidth(), m_setup.getHeight() );
+			glRenderbufferStorageMultisample( GL_RENDERBUFFER_EXT, m_setup.getNumSamples(), depthComponent, m_setup.getWidth(), m_setup.getHeight() );
 
 		// attach depth renderbuffer it to fbo
 		glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, m_depthbufferId);
 
-		// FBO is incomplete at this point because we havent created and attached a colorbuffer. This is done
-		// in setOutputs and we use glFramebufferTexture2DEXT
+		// attach stencil buffer to fbo
+		if( setup.hasStencilBuffer() )
+			glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, m_depthbufferId);
+
 
 
 		// attach outputs since FBOSetup provides us with all attachments =============
