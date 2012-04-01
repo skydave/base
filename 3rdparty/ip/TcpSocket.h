@@ -87,9 +87,11 @@ public:
 	*/
 
 	int Listen();
-	TcpSocket Accept();
+	void Accept( TcpSocket &client );
 	int Receive( char *data, int size );
 	void Send( const char *data, int size );
+
+	bool isValid();
 };
 
 
