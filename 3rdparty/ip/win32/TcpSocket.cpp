@@ -112,7 +112,7 @@ public:
        
 		int result = connect(socket_, (struct sockaddr *)&connectedAddr_, sizeof(connectedAddr_));
         if ( result == SOCKET_ERROR) {
-            throw std::runtime_error("unable to connect udp socket\n");
+            throw std::runtime_error("unable to connect tcp socket\n");
         }
 
 		isConnected_ = true;
