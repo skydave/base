@@ -75,7 +75,6 @@ public:
 	// for calls to Send()
 	void Connect( const IpEndpointName& remoteEndpoint );	
 	/*
-	void Send( const char *data, int size );
     void SendTo( const IpEndpointName& remoteEndpoint, const char *data, int size );
 	*/
 
@@ -89,6 +88,8 @@ public:
 
 	int Listen();
 	TcpSocket Accept();
+	int Receive( char *data, int size );
+	void Send( const char *data, int size );
 };
 
 

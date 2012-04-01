@@ -126,12 +126,7 @@ public:
 		isConnected_ = true;
 	}
 	/*
-	void Send( const char *data, int size )
-	{
-		assert( isConnected_ );
 
-        send( socket_, data, size, 0 );
-	}
 
     void SendTo( const IpEndpointName& remoteEndpoint, const char *data, int size )
 	{
@@ -184,6 +179,19 @@ public:
 		return result;
 	}
 	*/
+
+	int Receive( char *data, int size )
+	{
+		return recv( socket_, data, size, 0);
+	}
+
+	void Send( const char *data, int size )
+	{
+		//assert( isConnected_ );
+
+        send( socket_, data, size, 0 );
+	}
+
 	SOCKET& Socket() { return socket_; }
 };
 
@@ -212,11 +220,19 @@ void TcpSocket::Connect( const IpEndpointName& remoteEndpoint )
 {
 	impl_->Connect( remoteEndpoint );
 }
-/*
-void UdpSocket::Send( const char *data, int size )
+
+int TcpSocket::Receive( char *buffer, int size )
+{
+	return impl_->Receive( buffer, size );
+}
+
+void TcpSocket::Send( const char *data, int size )
 {
 	impl_->Send( data, size );
 }
+
+
+/*
 
 void UdpSocket::SendTo( const IpEndpointName& remoteEndpoint, const char *data, int size )
 {
