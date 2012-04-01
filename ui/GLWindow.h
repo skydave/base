@@ -22,6 +22,7 @@ namespace base
 		virtual void                       setCaption( std::string caption );
 		virtual void                        setSize( int width, int height );
 		void                                setSampleBuffers( bool enabled ); // specifies whether a glcontext with samplebuffer support is to be created
+		void                                setStencilBuffer( bool enabled ); // specifies whether a glcontext with stencil support is to be created
 		void                                    setSamples( int numSamples ); // specifies the number of samples we want
 		void                            setInitCallback( InitCallback init );
 
@@ -43,6 +44,7 @@ namespace base
 		int                                                         m_zdepth;
 		bool                                                 m_sampleBuffers;
 		int                                                     m_numSamples; // -1 indicates: maximum possible
+		bool                                                 m_stencilBuffer; // stencil buffer needed?
 
 		bool                                                    m_fullscreen;
 		RECT                                                    m_windowRect;

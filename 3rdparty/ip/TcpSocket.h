@@ -76,13 +76,13 @@ public:
 	void Connect( const IpEndpointName& remoteEndpoint );	
 	/*
     void SendTo( const IpEndpointName& remoteEndpoint, const char *data, int size );
-
+	*/
 
 	// Bind a local endpoint to receive incoming data. Endpoint
 	// can be 'any' for the system to choose an endpoint
 	void Bind( const IpEndpointName& localEndpoint );
 	bool IsBound() const;
-
+	/*
 	int ReceiveFrom( IpEndpointName& remoteEndpoint, char *data, int size );
 	*/
 	int Receive( char *data, int size );

@@ -3,6 +3,7 @@
 #include <math/Math.h>
 
 #include <gltools/gl.h>
+#include <util/tuple.h>
 
 
 
@@ -244,26 +245,51 @@ namespace base
 	{
 		GeometryPtr result = GeometryPtr(new Geometry(Geometry::QUAD));
 
+		// unique points
+		std::vector<math::Vec3f> pos;
+		pos.push_back( math::Vec3f(-.5f,-.5f,0.5f) );
+		pos.push_back( math::Vec3f(-.5f,0.5f,0.5f) );
+		pos.push_back( math::Vec3f(.5f,.5f,0.5f) );
+		pos.push_back( math::Vec3f(.5f,-.5f,0.5f) );
+
+		pos.push_back( math::Vec3f(-.5f,-.5f,-0.5f) );
+		pos.push_back( math::Vec3f(-.5f,0.5f,-0.5f) );
+		pos.push_back( math::Vec3f(.5f,.5f,-0.5f) );
+		pos.push_back( math::Vec3f(.5f,-.5f,-0.5f) );
+
+		// quads
+		std::vector< std::tuple<int, int, int, int> > quads;
+		quads.push_back( std::make_tuple(3, 2, 1, 0) );
+		quads.push_back( std::make_tuple(4, 5, 6, 7) );
+		quads.push_back( std::make_tuple(7, 6, 2, 3) );
+		quads.push_back( std::make_tuple(1, 5, 4, 0) );
+		quads.push_back( std::make_tuple(6, 5, 1, 2) );
+		quads.push_back( std::make_tuple(4, 7, 3, 0) );
+
+		// split per face (because we have uv shells)
 		AttributePtr positions = Attribute::createVec3f();
+		AttributePtr uv = Attribute::createVec2f();
 
-		positions->appendElement( math::Vec3f(-.5f,-.5f,0.5f) );
-		positions->appendElement( math::Vec3f(-.5f,0.5f,0.5f) );
-		positions->appendElement( math::Vec3f(.5f,.5f,0.5f) );
-		positions->appendElement( math::Vec3f(.5f,-.5f,0.5f) );
 
-		positions->appendElement( math::Vec3f(-.5f,-.5f,-0.5f) );
-		positions->appendElement( math::Vec3f(-.5f,0.5f,-0.5f) );
-		positions->appendElement( math::Vec3f(.5f,.5f,-0.5f) );
-		positions->appendElement( math::Vec3f(.5f,-.5f,-0.5f) );
+		for( std::vector< std::tuple<int, int, int, int> >::iterator it = quads.begin(); it != quads.end(); ++it )
+		{
+			std::tuple<int, int, int, int> &quad = *it;
+			int i0, i1, i2, i3;
+
+			i0 = positions->appendElement( pos[std::get<0>(quad)] );
+			uv->appendElement( math::Vec2f(0.0f, 0.0f) );
+			i1 = positions->appendElement( pos[std::get<1>(quad)] );
+			uv->appendElement( math::Vec2f(1.0f, 0.0f) );
+			i2 = positions->appendElement( pos[std::get<2>(quad)] );
+			uv->appendElement( math::Vec2f(1.0f, 1.0f) );
+			i3 = positions->appendElement( pos[std::get<3>(quad)] );
+			uv->appendElement( math::Vec2f(0.0f, 1.0f) );
+
+			result->addQuad(i0, i1, i2, i3);			
+		}
 
 		result->setAttr( "P", positions);
-
-		result->addQuad( 3, 2, 1, 0 );
-		result->addQuad( 4, 5, 6, 7 );
-		result->addQuad( 7, 6, 2, 3 );
-		result->addQuad( 1, 5, 4, 0 );
-		result->addQuad( 6, 5, 1, 2 );
-		result->addQuad( 4, 7, 3, 0 );
+		result->setAttr( "UV", uv);
 
 		return result;
 	}

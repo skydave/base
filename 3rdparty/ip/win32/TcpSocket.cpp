@@ -127,13 +127,13 @@ public:
 
         sendto( socket_, data, size, 0, (sockaddr*)&sendToAddr_, sizeof(sendToAddr_) );
 	}
-
+	*/
 	void Bind( const IpEndpointName& localEndpoint )
 	{
 		struct sockaddr_in bindSockAddr;
 		SockaddrFromIpEndpointName( bindSockAddr, localEndpoint );
 
-        if (bind(socket_, (struct sockaddr *)&bindSockAddr, sizeof(bindSockAddr)) < 0) {
+        if (bind(socket_, (struct sockaddr *)&bindSockAddr, sizeof(bindSockAddr))  == SOCKET_ERROR) {
             throw std::runtime_error("unable to bind udp socket\n");
         }
 
@@ -141,7 +141,7 @@ public:
 	}
 
 	bool IsBound() const { return isBound_; }
-
+	/*
     int ReceiveFrom( IpEndpointName& remoteEndpoint, char *data, int size )
 	{
 		assert( isBound_ );
@@ -215,17 +215,17 @@ void UdpSocket::SendTo( const IpEndpointName& remoteEndpoint, const char *data, 
 {
 	impl_->SendTo( remoteEndpoint, data, size );
 }
-
-void UdpSocket::Bind( const IpEndpointName& localEndpoint )
+*/
+void TcpSocket::Bind( const IpEndpointName& localEndpoint )
 {
 	impl_->Bind( localEndpoint );
 }
 
-bool UdpSocket::IsBound() const
+bool TcpSocket::IsBound() const
 {
 	return impl_->IsBound();
 }
-
+/*
 int UdpSocket::ReceiveFrom( IpEndpointName& remoteEndpoint, char *data, int size )
 {
 	return impl_->ReceiveFrom( remoteEndpoint, data, size );

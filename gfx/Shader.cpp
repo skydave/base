@@ -172,6 +172,12 @@ namespace base
 		return Shader::create( id ).attach( GL_VERTEX_SHADER_ARB, vertexShaderPath ).attach( GL_FRAGMENT_SHADER_ARB, pixelShaderPath );
 	}
 
+	// this method will append .ps.glsl and .vs.glsl  to find vertex and pixelshader
+	Shader::ShaderLoader Shader::load( Path shaderBasePath, const std::string &id )
+	{
+		return Shader::load( shaderBasePath.str() + ".vs.glsl", shaderBasePath.str() + ".ps.glsl" );
+	}
+
 
 	Shader::ShaderLoader Shader::create( const std::string &id )
 	{
@@ -349,6 +355,11 @@ namespace base
 		if(it != m_uniforms.end())
 			return it->second;
 		return AttributePtr();
+	}
+
+	ShaderPtr Shader::createSimpleTextureShader()
+	{
+		return Shader::create().attachPS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.ps.glsl").attachVS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.vs.glsl");
 	}
 
 }
