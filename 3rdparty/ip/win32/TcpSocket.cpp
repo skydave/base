@@ -31,7 +31,8 @@ extern void SockaddrFromIpEndpointName( struct sockaddr_in& sockAddr, const IpEn
 extern IpEndpointName IpEndpointNameFromSockaddr( const struct sockaddr_in& sockAddr );
 
 
-class TcpSocket::Implementation{
+class TcpSocket::Implementation
+{
     NetworkInitializer networkInitializer_;
 
 	bool isBound_;
@@ -54,6 +55,13 @@ public:
 
 		memset( &sendToAddr_, 0, sizeof(sendToAddr_) );
         sendToAddr_.sin_family = AF_INET;
+	}
+
+	Implementation( bool _isBound, bool _isConnected, SOCKET _socket )
+		: isBound_( _isBound )
+		, isConnected_( _isConnected )
+		, socket_( _socket )
+	{
 	}
 
 	~Implementation()
@@ -146,6 +154,17 @@ public:
 	}
 
 	bool IsBound() const { return isBound_; }
+
+	int Listen()
+	{
+		return listen( socket_, 10 );
+	}
+
+	TcpSocket Accept()
+	{
+		SOCKET connectedSocket = accept(socket_,NULL,NULL);
+		return TcpSocket( new TcpSocket::Implementation( false, true, connectedSocket ) );
+	}
 	/*
     int ReceiveFrom( IpEndpointName& remoteEndpoint, char *data, int size )
 	{
@@ -168,6 +187,10 @@ public:
 	SOCKET& Socket() { return socket_; }
 };
 
+TcpSocket::TcpSocket( Implementation *_impl )
+{
+	impl_ = _impl;
+}
 
 TcpSocket::TcpSocket()
 {
@@ -208,6 +231,16 @@ void TcpSocket::Bind( const IpEndpointName& localEndpoint )
 bool TcpSocket::IsBound() const
 {
 	return impl_->IsBound();
+}
+
+int TcpSocket::Listen()
+{
+	return impl_->Listen();
+}
+
+TcpSocket TcpSocket::Accept()
+{
+	return impl_->Accept();
 }
 /*
 int UdpSocket::ReceiveFrom( IpEndpointName& remoteEndpoint, char *data, int size )

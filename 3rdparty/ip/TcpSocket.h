@@ -52,7 +52,7 @@ class TcpSocket{
     Implementation *impl_;
     
 	//friend class SocketReceiveMultiplexer::Implementation;
-    
+    TcpSocket( Implementation * );
 public:
 
 	// ctor throws std::runtime_error if there's a problem
@@ -86,6 +86,9 @@ public:
 	/*
 	int ReceiveFrom( IpEndpointName& remoteEndpoint, char *data, int size );
 	*/
+
+	int Listen();
+	TcpSocket Accept();
 };
 
 
