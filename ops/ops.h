@@ -9,14 +9,14 @@
 
 
 // generic
-#include "FuncOp.h"
+#include "ops_utility.h"
 #include "ConstantOp.h"
 
 // meshes
 #include "SphereOp.h"
 
 // rendering
-#include "ClearOp.h"
+#include "ops_render.h"
 
 
 // misc
