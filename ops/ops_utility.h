@@ -8,9 +8,10 @@ namespace base
 {
 	namespace ops
 	{
-		//  ============================================================
-		//  FuncOp
-		//  ============================================================
+		// ============================================================
+		// FuncOp
+		// this operator allows the user to have any generic function to be executed from an op
+		// ============================================================
 
 		// this operator allows the user to have any generic function to be executed from an op
 		BASE_DECL_SMARTPTR(FuncOp);
@@ -40,11 +41,11 @@ namespace base
 		};
 
 
-		//  ============================================================
-		//  NOP
-		//  ============================================================
+		// ============================================================
+		// NOP
+		// does nothing
+		// ============================================================
 
-		// this operator allows the user to have any generic function to be executed from an op
 		BASE_DECL_SMARTPTR(NOP);
 		class NOP : public Op
 		{
@@ -60,6 +61,33 @@ namespace base
 			static NOPPtr create()
 			{
 				return NOPPtr( new NOP() );
+			}
+
+		};
+
+		// ============================================================
+		// SequenceOp
+		// executes all input ops
+		// ============================================================
+
+		BASE_DECL_SMARTPTR(SequenceOp);
+		class SequenceOp : public Op
+		{
+		public:
+			SequenceOp() : Op(){}
+			virtual ~SequenceOp(){}
+
+			// executes the function
+			virtual void execute()
+			{
+				// execute inputs
+				for( OpList::iterator it = m_opList.begin(); it != m_opList.end(); ++it)
+					(*it)->execute();
+			}
+
+			static SequenceOpPtr create()
+			{
+				return SequenceOpPtr( new SequenceOp() );
 			}
 
 		};

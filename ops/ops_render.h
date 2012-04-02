@@ -5,7 +5,11 @@ namespace base
 {
 	namespace ops
 	{
-		// this operator allows the user to have any generic function to be executed from an op
+		// ============================================================
+		// ClearOp
+		// wraps glClear
+		// ============================================================
+
 		BASE_DECL_SMARTPTR(ClearOp);
 		class ClearOp : public Op
 		{
