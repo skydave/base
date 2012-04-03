@@ -2,6 +2,7 @@
 #include <string>
 #include <math/Math.h>
 #include <gltools/gl.h>
+#include <util/fs.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -44,6 +45,8 @@ namespace base
 		{
 			// load from disk
 			Path srcFile = base::Path( BASE_PATH ) + "/gfx/glsl/noise.glsl";
+			return fs::read(srcFile);
+			/*
 			// TODO: use filesystem to abstract away fileaccess or alternatively bake noise code into cpp
 			std::string src;
 			std::ifstream file(srcFile.c_str() );
@@ -55,6 +58,7 @@ namespace base
 				file.close();
 			}
 			return src;
+			*/
 		}
 	}
 }
