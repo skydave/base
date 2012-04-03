@@ -31,7 +31,8 @@ extern void SockaddrFromIpEndpointName( struct sockaddr_in& sockAddr, const IpEn
 extern IpEndpointName IpEndpointNameFromSockaddr( const struct sockaddr_in& sockAddr );
 
 
-class TcpSocket::Implementation{
+class TcpSocket::Implementation
+{
     NetworkInitializer networkInitializer_;
 
 	bool isBound_;
@@ -56,9 +57,21 @@ public:
         sendToAddr_.sin_family = AF_INET;
 	}
 
+	Implementation( bool _isBound, bool _isConnected, SOCKET _socket )
+		: isBound_( _isBound )
+		, isConnected_( _isConnected )
+		, socket_( _socket )
+	{
+	}
+
 	~Implementation()
 	{
 		if (socket_ != INVALID_SOCKET) closesocket(socket_);
+	}
+
+	bool isValid()
+	{
+		return (socket_ != INVALID_SOCKET);
 	}
 	/*
 	IpEndpointName LocalEndpointFor( const IpEndpointName& remoteEndpoint ) const
@@ -112,18 +125,13 @@ public:
        
 		int result = connect(socket_, (struct sockaddr *)&connectedAddr_, sizeof(connectedAddr_));
         if ( result == SOCKET_ERROR) {
-            throw std::runtime_error("unable to connect udp socket\n");
+            throw std::runtime_error("unable to connect tcp socket\n");
         }
 
 		isConnected_ = true;
 	}
 	/*
-	void Send( const char *data, int size )
-	{
-		assert( isConnected_ );
 
-        send( socket_, data, size, 0 );
-	}
 
     void SendTo( const IpEndpointName& remoteEndpoint, const char *data, int size )
 	{
@@ -139,13 +147,25 @@ public:
 		SockaddrFromIpEndpointName( bindSockAddr, localEndpoint );
 
         if (bind(socket_, (struct sockaddr *)&bindSockAddr, sizeof(bindSockAddr))  == SOCKET_ERROR) {
-            throw std::runtime_error("unable to bind udp socket\n");
+            throw std::runtime_error("unable to bind tcp socket\n");
         }
 
 		isBound_ = true;
 	}
 
 	bool IsBound() const { return isBound_; }
+
+	int Listen()
+	{
+		return listen( socket_, 10 );
+	}
+
+	void Accept( TcpSocket &client )
+	{
+		SOCKET connectedSocket = accept(socket_,NULL,NULL);
+		delete client.impl_;
+		client.impl_ = new TcpSocket::Implementation( false, true, connectedSocket );
+	}
 	/*
     int ReceiveFrom( IpEndpointName& remoteEndpoint, char *data, int size )
 	{
@@ -165,9 +185,26 @@ public:
 		return result;
 	}
 	*/
+
+	int Receive( char *data, int size )
+	{
+		return recv( socket_, data, size, 0);
+	}
+
+	void Send( const char *data, int size )
+	{
+		//assert( isConnected_ );
+
+        send( socket_, data, size, 0 );
+	}
+
 	SOCKET& Socket() { return socket_; }
 };
 
+TcpSocket::TcpSocket( Implementation *_impl )
+{
+	impl_ = _impl;
+}
 
 TcpSocket::TcpSocket()
 {
@@ -189,11 +226,19 @@ void TcpSocket::Connect( const IpEndpointName& remoteEndpoint )
 {
 	impl_->Connect( remoteEndpoint );
 }
-/*
-void UdpSocket::Send( const char *data, int size )
+
+int TcpSocket::Receive( char *buffer, int size )
+{
+	return impl_->Receive( buffer, size );
+}
+
+void TcpSocket::Send( const char *data, int size )
 {
 	impl_->Send( data, size );
 }
+
+
+/*
 
 void UdpSocket::SendTo( const IpEndpointName& remoteEndpoint, const char *data, int size )
 {
@@ -208,6 +253,21 @@ void TcpSocket::Bind( const IpEndpointName& localEndpoint )
 bool TcpSocket::IsBound() const
 {
 	return impl_->IsBound();
+}
+
+int TcpSocket::Listen()
+{
+	return impl_->Listen();
+}
+
+void TcpSocket::Accept( TcpSocket &client )
+{
+	impl_->Accept(client);
+}
+
+bool TcpSocket::isValid()
+{
+	return impl_->isValid();
 }
 /*
 int UdpSocket::ReceiveFrom( IpEndpointName& remoteEndpoint, char *data, int size )
