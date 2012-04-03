@@ -49,7 +49,7 @@ namespace base
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_bufferId);
 		glEnableVertexAttribArray(index);
-		if( m_componentType != INT )
+		if( m_componentType == GL_FLOAT )
 			glVertexAttribPointer(index, numComponents(), m_componentType, false, 0, 0);
 		else
 			glVertexAttribIPointer(index, numComponents(), m_componentType, 0, 0);
