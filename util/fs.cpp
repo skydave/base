@@ -1,4 +1,5 @@
 #include "fs.h"
+#include <direct.h>
 #include <iostream>
 #include <sstream>
 
@@ -14,9 +15,89 @@ namespace base
 {
 	namespace fs
 	{
+		// ==============================
+		// Options
+		// ==============================
+
+		static Options g_options;
+
+		bool Options::m_logFiles = false;
+		std::set<std::string> Options::m_fileLog;
+		bool Options::m_useRedirectionTable = false;
+		std::map<std::string, std::string> Options::m_fileRedirectionTable;
+
+
+		void Options::setFileLogging( bool enabled )
+		{
+			g_options.m_logFiles = enabled;
+		}
+
+		bool Options::fileLogging()
+		{
+			return g_options.m_logFiles;
+		}
+
+		void Options::logFile( std::string path )
+		{
+			g_options.m_fileLog.insert(path);
+		}
+
+		void Options::getFileLog( std::vector<std::string> &out )
+		{
+			out.clear();
+			for( std::set<std::string>::iterator it = g_options.m_fileLog.begin(); it != g_options.m_fileLog.end(); ++it )
+				out.push_back(*it);
+		}
+
+
+
+		void Options::setFileRedirection( bool enabled )
+		{
+			g_options.m_useRedirectionTable = enabled;
+		}
+
+		void Options::redirectFile( const std::string &in, const std::string &out )
+		{
+			g_options.m_fileRedirectionTable[in] = out;
+		}
+
+		std::string Options::realPath( const std::string &in )
+		{
+			if( g_options.m_useRedirectionTable )
+			{
+				std::map<std::string, std::string>::iterator it = g_options.m_fileRedirectionTable.find(in);
+				if( it != g_options.m_fileRedirectionTable.end() )
+					return it->second;
+			}
+			return in;
+		}
+
+
+		// ==============================
+		//
+		// ==============================
+
+		std::string getCWD()
+		{
+			std::string result = "";
+			char* buffer;
+
+			// Get the current working directory: 
+			if( (buffer = _getcwd( NULL, 0 )) == NULL )
+				perror( "_getcwd error" );
+			else
+			{
+				result = std::string(buffer, strnlen(buffer, 2000));
+				free(buffer);
+			}
+
+			return result;
+		}
+
+
 		bool exists( const Path &path )
 		{
-			return platform::exists(path);
+			return platform::exists(Options::realPath(path.str()));
 		}
 
 		// returns contenst of file at path specified as string
@@ -38,8 +119,10 @@ namespace base
 
 		File *open( const Path &path )
 		{
+			if( Options::fileLogging() )
+				Options::logFile(path.str());
 			File *f = 0;
-			void *opaque = platform::open(path);
+			void *opaque = platform::open(Options::realPath(path.str()));
 			if(opaque)
 			{
 				f = new File();

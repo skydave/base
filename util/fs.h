@@ -2,6 +2,8 @@
 #include "Path.h"
 #include "types.h"
 #include <vector>
+#include <set>
+#include <map>
 
 
 
@@ -10,11 +12,28 @@ namespace base
 {
 	namespace fs
 	{
+		struct Options
+		{
+			static                                         void setFileLogging( bool enabled );
+			static                                                          bool fileLogging();
+			static                                            void logFile( std::string path );
+			static void                            getFileLog( std::vector<std::string> &out );
+
+			static void                                     setFileRedirection( bool enabled );
+			static void          redirectFile( const std::string &in, const std::string &out );
+			static std::string                               realPath( const std::string &in );
+		private:
+			static bool                                                             m_logFiles; // keep track of which files have been accessed
+			static bool                                                  m_useRedirectionTable; // use hashmap to look up real file position
+			static std::set<std::string>                                             m_fileLog;
+			static std::map<std::string, std::string>                   m_fileRedirectionTable;
+		};
 		typedef struct File
 		{
 			void *opaque;
 		} File;
 
+		std::string                                                                  getCWD();
 		bool                                                       exists( const Path &path );
 		std::string                                                  read( const Path &path ); // returns contenst of path specified as string
 		File                                                        *open( const Path &path );
