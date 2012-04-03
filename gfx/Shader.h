@@ -83,8 +83,9 @@ namespace base
 		std::vector<ShaderObject> m_objects;
 		void reload();
 
-		GLhandleARB m_glProgram;
-		bool             m_isOk;
+		GLhandleARB               m_glProgram;
+		bool                           m_isOk;
+		std::string        m_shaderIdentifier; // some arbitrary string which will be used only for logging so that user knows which shader was compiled
 
 		//
 		// creation functions

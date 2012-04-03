@@ -182,6 +182,7 @@ namespace base
 	Shader::ShaderLoader Shader::create( const std::string &id )
 	{
 		ShaderPtr shader = ShaderPtr( new Shader() );
+		shader->m_shaderIdentifier = id;
 		return Shader::ShaderLoader( shader );
 	}
 
@@ -191,7 +192,7 @@ namespace base
 		return m_objects.back();
 	}
 
-	Shader::Shader() : m_isOk(false)
+	Shader::Shader() : m_isOk(false), m_shaderIdentifier("")
 	{
 		m_glProgram = glCreateProgram();
 	}
@@ -225,7 +226,7 @@ namespace base
 		//
 		glLinkProgram(m_glProgram);
 		glGetInfoLogARB(m_glProgram, 1000, 0, text);
-		std::cout << "Shader::finalize:\n" << text << std::endl;
+		std::cout << "Shader::finalize: "<< m_shaderIdentifier << "\n" << text << std::endl;
 
 
 		// extract active attributes info
