@@ -193,6 +193,7 @@ namespace base
 		{
 			Helper(BSONPtr bson);
 
+			bool                           contains( const Key &key );
 
 			ItemHelper      operator[]( const std::string &key ); // select an item within the bson object
 			ItemHelper      operator[]( const int &key ); // select an item within the bson object
@@ -229,6 +230,7 @@ namespace base
 
 			BSON();
 
+			bool                           contains( const Key &key );
 			ItemPtr                             get( const Key &key );
 			void                  set( const Key &key, ItemPtr item );
 			void                               append( ItemPtr item ); // uses a local counter

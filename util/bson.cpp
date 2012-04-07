@@ -176,6 +176,16 @@ namespace base
 		{
 		}
 
+		bool BSON::contains( const Key &key )
+		{
+			ItemMap::iterator it = m_items.find(key);
+
+			if( it != m_items.end() )
+				return true;
+
+			return false;
+		}
+
 		ItemPtr BSON::get( const Key &key )
 		{
 			ItemMap::iterator it = m_items.find(key);
@@ -258,6 +268,11 @@ namespace base
 
 		Helper::Helper( BSONPtr bson ) : m_bson(bson)
 		{
+		}
+
+		bool Helper::contains( const Key &key )
+		{
+			return m_bson->contains(key);
 		}
 
 		Helper::operator BSONPtr()
