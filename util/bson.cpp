@@ -260,6 +260,11 @@ namespace base
 
 		}
 
+		Packet::Packet( char *data, int size ) : m_data(data), m_size(size)
+		{
+
+		}
+
 		Packet::Packet( const std::string &data )
 		{
 			m_size = (int)data.size();
@@ -287,7 +292,6 @@ namespace base
 		{
 			base::bson::OneShotReadBuf osrb(packet->m_data, packet->m_size);
 			std::istream in( &osrb );
-			//std::istringstream in( packet->m_data, std::stringstream::in | std::stringstream::binary );
 
 			BSON *b = new BSON();
 
@@ -295,6 +299,18 @@ namespace base
 
 			return Helper(BSONPtr( b ));
 
+		}
+
+		Helper unpack( char *data, int size )
+		{
+			base::bson::OneShotReadBuf osrb(data, size);
+			std::istream in( &osrb );
+
+			BSON *b = new BSON();
+
+			in >> *b;
+
+			return Helper(BSONPtr( b ));
 		}
 	}
 }

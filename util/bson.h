@@ -252,6 +252,7 @@ namespace base
 		// ===============================================
 		struct Packet
 		{
+			Packet( char *data, int size );
 			Packet( const std::string &data );
 			Packet();
 			~Packet();
@@ -261,6 +262,7 @@ namespace base
 
 		PacketPtr pack( Helper &helper );
 		Helper unpack( PacketPtr &packet );
+		Helper unpack( char *data, int size );
 		
 	}
 }
