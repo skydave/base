@@ -50,7 +50,7 @@ namespace base
 		{
 		}
 
-		Key::Key( const int key )
+		Key::Key( const int key ) : m_isString(false), m_intKey(key)
 		{
 		}
 
@@ -159,6 +159,15 @@ namespace base
 			return ItemHelper();
 		}
 
+		// will only work if wrapped item is a bson object
+		ItemHelper ItemHelper::operator[]( const int &key )
+		{
+			if( m_item->m_child )
+				return ItemHelper( m_item->m_child, key );
+			// TODO:we probably should assert
+			return ItemHelper();
+		}
+
 
 		// ===============================================
 		// BSON
@@ -203,6 +212,7 @@ namespace base
 		{
 			int numItems = (int)bson.m_items.size();
 			out.write( (char*)(&numItems), sizeof(int));
+			out.write( (char*)(&bson.m_nextIndex), sizeof(int));
 
 			for( BSON::ItemMap::const_iterator it = bson.m_items.begin(); it != bson.m_items.end();++it )
 			{
@@ -217,6 +227,7 @@ namespace base
 		{
 			int numItems = 0;
 			in.read( (char *)&numItems, sizeof(int) );
+			in.read( (char *)&bson.m_nextIndex, sizeof(int) );
 
 			for( int i=0;i<numItems;++i )
 			{
@@ -240,6 +251,10 @@ namespace base
 			return ItemHelper( m_bson, key );
 		}
 
+		ItemHelper Helper::operator[]( const int &key )
+		{
+			return ItemHelper( m_bson, key );
+		}
 
 		Helper::Helper( BSONPtr bson ) : m_bson(bson)
 		{
