@@ -179,12 +179,13 @@ namespace base
 		};
 
 
-		// for some reason I didnt got template specializatino to work for strings :(
 		template <>
 		inline ItemHelper::operator Helper()
 		{
 			return Helper(m_item->m_child);
 		}
+
+
 
 
 		// ===============================================
