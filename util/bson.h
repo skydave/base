@@ -65,11 +65,23 @@ namespace base
 
 			template<typename T>
 			void set( const T &value );
+			//void set(const char* &other);
 
 			char          *m_data;
 			int            m_size;
 			BSONPtr       m_child;
 		};
+
+		template<typename T>
+		void Item::set( const T &item )
+		{
+			m_size = sizeof(T);
+			m_data = (char *)realloc( m_data, m_size );
+			memcpy(m_data, &item, m_size);
+			if(m_child)
+				m_child = BSONPtr();
+		}
+
 
 		template<>
 		inline void Item::set<std::string>(const std::string &other)
@@ -80,6 +92,20 @@ namespace base
 			if(m_child)
 				m_child = BSONPtr();
 		}
+
+		/*
+		// problem: for some reason we can not specialize for const char *
+		// as soon as we add a ptr it errors :(
+		template<>
+		inline void Item::set<int*>(const int* &other)
+		{
+			m_size = (int)other.size();
+			m_data = (char *)realloc( m_data, m_size );
+			memcpy(m_data, &other[0], m_size);
+			if(m_child)
+				m_child = BSONPtr();
+		}
+		*/
 
 		template<>
 		inline void Item::set<BSONPtr>(const BSONPtr &other)
@@ -106,6 +132,7 @@ namespace base
 			ItemHelper( BSONPtr bson, const Key &key );
 
 			ItemHelper      operator[]( const std::string &key ); // will only work if wrapped item is a bson object
+			ItemHelper      operator[]( const int &key ); // will only work if wrapped item is a bson object
 
 			// must support pods, bson objects
 			template<typename T>
@@ -168,9 +195,10 @@ namespace base
 
 
 			ItemHelper      operator[]( const std::string &key ); // select an item within the bson object
+			ItemHelper      operator[]( const int &key ); // select an item within the bson object
 
 			template<typename T>
-			Helper                  &operator+=( const T value ); // append item
+			Helper                  &operator+=( const T &value ); // append item
 
 			operator BSONPtr ();                                  // ptr conversion operator
 
@@ -215,7 +243,7 @@ namespace base
 
 	
 		template<typename T>
-		Helper & Helper::operator+=( const T value )
+		Helper & Helper::operator+=( const T &value )
 		{
 			ItemPtr item = ItemPtr(new Item());
 			item->set<T>(value);
@@ -223,18 +251,24 @@ namespace base
 			return *this;
 		}
 
+
+		/*
+		// we added these specialicatinos here because otherwise we would always use Item::set<T> generic version...
+		template<>
+		inline Helper & Helper::operator+=<std::string>( std::string &value )
+		{
+			ItemPtr item = ItemPtr(new Item());
+			item->set(value);
+			m_bson->append( item );
+			return *this;
+		}
+		*/
+
 		// ===============================================
 		// Item
 		// ===============================================
-		template<typename T>
-		void Item::set( const T &item )
-		{
-			m_size = sizeof(T);
-			m_data = (char *)realloc( m_data, m_size );
-			memcpy(m_data, &item, m_size);
-			if(m_child)
-				m_child = BSONPtr();
-		}
+
+		
 		template<>
 		inline void Item::set( const Helper &child )
 		{
@@ -245,7 +279,6 @@ namespace base
 			}
 			m_child = child.m_bson;
 		} 
-
 
 		// ===============================================
 		// Packet
