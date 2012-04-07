@@ -147,7 +147,7 @@ namespace base
 
 		std::string ItemHelper::asString()
 		{
-			return std::string( m_item->m_data, m_item->m_size );
+			return std::string( m_item->m_data, m_item->m_size - 1 );
 		}
 
 		// will only work if wrapped item is a bson object

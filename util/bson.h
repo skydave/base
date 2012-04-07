@@ -184,7 +184,11 @@ namespace base
 		{
 			return Helper(m_item->m_child);
 		}
-
+		template <>
+		inline ItemHelper::operator BSONPtr()
+		{
+			return m_item->m_child;
+		}
 
 
 
