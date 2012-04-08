@@ -221,11 +221,12 @@ namespace math
 	//
 	Matrix44f createLookAtMatrix( const Vec3f &position, const Vec3f &target, const Vec3f &_up, bool orientationOnly )
 	{
-		math::Vec3f forward = normalize( target - position );
+		// we negate forward because in opengl the cam looks down the negative z axis
+		math::Vec3f forward = -normalize( target - position );
 
 		math::Vec3f right = crossProduct( _up, forward );
 
-		math::Vec3f up = crossProduct( forward, right );
+		math::Vec3f up = crossProduct( right, forward );
 
 		math::Matrix44f m = math::Matrix44f( right, up, forward );
 		if( orientationOnly )
