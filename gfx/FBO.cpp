@@ -130,6 +130,8 @@ namespace base
 			for( std::vector<Texture2dPtr>::const_iterator it = setup.m_outputs.begin(); it != setup.m_outputs.end(); ++it, ++i )
 			{
 				Texture2dPtr out = *it;
+				// make sure texture has the same size
+				out->resize( m_setup.m_width, m_setup.m_height );
 				// attach texture to framebuffer
 				glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT+i, out->m_target, out->m_id, 0);
 			}

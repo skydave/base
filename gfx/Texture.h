@@ -39,6 +39,7 @@ namespace base
 
 		int                                                   width();
 		int                                                  height();
+		void                    resize( int newWidth, int newHeight );
 
 		void uploadRGBA8( int xres, int yres, unsigned char *pixels );
 		void   uploadRGBAFloat32( int xres, int yres, float *pixels );
@@ -53,10 +54,12 @@ namespace base
 		int                                           m_textureFormat; // format of texture in gpu memory
 		int                                                  m_target; // this is either GL_TEXTURE_2D or GL_TEXTURE_2D_MULTISAMPLE
 		bool                                           m_multiSampled;
+		int                                              m_numSamples;
 
 		static Texture2dPtr create( int textureFormat, int xres = 64, int yres = 64, bool multisampled = false, int numSamples = 4 );
 		static Texture2dPtr createRGBA8( int xres = 64, int yres = 64 );
 		static Texture2dPtr createFloat32( int xres = 64, int yres = 64 );
+		static Texture2dPtr createFloat16( int xres = 64, int yres = 64 );
 		static Texture2dPtr createRGBAFloat32( int xres = 64, int yres = 64, bool multisampled = false, int numSamples = 4 );
 		static Texture2dPtr createRGBAFloat16( int xres = 64, int yres = 64 );
 

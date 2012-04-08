@@ -36,7 +36,7 @@ namespace base
 
 	Texture1dPtr Texture1d::createFloat32( int xres )
 	{
-		return Texture1d::create( GL_FLOAT_R32_NV, xres );
+		return Texture1d::create( GL_R32F, xres );
 	}
 
 
@@ -154,7 +154,12 @@ namespace base
 
 	Texture2dPtr Texture2d::createFloat32( int xres, int yres )
 	{
-		return Texture2d::create( GL_FLOAT_R32_NV, xres, yres);
+		return Texture2d::create( GL_R32F, xres, yres);
+	}
+
+	Texture2dPtr Texture2d::createFloat16( int xres, int yres )
+	{
+		return Texture2d::create( GL_R16F, xres, yres);
 	}
 
 	// loads texture from file
@@ -174,10 +179,12 @@ namespace base
 	}
 
 
-	Texture2d::Texture2d(bool multisampled, int numSamples) : m_multiSampled(multisampled)
+	Texture2d::Texture2d(bool multisampled, int numSamples) : m_multiSampled(multisampled), m_numSamples(numSamples)
 	{
 		if(m_multiSampled)
+		{
 			m_target = GL_TEXTURE_2D_MULTISAMPLE;
+		}
 		else
 			m_target = GL_TEXTURE_2D;
 
@@ -206,6 +213,22 @@ namespace base
 		glDeleteTextures(1,&m_id);
 	}
 
+	void Texture2d::resize( int newWidth, int newHeight )
+	{
+		if( (m_xres == newWidth)&&(m_yres == newHeight) )
+			// nothing to do here
+			return;
+		m_xres = newWidth;
+		m_yres = newHeight;
+
+		glBindTexture(m_target, m_id);
+		if( !m_multiSampled )
+			// this will destroy whatever we have on the gpu
+			glTexImage2D(GL_TEXTURE_2D, 0, m_textureFormat, m_xres, m_yres, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+		else
+			glTexImage2DMultisample( GL_TEXTURE_2D_MULTISAMPLE, m_numSamples, m_textureFormat, m_xres, m_yres, true );
+
+	}
 
 	void Texture2d::uploadRGBA8( int xres, int yres, unsigned char *pixels )
 	{
