@@ -39,6 +39,7 @@ namespace base
 		void                                                setModelMatrix( const math::Matrix44f &modelMatrix );
 		void                                                                                     setViewMatrix();
 		void                                                                               setProjectionMatrix();
+		math::Vec3f                                                   worldToView( const math::Vec3f &worldPos );
 
 		math::Matrix44f                                                                    getModelViewInverse();
 		math::Matrix44f                                                                         getViewInverse();
@@ -68,7 +69,9 @@ namespace base
 		// some standard resources
 		//
 		GeometryPtr                                         m_screenQuad;
+		ShaderPtr                            m_simpleTextureShaderScreen;
 		ShaderPtr                                  m_simpleTextureShader;
+		ShaderPtr                                       m_constantShader;
 
 	private:
 		math::Matrix44f                                                                            m_modelMatrix; // object to world

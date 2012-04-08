@@ -71,7 +71,10 @@ namespace base
 		// we initialize mvpm uniform to identity. we can do this here because currently m_simpleTextureShader is only used for
 		// screenquad rendering
 		m_simpleTextureShader = Shader::create().attachPS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.ps.glsl").attachVS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.vs.glsl");
-		m_simpleTextureShader->setUniform( "mvpm", math::Matrix44f::Identity() );
+		m_simpleTextureShaderScreen = Shader::create().attachPS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.ps.glsl").attachVS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.vs.glsl");
+		m_simpleTextureShaderScreen->setUniform( "mvpm", math::Matrix44f::Identity() );
+
+		m_constantShader = Shader::create().attachPS(base::Path( BASE_PATH ) + "/gfx/glsl/constant.ps.glsl").attachVS(base::Path( BASE_PATH ) + "/gfx/glsl/constant.vs.glsl");
 
 		// initialize noise glsl module
 		setUniform("noise_permTexture", base::glsl::noisePermutationTableTex()->getUniform());
@@ -185,6 +188,11 @@ namespace base
 		m_modelViewInverseTranspose.ma[8] = m.m[2][2];
 
 		m_mvminvtAttr->set( 0, m_modelViewInverseTranspose );
+	}
+
+	math::Vec3f Context::worldToView( const math::Vec3f &worldPos )
+	{
+		return math::transform( worldPos, m_modelViewMatrix );
 	}
 
 	math::Matrix44f Context::getModelViewInverse()
