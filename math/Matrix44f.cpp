@@ -298,6 +298,13 @@ namespace math
 		_43 = temp._34;
 	}
 
+	Matrix44f Matrix44f::transposed( void )
+	{
+		Matrix44f m = *this;
+		m.transpose();
+		return m;
+	}
+
 	//
 	// computes the determinant of a 3x3 matrix after the rule of Sarrus
 	//

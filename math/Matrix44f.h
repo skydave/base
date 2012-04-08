@@ -69,6 +69,7 @@ namespace math
 
 		// public methods
 		void                                                                        transpose( void );
+		Matrix44f                                                                  transposed( void );
 		void                                                                           invert( void );
 		Matrix44f                                                                    inverted( void );
 
