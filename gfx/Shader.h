@@ -91,7 +91,6 @@ namespace base
 		// creation functions
 		//
 		static ShaderLoader create( const std::string &id = "" );
-		static ShaderLoader load( const std::string &vertexShaderPath, const std::string &pixelShaderPath, const std::string &id = "" );
 		static ShaderLoader load( const char *vsSrc, const int &vsSrcSize, const char *psSrc, const int &psSrcSize, const std::string &id = "" );
 		static ShaderLoader load( Path shaderBasePath, const std::string &id = "" ); // this method will append .ps.glsl and .vs.glsl  to find vertex and pixelshader
 		static ShaderLoader load( Path vertexShaderPath, Path pixelShaderPath, const std::string &id = "" );

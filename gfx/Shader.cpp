@@ -140,33 +140,6 @@ namespace base
 		finalize();
 	}
 
-	Shader::ShaderLoader Shader::load( const std::string &vertexShaderPath, const std::string &pixelShaderPath, const std::string &id )
-	{
-		std::string vsSrc, psSrc;
-
-		{
-			// read vertex shader file content
-			vsSrc = base::fs::read( vertexShaderPath );
-			if( vsSrc.empty() )
-			{
-				std::cout << "Unable to open vertexshader file\n";
-				return Shader::ShaderLoader(ShaderPtr());
-			}
-		}
-
-		{
-			// read pixel shader file content
-			psSrc = base::fs::read( pixelShaderPath );
-			if (psSrc.empty())
-			{
-				std::cout << "Unable to open pixelshader file\n";
-				return Shader::ShaderLoader(ShaderPtr());
-			}
-		}
-
-		return Shader::create( id ).attachVS( vsSrc ).attachPS( psSrc );
-	}
-
 	Shader::ShaderLoader Shader::load( Path vertexShaderPath, Path pixelShaderPath, const std::string &id )
 	{
 		return Shader::create( id ).attach( GL_VERTEX_SHADER_ARB, vertexShaderPath ).attach( GL_FRAGMENT_SHADER_ARB, pixelShaderPath );
@@ -175,7 +148,7 @@ namespace base
 	// this method will append .ps.glsl and .vs.glsl  to find vertex and pixelshader
 	Shader::ShaderLoader Shader::load( Path shaderBasePath, const std::string &id )
 	{
-		return Shader::load( shaderBasePath.str() + ".vs.glsl", shaderBasePath.str() + ".ps.glsl" );
+		return Shader::load( shaderBasePath.str() + ".vs.glsl", shaderBasePath.str() + ".ps.glsl", id );
 	}
 
 
