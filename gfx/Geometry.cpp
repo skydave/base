@@ -1,10 +1,10 @@
 #include "Geometry.h"
 #include <iostream>
-#include <math/Math.h>
 
+#include <math/Math.h>
 #include <gltools/gl.h>
 #include <util/tuple.h>
-
+#include "ObjIO.h"
 
 
 
@@ -153,6 +153,11 @@ namespace base
 		AttributePtr positions = AttributePtr( Attribute::createVec3f() );
 		result->setAttr( "P", positions);
 		return result;
+	}
+
+	GeometryPtr Geometry::createReferenceMesh()
+	{
+		return importObj( Path( BASE_PATH ) + "/data/meshref.obj" );
 	}
 
 	//

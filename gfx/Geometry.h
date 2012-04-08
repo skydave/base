@@ -117,6 +117,7 @@ namespace base
 		static GeometryPtr    createTriangleGeometry();
 		static GeometryPtr        createQuadGeometry();
 		static GeometryPtr        createPolyGeometry();
+		static GeometryPtr       createReferenceMesh();
 	};
 
 
