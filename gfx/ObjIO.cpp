@@ -100,7 +100,8 @@ namespace base
 				std::vector<std::string> components;
 				base::splitString( line, components, " " );
 
-				if( components.size() == 3 )
+				// we dont test against 3 exactly because vertices in objs from houdini have a 4th component
+				if( components.size() > 2 )
 				{
 					math::Vec3f position;
 					std::istringstream( components[0] ) >> position.x;
