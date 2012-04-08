@@ -73,6 +73,7 @@ namespace base
 	private:
 		math::Matrix44f                                                                            m_modelMatrix; // object to world
 		math::Matrix44f                                                                             m_viewMatrix; // world to camera
+		math::Matrix44f                                                                        m_modelViewMatrix; // world to eye
 		math::Matrix44f                                                                       m_projectionMatrix; // camera to view
 		math::Matrix44f                                                              m_modelViewProjectionMatrix; // model view projection matrix (world to screen)
 		math::Matrix44f                                                                      m_viewInverseMatrix; // view matrix inverse (camera to world)
@@ -82,6 +83,7 @@ namespace base
 
 
 
+		AttributePtr                                                                                   m_mvmAttr; // model view matrix (world to eye)
 		AttributePtr                                                                                  m_mvpmAttr; // model view projection matrix (world to screen)
 		AttributePtr                                                                                    m_mmAttr; // model matrix attribute
 		AttributePtr                                                                                    m_vmAttr; // view matrix (camera to world) attribute

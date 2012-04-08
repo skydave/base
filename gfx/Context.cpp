@@ -20,12 +20,17 @@ namespace base
 		m_viewMatrix = math::Matrix44f::Identity();
 		m_projectionMatrix = math::Matrix44f::Identity();
 		m_viewInverseMatrix = math::Matrix44f::Identity();
+		m_modelViewMatrix = math::Matrix44f::Identity();
 
 
 
 		// view projection matrix
 		m_mvpmAttr = Attribute::createMat44();
 		m_mvpmAttr->appendElement( math::Matrix44f::Identity() );
+
+		// model view matrix
+		m_mvmAttr = Attribute::createMat44();
+		m_mvmAttr->appendElement( math::Matrix44f::Identity() );
 
 		// model view matrix inverse transpose
 		m_mvminvtAttr = Attribute::createMat33();
@@ -48,6 +53,7 @@ namespace base
 		// register predefined globals
 		//
 		m_globalUniforms.insert( std::make_pair( "mvpm", m_mvpmAttr ) );
+		m_globalUniforms.insert( std::make_pair( "mvm", m_mvmAttr ) );
 		m_globalUniforms.insert( std::make_pair( "mvminvt", m_mvminvtAttr ) );
 		m_globalUniforms.insert( std::make_pair( "vminv", m_vminvAttr ) );
 		m_globalUniforms.insert( std::make_pair( "vm", m_vmAttr ) );
@@ -124,11 +130,15 @@ namespace base
 		m_modelViewProjectionMatrix = m_modelMatrix * m_viewMatrix * m_projectionMatrix;
 		m_mvpmAttr->set( 0, m_modelViewProjectionMatrix );
 
-		//updateModelViewMatrixInverseTranspose
-		math::Matrix44f m = m_modelMatrix * m_viewMatrix;
-		m.invert();
-		m_modelViewInverse = m;
-		m.transpose();
+
+		//update ModelViewMatrix
+		m_modelViewMatrix = m_modelMatrix * m_viewMatrix;
+		m_mvmAttr->set( 0, m_modelViewMatrix );
+
+		//update ModelViewMatrixInverseTranspose
+		m_modelViewInverse = m_modelViewMatrix.inverted();
+
+		math::Matrix44f m = m_modelViewInverse.transposed();
 
 		// we do the transpose when we extract the orientation from 44f matrix
 		m_modelViewInverseTranspose.ma[0] = m.m[0][0];
@@ -154,11 +164,14 @@ namespace base
 		m_modelViewProjectionMatrix = m_modelMatrix * m_viewMatrix * m_projectionMatrix;
 		m_mvpmAttr->set( 0, m_modelViewProjectionMatrix );
 
-		//updateModelViewMatrixInverseTranspose
-		math::Matrix44f m = m_modelMatrix * m_viewMatrix;
-		m.invert();
-		m_modelViewInverse = m;
-		m.transpose();
+		//update ModelViewMatrix
+		m_modelViewMatrix = m_modelMatrix * m_viewMatrix;
+		m_mvmAttr->set( 0, m_modelViewMatrix );
+
+		//update ModelViewMatrixInverseTranspose
+		m_modelViewInverse = m_modelViewMatrix.inverted();
+
+		math::Matrix44f m = m_modelViewInverse.transposed();
 
 		// we do the transpose when we extract the orientation from 44f matrix
 		m_modelViewInverseTranspose.ma[0] = m.m[0][0];
