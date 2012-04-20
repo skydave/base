@@ -158,9 +158,11 @@ namespace base
 		return AttributePtr( new Attribute(16, Attribute::FLOAT) );
 	}
 
-	AttributePtr Attribute::createVec4f()
+	AttributePtr Attribute::createVec4f( int numElements )
 	{
-		return AttributePtr( new Attribute(4, Attribute::FLOAT) );
+		AttributePtr attr = AttributePtr( new Attribute(4, Attribute::FLOAT) );
+		attr->resize(numElements);
+		return attr;
 	}
 
 	AttributePtr Attribute::createVec3f( int numElements )

@@ -126,7 +126,7 @@ namespace base
 		static AttributePtr                      createSampler1d();
 		static AttributePtr                          createMat33();
 		static AttributePtr                          createMat44();
-		static AttributePtr                          createVec4f();
+		static AttributePtr     createVec4f( int numElements = 0 );
 		static AttributePtr     createVec3f( int numElements = 0 );
 		static AttributePtr     createVec2f( int numElements = 0 );
 		static AttributePtr                          createFloat();
@@ -181,11 +181,12 @@ namespace base
 	unsigned int Attribute::appendElement( const T &v0, const T &v1, const T &v2, const T &v3 )
 	{
 		unsigned int pos = (unsigned int) m_data.size();
-		m_data.resize( pos + sizeof(T)*3 );
+		m_data.resize( pos + sizeof(T)*4 );
 		T *data = (T*)&m_data[pos];
 		*data = v0;++data;
 		*data = v1;++data;
 		*data = v2;++data;
+		*data = v3;++data;
 		return m_numElements++;
 	}
 
