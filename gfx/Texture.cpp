@@ -271,6 +271,21 @@ namespace base
 			glTexImage2D(m_target, 0, m_textureFormat, m_xres, m_yres, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->m_data);
 	}
 
+	ImagePtr Texture2d::download()
+	{
+		ImagePtr img = ImagePtr( new Image() );
+		// note that we allocate sizeof(float)
+		//TODO: manage pixelformat in Image
+		img->m_data = (unsigned char *)malloc( m_xres*m_yres*4*sizeof(float) );
+		img->m_width = m_xres;
+		img->m_height = m_yres;
+
+		glBindTexture(m_target, m_id);
+		glGetTexImage( GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, img->m_data );
+
+		return img;
+	}
+
 
 	AttributePtr Texture2d::getUniform()
 	{

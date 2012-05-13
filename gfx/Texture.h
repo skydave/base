@@ -45,6 +45,7 @@ namespace base
 		void   uploadRGBAFloat32( int xres, int yres, float *pixels );
 		void       uploadFloat32( int xres, int yres, float *pixels );
 		void                                 upload( ImagePtr image );
+		ImagePtr                                           download();
 		AttributePtr                                     getUniform();
 
 
