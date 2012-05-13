@@ -110,6 +110,19 @@ namespace base
 	}
 
 
+
+	// reverses the order of vertices for each primitive (CW polys become CCW)
+	void Geometry::reverse()
+	{
+		for( unsigned int i=0;i<m_numPrimitives;++i )
+		{
+			int offset = i*m_numPrimitiveVertices;
+			std::reverse(m_indexBuffer.begin()+offset, m_indexBuffer.begin()+offset+m_numPrimitiveVertices );
+		}
+		m_indexBufferIsDirty = true;
+	}
+
+
 	//
 	// removes all attributes and primitives
 	//

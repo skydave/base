@@ -54,6 +54,7 @@ namespace base
 		//void splitVertex( int vertexIndex, int numCopies );
 		//void removeVertex( int vertexIndex );
 		//void autoWeld( float distance );
+		void reverse(); // reverses the order of vertices for each primitive (CW polys become CCW)
 
 
 
