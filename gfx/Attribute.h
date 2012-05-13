@@ -84,10 +84,7 @@ namespace base
 			return m_numComponents;
 		}
 
-		//int elementComponentType()
-		//{
-		//	return m_componentType;
-		//}
+		int elementComponentType();
 
 		int elementComponentSize()
 		{

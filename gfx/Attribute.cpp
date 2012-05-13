@@ -35,6 +35,17 @@ namespace base
 		glDeleteBuffers(1, &m_bufferId);
 	}
 
+	int Attribute::elementComponentType()
+	{
+		switch(m_componentType)
+		{
+		case GL_FLOAT:
+			return FLOAT;break;
+		case GL_INT:
+			return INT;break;
+		};
+		return m_componentType;
+	}
 
 	void Attribute::bindAsAttribute( int index )
 	{
