@@ -91,6 +91,7 @@ namespace base
 		unsigned int numPrimitives();
 		unsigned int numPrimitiveVertices(); // Point=1; Line=2; Triangle=3; Quad=4
 		unsigned int addPoint( unsigned int vId );
+		unsigned int addLine( unsigned int vId0, unsigned int vId1 );
 		unsigned int addTriangle( unsigned int vId0, unsigned int vId1, unsigned int vId2 );
 		unsigned int addQuad( unsigned int vId0, unsigned int vId1, unsigned int vId2, unsigned int vId3 );
 		unsigned int addPolygonVertex( unsigned int v );

@@ -79,6 +79,14 @@ namespace base
 		return m_numPrimitives++;
 	}
 
+	unsigned int Geometry::addLine( unsigned int vId0, unsigned int vId1 )
+	{
+		m_indexBuffer.push_back(vId0);
+		m_indexBuffer.push_back(vId1);
+		m_indexBufferIsDirty = true;
+		return m_numPrimitives++;
+	}
+
 	unsigned int Geometry::addTriangle( unsigned int vId0, unsigned int vId1, unsigned int vId2 )
 	{
 		m_indexBuffer.push_back(vId0);
@@ -244,6 +252,26 @@ namespace base
 			int numPoints = xres*zres;
 			for( int i=0;i<numPoints;++i )
 				result->addPoint( i );
+		}else
+		if( primType == Geometry::LINE )
+		{
+			for( int j=0; j<zres; ++j )
+			{
+				for( int i=0; i<xres-1; ++i )
+				{
+					int vo = (j*xres);
+					result->addLine( vo+i, vo+i+1 );
+				}
+			}
+			for( int j=0; j<xres; ++j )
+			{
+				for( int i=0; i<zres-1; ++i )
+				{
+					int v0 = (i*xres) + j;
+					int v1 = ((i+1)*xres) + j;
+					result->addLine( v0, v1 );
+				}
+			}
 		}else
 		if( primType == Geometry::TRIANGLE )
 			for( int j=0; j<zres-1; ++j )
