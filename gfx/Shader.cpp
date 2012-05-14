@@ -336,6 +336,13 @@ namespace base
 		return Shader::create().attachPS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.ps.glsl").attachVS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.vs.glsl");
 	}
 
+	ShaderPtr Shader::createSimpleConstantShader( float r, float g, float b )
+	{
+		ShaderPtr shader = Shader::create().attachPS(base::Path( BASE_PATH ) + "/gfx/glsl/constant.ps.glsl").attachVS(base::Path( BASE_PATH ) + "/gfx/glsl/constant.vs.glsl");
+		shader->setUniform( "color", math::Vec3f(r, g, b) );
+		return shader;
+	}
+
 }
 
 
