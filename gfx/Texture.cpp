@@ -1,6 +1,9 @@
 #include "Texture.h"
 
 #include <gltools/gl.h>
+#include <gltools/misc.h>
+
+#include <iostream>
 
 
 namespace base
@@ -114,12 +117,19 @@ namespace base
 		result->m_xres = xres;
 		result->m_yres = yres;
 		result->m_textureFormat = textureFormat;
-
 		glBindTexture(result->m_target, result->m_id);
 		if( !multisampled )
 			glTexImage2D(GL_TEXTURE_2D, 0, result->m_textureFormat, result->m_xres, result->m_yres, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 		else
 			glTexImage2DMultisample( GL_TEXTURE_2D_MULTISAMPLE, numSamples, result->m_textureFormat, result->m_xres, result->m_yres, true );
+
+		if( CHECKGLERROR() )
+		{
+
+			std::cout << "Texture2d::create: unable to allocate gpu memory for texture\n";
+			return Texture2dPtr();
+			//TODO: investigate exception handling + qt throw std::runtime_error(glErrorString(error).c_str());
+		}
 
 		return result;
 	}
@@ -195,11 +205,11 @@ namespace base
 		// when texture area is small, bilinear filter the closest mipmap
 		//glTexParameteri( GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 		//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-		glTexParameterf( m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+		glTexParameteri( m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 		//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
 		// when texture area is large, bilinear filter the original
 		//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-		glTexParameterf( m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+		glTexParameteri( m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 		//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR );
 
 		// the texture wraps over at the edges (repeat)
@@ -262,10 +272,10 @@ namespace base
 		m_xres = image->m_width;
 		m_yres = image->m_height;
 		glBindTexture(m_target, m_id);
-		
+
 		glTexParameteri( m_target, GL_GENERATE_MIPMAP, GL_TRUE);
-		glTexParameterf( m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
-		glTexParameterf( m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+		glTexParameteri( m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+		glTexParameteri( m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
 		if( !m_multiSampled )
 			glTexImage2D(m_target, 0, m_textureFormat, m_xres, m_yres, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->m_data);
