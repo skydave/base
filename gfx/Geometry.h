@@ -116,6 +116,7 @@ namespace base
 		// static creators
 		//
 		static GeometryPtr       createPointGeometry();
+		static GeometryPtr        createLineGeometry();
 		static GeometryPtr    createTriangleGeometry();
 		static GeometryPtr        createQuadGeometry();
 		static GeometryPtr        createPolyGeometry();

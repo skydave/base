@@ -152,6 +152,15 @@ namespace base
 		return result;
 	}
 
+	GeometryPtr Geometry::createLineGeometry()
+	{
+		GeometryPtr result = GeometryPtr( new Geometry(LINE) );
+		AttributePtr positions = AttributePtr( Attribute::createVec3f() );
+		result->setAttr( "P", positions);
+		return result;
+	}
+
+
 	GeometryPtr Geometry::createTriangleGeometry()
 	{
 		GeometryPtr result = GeometryPtr( new Geometry(TRIANGLE) );
