@@ -117,6 +117,21 @@ namespace base
 			return result;
 		}
 
+		// allocates memory and reads file content into given ptr
+		void read( const Path &path, char **ptr )
+		{
+			*ptr = 0;
+			if( !exists( path ) )
+				return;
+			File *f = open( path );
+			if(!f)
+				return;
+			uint64 l = size(f);
+			*ptr = (char*)malloc( l*sizeof(char) );
+			read( f, *ptr, sizeof(char), (unsigned int)l );
+			close(f);
+		}
+
 		File *open( const Path &path )
 		{
 			if( Options::fileLogging() )
