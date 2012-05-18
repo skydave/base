@@ -91,6 +91,12 @@ namespace base
 		return math::Color::Black();
 	}
 
+	math::Color Image::lookup( int x, int y )
+	{
+		int pixel = y*m_width*4 + x*4;
+		return math::setRGBColor( m_data[pixel], m_data[pixel+1], m_data[pixel+2], m_data[pixel+3] );
+	}
+
 	ImagePtr Image::create( int width, int height )
 	{
 		ImagePtr img = ImagePtr( new Image() );

@@ -23,6 +23,7 @@ namespace base
 		unsigned char                                                    *m_data;
 
 		math::Color                                   lookup( float u, float v );
+		math::Color                                       lookup( int x, int y );
 
 		ImagePtr                     copy( int x, int y, int width, int height );
 		void                flip( bool vertical = true, bool horizontal = true );
