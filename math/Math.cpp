@@ -296,6 +296,32 @@ namespace math
 
 
 
+	float lerp( float x0, float x1, float t )
+	{
+		return x0*(1.0f-t) + x1*t;
+	}
+
+	Vec3f slerp( Vec3f v0, Vec3f v1, float t  )
+	{
+		 // Dot product - the cosine of the angle between 2 vectors.
+		 float dot = dotProduct(v0, v1);
+		 // Clamp it to be in the range of Acos()
+		 clamp(dot, -1.0f, 1.0f);
+		 // Acos(dot) returns the angle between start and end,
+		 // And multiplying that by percent returns the angle between
+		 // start and the final result.
+		 float theta = acos(dot)*t;
+		 Vec3f RelativeVec = v1 - v0*dot;
+		 RelativeVec.normalize();
+		 // The final result.
+		 return ((v0*cos(theta)) + (RelativeVec*sin(theta)));
+	}
+
+	float clamp( float x, float left, float right )
+	{
+		return (x < left) ? left : (x > right ? right : x);
+	}
+
 	float smoothstep( float x )
 	{
 		return (x) * (x) * (3 - 2 * (x));
