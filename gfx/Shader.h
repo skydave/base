@@ -98,6 +98,7 @@ namespace base
 		//
 		// some useful default shaders
 		//
+		static ShaderPtr createSimpleLambertShader();
 		static ShaderPtr createSimpleTextureShader();
 		static ShaderPtr createSimpleConstantShader( float r = 1.0f, float g = 1.0f, float b = 1.0f );
 

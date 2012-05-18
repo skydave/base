@@ -331,6 +331,18 @@ namespace base
 		return AttributePtr();
 	}
 
+	ShaderPtr Shader::createSimpleLambertShader()
+	{
+		ShaderPtr shader = Shader::load(base::Path( BASE_PATH ) + "/gfx/glsl/simpleLambert");
+		shader->setUniform( "l", math::Vec3f( 1.0f, 1.0f, 1.0f ).normalized() );
+		shader->setUniform( "diffuse", math::Vec3f(0.5f, 0.5f, 0.5f));
+		shader->setUniform( "kd", 1.0f );
+		shader->setUniform( "ambient", math::Vec3f(0.05f, 0.05f, 0.05f));
+		shader->setUniform( "ka", 1.0f );
+		shader->setUniform( "l", math::Vec3f(1.0f, 1.0f, 1.0f).normalized() );
+		return shader;
+	}
+
 	ShaderPtr Shader::createSimpleTextureShader()
 	{
 		return Shader::create().attachPS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.ps.glsl").attachVS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.vs.glsl");
