@@ -36,6 +36,7 @@ namespace base
 		std::string                                                                  getCWD();
 		bool                                                       exists( const Path &path );
 		std::string                                                  read( const Path &path ); // returns contenst of path specified as string
+		void                                             read( const Path &path, char **ptr ); // allocates memory and reads file content into given ptr
 		File                                                        *open( const Path &path );
 		void                                                              close( File *file );
 		uint64                                                             size( File *file ); // returns size of file in byte

@@ -101,6 +101,7 @@ namespace base
 		static ShaderPtr createSimpleLambertShader();
 		static ShaderPtr createSimpleTextureShader();
 		static ShaderPtr createSimpleConstantShader( float r = 1.0f, float g = 1.0f, float b = 1.0f );
+		static ShaderPtr createSimpleColorShader(); // creates a shader which uses varying Cd attribute
 
 	};
 

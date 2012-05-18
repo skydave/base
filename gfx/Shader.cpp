@@ -355,6 +355,12 @@ namespace base
 		return shader;
 	}
 
+	// creates a shader which uses varying Cd attribute
+	ShaderPtr Shader::createSimpleColorShader()
+	{
+		return Shader::load( base::Path( BASE_PATH ) + "/gfx/glsl/simpleColor" );
+	}
+
 }
 
 
