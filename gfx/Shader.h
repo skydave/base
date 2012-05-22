@@ -8,6 +8,7 @@
 
 #include <gltools/gl.h>
 #include "Attribute.h"
+#include "fwd/Texture.h"
 
 #include <iostream>
 
@@ -99,7 +100,7 @@ namespace base
 		// some useful default shaders
 		//
 		static ShaderPtr createSimpleLambertShader();
-		static ShaderPtr createSimpleTextureShader();
+		static ShaderPtr createSimpleTextureShader( base::Texture2dPtr texture = base::Texture2dPtr() );
 		static ShaderPtr createSimpleConstantShader( float r = 1.0f, float g = 1.0f, float b = 1.0f );
 		static ShaderPtr createSimpleColorShader(); // creates a shader which uses varying Cd attribute
 

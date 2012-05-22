@@ -4,6 +4,8 @@
 #include <fstream>
 #include <sstream>
 
+#include "Texture.h"
+
 
 
 
@@ -343,9 +345,12 @@ namespace base
 		return shader;
 	}
 
-	ShaderPtr Shader::createSimpleTextureShader()
+	ShaderPtr Shader::createSimpleTextureShader( base::Texture2dPtr texture )
 	{
-		return Shader::create().attachPS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.ps.glsl").attachVS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.vs.glsl");
+		base::ShaderPtr shader = Shader::create().attachPS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.ps.glsl").attachVS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.vs.glsl");
+		if(texture)
+			shader->setUniform( "texture", texture->getUniform() );
+		return shader;
 	}
 
 	ShaderPtr Shader::createSimpleConstantShader( float r, float g, float b )
