@@ -168,6 +168,11 @@ inline float dotProduct( const Vec3f &lhs, const Vec3f &rhs )
 	return (lhs.x*rhs.x + lhs.y*rhs.y + lhs.z*rhs.z);
 }
 
+inline float dot( const Vec3f &lhs, const Vec3f &rhs )
+{
+	return (lhs.x*rhs.x + lhs.y*rhs.y + lhs.z*rhs.z);
+}
+
 inline void dotProduct( float &result, const Vec3f &lhs, const Vec3f &rhs )
 {
 	result = (lhs.x*rhs.x + lhs.y*rhs.y + lhs.z*rhs.z);
@@ -197,6 +202,11 @@ inline Vec3f reflect( const math::Vec3f &i, const math::Vec3f &n )
 
 
 inline double dotProduct( const math::Vec3d &vec1, const math::Vec3d &vec2 )
+{
+	return vec1.x*vec2.x+vec1.y*vec2.y+vec1.z*vec2.z;
+}
+
+inline double dot( const math::Vec3d &vec1, const math::Vec3d &vec2 )
 {
 	return vec1.x*vec2.x+vec1.y*vec2.y+vec1.z*vec2.z;
 }
@@ -919,6 +929,7 @@ float                                                                distance( c
 float                                                         squaredDistance( const Vec3f &p0, const Vec3f &p1 ); // computes the squared euclidian distance between 2 points in space
 float                  distancePointPlane( const math::Vec3f &point, const Vec3f &normal, const float &distance ); // computes the distance of a point to a given plane
 float                             distancePointLine( const math::Vec3f &point, const Vec3f &p1, const Vec3f &p2 ); // returns the distance of the given point to the line specified by two points
+float             distancePointTriangle( const Vec3f &point, const Vec3f &p1, const Vec3f &p2, const Vec3f &p3  ); // returns distance to the closest point on triangle given
 
 
 math::Vec3f     projectPointOnPlane( const math::Vec3f &normal, const float &distance, const math::Vec3f &point ); // returns the projection of the given point on the normal and distance specified plane

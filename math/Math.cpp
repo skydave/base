@@ -170,6 +170,253 @@ namespace math
 	}
 
 
+	// returns distance to the closest point on triangle given
+	float distancePointTriangle( const Vec3f &point, const Vec3f &p1, const Vec3f &p2, const Vec3f &p3  )
+	{
+		// copied from http://www.mathworks.com/matlabcentral/fileexchange/22857-distance-between-a-point-and-a-triangle-in-3d
+
+		// rewrite triangle in normal form
+		math::Vec3f B = p1;
+		math::Vec3f E0 = p2-B;
+		//E0 = E0/sqrt(sum(E0.^2)); %normalize vector
+		math::Vec3f E1 = p3-B;
+		//E1 = E1/sqrt(sum(E1.^2)); %normalize vector
+
+
+		math::Vec3f D = B - point;
+		float a = dot(E0,E0);
+		float b = dot(E0,E1);
+		float c = dot(E1,E1);
+		float d = dot(E0,D);
+		float e = dot(E1,D);
+		float f = dot(D,D);
+
+		float det = a*c - b*b; // do we have to use abs here?
+		float s   = b*e - c*d;
+		float t   = b*d - a*e;
+
+		float sqrDistance, invDet, tmp0, tmp1, numer, denom;
+
+		// Terible tree of conditionals to determine in which region of the diagram
+		// shown above the projection of the point into the triangle-plane lies.
+	
+		if ((s+t) <= det)
+		{
+		  if (s < 0)
+		  {
+			if (t < 0)
+			{
+			  // region4
+			  if (d < 0)
+			  {
+				t = 0;
+				if (-d >= a)
+				{
+				  s = 1;
+				  sqrDistance = a + 2*d + f;
+				}else
+				{
+				  s = -d/a;
+				  sqrDistance = d*s + f;
+				}
+			  }else
+			  {
+				s = 0;
+				if (e >= 0)
+				{
+				  t = 0;
+				  sqrDistance = f;
+				}else
+				{
+				  if (-e >= c)
+				  {
+					t = 1;
+					sqrDistance = c + 2*e + f;
+				  }else
+				  {
+					t = -e/c;
+					sqrDistance = e*t + f;
+				  }
+				}
+			   } //end %of region 4
+			}else
+			{
+			  // region 3
+			  s = 0;
+			  if (e >= 0)
+			  {
+				t = 0;
+				sqrDistance = f;
+			  }else
+			  {
+				if (-e >= c)
+				{
+				  t = 1;
+				  sqrDistance = c + 2*e +f;
+				}else
+				{
+				  t = -e/c;
+				  sqrDistance = e*t + f;
+				}
+			  }
+			} //end %of region 3 
+		  }else
+		  {
+			if (t < 0)
+			{
+			  // region 5
+			  t = 0;
+			  if (d >= 0)
+			  {
+				s = 0;
+				sqrDistance = f;
+			  }else
+			  {
+				if (-d >= a)
+				{
+				  s = 1;
+				  sqrDistance = a + 2*d + f; // GF 20101013 fixed typo d*s ->2*d
+				}else
+				{
+				  s = -d/a;
+				  sqrDistance = d*s + f;
+				}
+			  }
+			}else
+			{
+			  //% region 0
+			  invDet = 1/det;
+			  s = s*invDet;
+			  t = t*invDet;
+			  sqrDistance = s*(a*s + b*t + 2*d) + t*(b*s + c*t + 2*e) + f;
+			}
+		  }
+		}else
+		{
+		  if (s < 0)
+		  {
+			// region 2
+			tmp0 = b + d;
+			tmp1 = c + e;
+			if (tmp1 > tmp0) // minimum on edge s+t=1
+			{
+			  numer = tmp1 - tmp0;
+			  denom = a - 2*b + c;
+			  if(numer >= denom)
+			  {
+				s = 1;
+				t = 0;
+				sqrDistance = a + 2*d + f; // GF 20101014 fixed typo 2*b -> 2*d
+			  }else
+			  {
+				s = numer/denom;
+				t = 1-s;
+				sqrDistance = s*(a*s + b*t + 2*d) + t*(b*s + c*t + 2*e) + f;
+			  }
+			}else       // minimum on edge s=0
+			{
+			  s = 0;
+			  if (tmp1 <= 0)
+			  {
+				t = 1;
+				sqrDistance = c + 2*e + f;
+			  }else
+				if (e >= 0)
+				{
+				  t = 0;
+				  sqrDistance = f;
+				}else
+				{
+				  t = -e/c;
+				  sqrDistance = e*t + f;
+				}
+			 } //of region 2
+		  }else
+		  {
+			if (t < 0)
+			{
+			  //region6 
+			  tmp0 = b + e;
+			  tmp1 = a + d;
+			  if (tmp1 > tmp0)
+			  {
+				numer = tmp1 - tmp0;
+				denom = a-2*b+c;
+				if (numer >= denom)
+				{
+				  t = 1;
+				  s = 0;
+				  sqrDistance = c + 2*e + f;
+				}else
+				{
+				  t = numer/denom;
+				  s = 1 - t;
+				  sqrDistance = s*(a*s + b*t + 2*d) + t*(b*s + c*t + 2*e) + f;
+				}
+			  }else  
+			  {
+				t = 0;
+				if (tmp1 <= 0)
+				{
+					s = 1;
+					sqrDistance = a + 2*d + f;
+				}else
+				{
+				  if (d >= 0)
+				  {
+					  s = 0;
+					  sqrDistance = f;
+				  }else
+				  {
+					  s = -d/a;
+					  sqrDistance = d*s + f;
+				  }
+				}
+			   }
+			  //end region 6
+			}else
+			{
+			  // region 1
+			  numer = c + e - b - d;
+			  if (numer <= 0)
+			  {
+				s = 0;
+				t = 1;
+				sqrDistance = c + 2*e + f;
+			  }else
+			  {
+				denom = a - 2*b + c;
+				if (numer >= denom)
+				{
+				  s = 1;
+				  t = 0;
+				  sqrDistance = a + 2*d + f;
+				}else
+				{
+				  s = numer/denom;
+				  t = 1-s;
+				  sqrDistance = s*(a*s + b*t + 2*d) + t*(b*s + c*t + 2*e) + f;
+				}
+			  } // of region 1
+			}
+		  }
+		}
+
+
+
+		// account for numerical round-off error
+		if (sqrDistance < 0)
+		  sqrDistance = 0;
+
+		float dist = sqrt(sqrDistance);
+
+		//if nargout>1
+		//  PP0 = B + s*E0 + t*E1;
+		//end
+		return dist;
+	}
+
+
 	//
 	// computes the distance of a point to a plane
 	//
