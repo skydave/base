@@ -419,6 +419,79 @@ namespace base
 		return result;
 	}
 
+	GeometryPtr geo_circle( int uSubdivisions, float radius, math::Vec3f center, Geometry::PrimitiveType primType )
+	{
+		GeometryPtr result = GeometryPtr(new Geometry(Geometry::LINE));
+
+		AttributePtr positions = Attribute::createVec3f();
+		result->setAttr( "P", positions);
+
+		AttributePtr uvs = Attribute::createVec2f();
+		result->setAttr( "UV", uvs );
+
+		float dPhi = MATH_2PIf/uSubdivisions;
+		float phi;
+
+		{
+			math::Vec3f p;
+			// x-z
+			phi = 0.0f;
+			for( int j = 0; j<uSubdivisions; ++j  )
+			{
+				p.x = cos(phi);
+				p.y = 0.0f;
+				p.z = sin(phi);
+
+				p = p*radius + center;
+
+				positions->appendElement( p );
+				phi+=dPhi;
+			}
+		}
+
+		int pole1 = positions->appendElement( math::Vec3f(0.0f, 1.0f, 0.0f)*radius + center );
+		int pole2 = positions->appendElement( math::Vec3f(0.0f, -1.0f, 0.0f)*radius + center );
+
+		if( primType == Geometry::POINT )
+		{
+			int numVertices = positions->numElements();
+			for( int i=0; i< numVertices; ++i )
+				result->addPoint( i );
+		}else
+		if( primType == Geometry::LINE )
+		{
+			for( int i=0; i<uSubdivisions-1; ++i )
+			{
+				result->addLine(i, i+1);
+			}
+			result->addLine(uSubdivisions-1, 0);
+
+			/*
+			// add faces
+			for( int j=0; j<vSubdivisions-3;++j )
+			{
+				int offset = j*(uSubdivisions);
+				int i = 0;
+				for( i=0; i<uSubdivisions-1; ++i )
+				{
+					result->addTriangle(offset+i+1, offset+i + uSubdivisions, offset+i);
+					result->addTriangle(offset+i+1, offset+i+uSubdivisions+1, offset+i + uSubdivisions);
+				}
+				result->addTriangle(offset+0,offset+i + uSubdivisions,offset+i);
+				result->addTriangle(offset,offset + uSubdivisions,offset+i + uSubdivisions);
+			}
+			for( int i=0; i<uSubdivisions-1; ++i )
+			{
+				result->addTriangle(i+1, i,pole1);
+				result->addTriangle(uSubdivisions*(vSubdivisions-3)+i, uSubdivisions*(vSubdivisions-3)+i+1, pole2);
+			}
+			result->addTriangle(0, uSubdivisions-1, pole1);
+			result->addTriangle(uSubdivisions*(vSubdivisions-2)-1, uSubdivisions*(vSubdivisions-3), pole2);
+			*/
+		}
+		return result;
+	}
+
 
 
 

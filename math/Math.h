@@ -178,6 +178,24 @@ inline void dotProduct( float &result, const Vec3f &lhs, const Vec3f &rhs )
 	result = (lhs.x*rhs.x + lhs.y*rhs.y + lhs.z*rhs.z);
 }
 
+inline math::Matrix33f outerProduct( const math::Vec3f &lhs, const math::Vec3f &rhs )
+{
+	math::Matrix33f result;
+
+	result._11 = lhs.x * rhs.x;
+	result._12 = lhs.x * rhs.y;
+	result._13 = lhs.x * rhs.z;
+	result._21 = lhs.y * rhs.x;
+	result._22 = lhs.y * rhs.y;
+	result._23 = lhs.y * rhs.z;
+	result._31 = lhs.z * rhs.x;
+	result._32 = lhs.z * rhs.y;
+	result._33 = lhs.z * rhs.z;
+
+	return result;
+}
+
+
 
 
 inline Vec3f crossProduct( const Vec3f &lhs, const Vec3f &rhs )
@@ -217,7 +235,6 @@ inline math::Vec3d crossProduct( const math::Vec3d &lhs, const math::Vec3d &rhs 
 			  lhs.z*rhs.x - lhs.x*rhs.z,
 			  lhs.x*rhs.y - lhs.y*rhs.x );
 }
-
 
 
 //

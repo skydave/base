@@ -135,6 +135,7 @@ namespace base
 	GeometryPtr geo_grid( int xres, int zres, Geometry::PrimitiveType primType = Geometry::TRIANGLE );
 	GeometryPtr geo_cube();
 	GeometryPtr geo_sphere( int uSubdivisions, int vSubdivisions, float radius, math::Vec3f center = math::Vec3f(0.0f,0.0f,0.0f), Geometry::PrimitiveType primType = Geometry::TRIANGLE );
+	GeometryPtr geo_circle( int uSubdivisions, float radius, math::Vec3f center = math::Vec3f(0.0f,0.0f,0.0f), Geometry::PrimitiveType primType = Geometry::LINE );
 
 	//
 	// geometry manipulation functions

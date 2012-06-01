@@ -74,7 +74,7 @@ namespace base
 		m_simpleTextureShaderScreen = Shader::create().attachPS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.ps.glsl").attachVS(base::Path( BASE_PATH ) + "/gfx/glsl/simpleTexture.vs.glsl");
 		m_simpleTextureShaderScreen->setUniform( "mvpm", math::Matrix44f::Identity() );
 
-		m_constantShader = Shader::create().attachPS(base::Path( BASE_PATH ) + "/gfx/glsl/constant.ps.glsl").attachVS(base::Path( BASE_PATH ) + "/gfx/glsl/constant.vs.glsl");
+		m_constantShader = Shader::createSimpleConstantShader(1.0f, 1.0f, 1.0f);
 
 		// initialize noise glsl module
 		setUniform("noise_permTexture", base::glsl::noisePermutationTableTex()->getUniform());

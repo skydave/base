@@ -96,6 +96,12 @@ namespace math
 		_33 = temp._33;
 	}
 
+	Matrix33f Matrix33f::transposed( void )
+	{
+		Matrix33f m = *this;
+		m.transpose();
+		return m;
+	}
 
 	//
 	// computes the determinant of a 2x2 matrix
@@ -104,6 +110,14 @@ namespace math
 					  float &_21, float &_22 )
 	{
 		return _11*_22 - _12*_21;
+	}
+
+	//
+	//returns sum of elements in main diagonal
+	//
+	float Matrix33f::trace()
+	{
+		return _11+_22+_33;
 	}
 
 	//

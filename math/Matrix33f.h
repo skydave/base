@@ -40,9 +40,11 @@ namespace math
 
 		// public methods
 		void                                                                        transpose( void );
+		Matrix33f                                                                  transposed( void );
 		void                                                                           invert( void );
 
 		float                                                                        getDeterminant(); // computes and returns the determinant
+		float                                                                                 trace(); //returns sum of elements in main diagonal
 
 		// operators
 		bool                                                       operator==( const Matrix33f &rhs );
