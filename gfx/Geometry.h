@@ -131,6 +131,7 @@ namespace base
 	// geometry generation functions
 	//
 	GeometryPtr geo_pointCloud();
+	GeometryPtr geo_points( math::Vec3f p );
 	GeometryPtr geo_quad();
 	GeometryPtr geo_grid( int xres, int zres, Geometry::PrimitiveType primType = Geometry::TRIANGLE );
 	GeometryPtr geo_cube();

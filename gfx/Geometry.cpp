@@ -212,6 +212,16 @@ namespace base
 		return result;
 	}
 
+	GeometryPtr geo_points( math::Vec3f p )
+	{
+		GeometryPtr result = GeometryPtr( new Geometry(Geometry::POINT) );
+		AttributePtr positions = Attribute::createVec3f();
+		positions->appendElement( p );
+		result->setAttr( "P", positions);
+		result->addPoint( 0 );
+		return result;
+	}
+
 	GeometryPtr geo_quad()
 	{
 		GeometryPtr result = GeometryPtr(new Geometry(Geometry::QUAD));
