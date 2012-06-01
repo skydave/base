@@ -148,6 +148,7 @@ namespace base
 		unsigned int pos = (unsigned int) m_data.size();
 		m_data.resize( pos + sizeof(T) );
 		*((T *)&m_data[pos]) = value;
+		m_isDirty = true;
 		return m_numElements++;
 	}
 
@@ -159,6 +160,7 @@ namespace base
 		T *data = (T*)&m_data[pos];
 		*data = v0;++data;
 		*data = v1;++data;
+		m_isDirty = true;
 		return m_numElements++;
 	}
 
@@ -171,6 +173,7 @@ namespace base
 		*data = v0;++data;
 		*data = v1;++data;
 		*data = v2;++data;
+		m_isDirty = true;
 		return m_numElements++;
 	}
 
@@ -184,6 +187,7 @@ namespace base
 		*data = v1;++data;
 		*data = v2;++data;
 		*data = v3;++data;
+		m_isDirty = true;
 		return m_numElements++;
 	}
 
