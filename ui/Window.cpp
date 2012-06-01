@@ -8,9 +8,15 @@
 namespace base
 {
 
-	Window::Window() : m_hwnd(0)
+	Window::Window() : m_hwnd(0), m_keypress(0)
 	{
 	}
+
+	void Window::setKeyPressCallback( KeyPressCallback keyPress )
+	{
+		m_keypress = keyPress;
+	}
+
 	HWND Window::getHandle()
 	{
 		return m_hwnd;
@@ -46,6 +52,7 @@ namespace base
 		// convert std::wstring to std::string
 		//m_caption = std::wstring( caption.begin(), caption.end() );
 		m_caption = caption;
+		SetWindowText( m_hwnd, m_caption.c_str());
 	}
 
 	void Window::setSize( int width, int height )

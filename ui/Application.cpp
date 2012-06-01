@@ -186,6 +186,10 @@ namespace base
 			}
 
 			ei.keyb.press[conv] = 1;
+
+			if( w->m_keypress )
+				w->m_keypress(conv);
+
 			return( DefWindowProc(hWnd,uMsg,wParam,lParam) );
 		}break;
 		case WM_LBUTTONDOWN:
