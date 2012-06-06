@@ -75,6 +75,13 @@ namespace math
 		_22 = temp._22;
 	}
 
+	Matrix22f Matrix22f::transposed( void )const
+	{
+		Matrix22f m = *this;
+		m.transpose();
+		return m;
+	}
+
 
 	void Matrix22f::invert( void )
 	{
@@ -83,6 +90,13 @@ namespace math
 		//Then the inverse is 1/(ad-cb) * d -b-c a
 		//float c = 1.0f/( _11*_22 - _21*_12 );
 		//*this = Matrix22f( c*_22, -c*_12, -c*_21, c*_11 );
+	}
+
+
+	//returns sum of elements in main diagonal
+	float Matrix22f::trace()
+	{
+		return _11 + _22;
 	}
 
 	//

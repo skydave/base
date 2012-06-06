@@ -36,7 +36,9 @@ namespace math
 
 		// public methods
 		void                                                                        transpose( void );
+		Matrix22f                                                             transposed( void )const;
 		void                                                                           invert( void );
+		float                                                                                 trace(); //returns sum of elements in main diagonal
 
 		// operators
 		bool                                                      operator==( const Matrix22f &rhs );

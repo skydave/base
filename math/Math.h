@@ -39,6 +39,11 @@ float degToRad( float degree );
 
 double radToDeg( double rad );
 double degToRad( double degree );
+
+inline float sign( float f )
+{
+	return f < 0.0f ? -1.0f : 1.0f;
+}
 //
 // global Vec2f related ops
 //
@@ -95,6 +100,68 @@ inline void crossProduct( float &result, const Vec2f &lhs, const Vec2f &rhs )
 {
 	result = lhs.x*rhs.y - lhs.y*rhs.x;
 }
+
+
+
+//
+// global Vec2d related ops
+//
+inline Vec2d operator-( const Vec2d &lhs, const Vec2d &rhs )
+{
+	return Vec2d( lhs.x-rhs.x, lhs.y-rhs.y );
+}
+inline Vec2d operator+( const Vec2d &lhs, const Vec2d &rhs )
+{
+	return Vec2d( lhs.x+rhs.x, lhs.y+rhs.y );
+}
+
+
+inline Vec2d operator*( const Vec2d &lhs, const double &rhs )
+{
+	return Vec2d( lhs.x*rhs, lhs.y*rhs );
+}
+inline Vec2d operator*( const double &lhs, const Vec2d &rhs )
+{
+	return (rhs*lhs);
+}
+inline Vec2d operator*( const Vec2d &lhs, const Vec2d &rhs )
+{
+	return Vec2d( lhs.x*rhs.x, lhs.y*rhs.y );
+}
+
+//
+// global Vec2d related functions
+//
+/*
+inline Vec3f normalize( const Vec3f &vector )
+{
+	Vec3f result = vector;
+	result.normalize();
+	return result;
+}
+
+inline double dotProduct( const Vec3f &lhs, const Vec3f &rhs )
+{
+	return (lhs.x*rhs.x + lhs.y*rhs.y + lhs.z*rhs.z);
+}
+
+inline void dotProduct( double &result, const Vec3f &lhs, const Vec3f &rhs )
+{
+	result = (lhs.x*rhs.x + lhs.y*rhs.y + lhs.z*rhs.z);
+}
+*/
+inline double crossProduct( const Vec2d &lhs, const Vec2d &rhs )
+{
+	return lhs.x*rhs.y - lhs.y*rhs.x;
+}
+
+inline void crossProduct( double &result, const Vec2d &lhs, const Vec2d &rhs )
+{
+	result = lhs.x*rhs.y - lhs.y*rhs.x;
+}
+
+
+
 
 //
 // global Vec3f related ops
@@ -219,22 +286,132 @@ inline Vec3f reflect( const math::Vec3f &i, const math::Vec3f &n )
 }
 
 
-inline double dotProduct( const math::Vec3d &vec1, const math::Vec3d &vec2 )
+
+
+//
+// global Vec3d related ops
+//
+
+inline Vec3d operator-( const Vec3d &rhs )
 {
-	return vec1.x*vec2.x+vec1.y*vec2.y+vec1.z*vec2.z;
+	return Vec3d( -rhs.x, -rhs.y, -rhs.z );
 }
 
-inline double dot( const math::Vec3d &vec1, const math::Vec3d &vec2 )
+inline Vec3d operator+( const Vec3d &lhs, const Vec3d &rhs )
 {
-	return vec1.x*vec2.x+vec1.y*vec2.y+vec1.z*vec2.z;
+	return Vec3d( lhs.x+rhs.x, lhs.y+rhs.y, lhs.z+rhs.z );
+}
+inline Vec3d operator-( const Vec3d &lhs, const Vec3d &rhs )
+{
+	return Vec3d( lhs.x-rhs.x, lhs.y-rhs.y, lhs.z-rhs.z );
+}
+inline Vec3d operator/( const Vec3d &lhs, const Vec3d &rhs )
+{
+	return Vec3d( lhs.x/rhs.x, lhs.y/rhs.y, lhs.z/rhs.z );
+}		
+inline Vec3d operator+( const Vec3d &lhs, const double &rhs )
+{
+	return Vec3d( lhs.x+rhs, lhs.y+rhs, lhs.z+rhs );
+}
+inline Vec3d operator-( const Vec3d &lhs, const double &rhs )
+{
+	return Vec3d( lhs.x-rhs, lhs.y-rhs, lhs.z-rhs );
+}
+inline Vec3d operator*( const Vec3d &lhs, const double &rhs )
+{
+	return Vec3d( lhs.x*rhs, lhs.y*rhs, lhs.z*rhs );
 }
 
-inline math::Vec3d crossProduct( const math::Vec3d &lhs, const math::Vec3d &rhs )
+inline Vec3d operator/( const Vec3d &lhs, const double &rhs )
+{
+	return Vec3d( lhs.x/rhs, lhs.y/rhs, lhs.z/rhs );
+}
+
+inline Vec3d operator+( const double &lhs, const Vec3d &rhs )
+{
+	return (rhs+lhs);
+}
+inline Vec3d operator-( const double &lhs, const Vec3d &rhs )
+{
+	return Vec3d( lhs-rhs.x, lhs-rhs.y, lhs-rhs.z );
+}
+inline Vec3d operator*( const double &lhs, const Vec3d &rhs )
+{
+	return (rhs*lhs);
+}
+inline Vec3d operator/( const double &lhs, const Vec3d &rhs )
+{
+	return (rhs/lhs);
+}
+
+//
+// global Vec3d related functions
+//
+
+inline Vec3d normalize( const Vec3d &vector )
+{
+	Vec3d result = vector;
+	result.normalize();
+	return result;
+}
+
+inline double dotProduct( const Vec3d &lhs, const Vec3d &rhs )
+{
+	return (lhs.x*rhs.x + lhs.y*rhs.y + lhs.z*rhs.z);
+}
+
+inline double dot( const Vec3d &lhs, const Vec3d &rhs )
+{
+	return (lhs.x*rhs.x + lhs.y*rhs.y + lhs.z*rhs.z);
+}
+
+inline void dotProduct( double &result, const Vec3d &lhs, const Vec3d &rhs )
+{
+	result = (lhs.x*rhs.x + lhs.y*rhs.y + lhs.z*rhs.z);
+}
+
+// TODO:  change to matrix33d
+inline math::Matrix33f outerProduct( const math::Vec3d &lhs, const math::Vec3d &rhs )
+{
+	math::Matrix33f result;
+
+	result._11 = (float)(lhs.x * rhs.x);
+	result._12 = (float)(lhs.x * rhs.y);
+	result._13 = (float)(lhs.x * rhs.z);
+	result._21 = (float)(lhs.y * rhs.x);
+	result._22 = (float)(lhs.y * rhs.y);
+	result._23 = (float)(lhs.y * rhs.z);
+	result._31 = (float)(lhs.z * rhs.x);
+	result._32 = (float)(lhs.z * rhs.y);
+	result._33 = (float)(lhs.z * rhs.z);
+
+	return result;
+}
+
+
+
+
+inline Vec3d crossProduct( const Vec3d &lhs, const Vec3d &rhs )
 {
 	return Vec3d( lhs.y*rhs.z - lhs.z*rhs.y,
-			  lhs.z*rhs.x - lhs.x*rhs.z,
-			  lhs.x*rhs.y - lhs.y*rhs.x );
+				  lhs.z*rhs.x - lhs.x*rhs.z,
+				  lhs.x*rhs.y - lhs.y*rhs.x );
 }
+
+inline void crossProduct( Vec3d &result, const Vec3d &lhs, const Vec3d &rhs )
+{
+	result.x = lhs.y*rhs.z - lhs.z*rhs.y;
+	result.y = lhs.z*rhs.x - lhs.x*rhs.z;
+	result.z = lhs.x*rhs.y - lhs.y*rhs.x;
+}
+
+// For a given incident vector I and surface normal N reflect returns the reflection direction calculated as I - 2.0 * dot(N, I) * N. N should be normalized in order to achieve the desired result.
+inline Vec3d reflect( const math::Vec3d &i, const math::Vec3d &n )
+{
+	return i - 2.0f*dotProduct(n,i)*n;
+}
+
+
 
 
 //
@@ -504,6 +681,43 @@ inline Matrix22f outerProduct( const Vec2f &lhs, const Vec2f &rhs )
 
 	result._21 = lhs.x * rhs.y;
 	result._22 = lhs.y * rhs.y;
+
+	result.transpose();
+
+	return result;
+}
+
+
+
+// Vec2d stuff
+inline Vec2d operator-( const Vec2d &rhs )
+{
+	return Vec2d( -rhs.x, -rhs.y );
+}
+
+inline Vec2d transform( const Vec2d &lhs, const Matrix44f &rhs )
+{
+	return Vec2d(lhs.x*rhs._11 + lhs.y*rhs._21 + rhs._41,
+		lhs.x*rhs._12 + lhs.y*rhs._22 + rhs._42 );
+}
+
+inline Vec2d transform( const Vec2d &lhs, const Matrix22f &rhs )
+{
+	return Vec2d(lhs.x*rhs._11 + lhs.y*rhs._21,
+				 lhs.x*rhs._12 + lhs.y*rhs._22 );
+}
+
+inline Matrix22f outerProduct( const Vec2d &lhs, const Vec2d &rhs )
+{
+	Matrix22f result;
+
+	result._11 = lhs.x * rhs.x;
+	result._12 = lhs.y * rhs.x;
+
+	result._21 = lhs.x * rhs.y;
+	result._22 = lhs.y * rhs.y;
+
+	result.transpose();
 
 	return result;
 }

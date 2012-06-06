@@ -31,6 +31,13 @@ namespace math
 	//
 	//
 	//
+	Vec3d::Vec3d( const double &xyz ) : x(xyz), y(xyz), z(xyz)
+	{
+	}
+
+	//
+	//
+	//
 	Vec3d::~Vec3d( )
 	{
 	}
@@ -48,6 +55,16 @@ namespace math
 	//
 	double Vec3d::getLength( void ) const
 	{
+		/*
+		double t = x*x + y*y + z*z;
+		__asm
+		{
+			fld t;
+			fsqrt;
+			fstp t;
+		}
+		return t;
+		*/
         return sqrt( x*x + y*y + z*z );
 	}
 
@@ -81,6 +98,17 @@ namespace math
 			y /= length;
 			z /= length;	
 		}
+	}
+
+	///< returnes normalized version if this the vector
+	Vec3d Vec3d::normalized( void ) const
+	{
+		double length = getLength();
+
+		if( length != 0.0f )
+			return Vec3d(x/length, y/length, z/length);
+		else
+			return Vec3d(0.0f, 0.0f, 0.0f);
 	}
 
 	//
