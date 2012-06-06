@@ -15,10 +15,17 @@ namespace base
 	BASE_DECL_SMARTPTR_STRUCT(Context);
 	struct Context
 	{
+		// used to store and cache all matrices (including redundant ones) of the transform pipeline
 		struct TransformState
 		{
-
-		private:
+			math::Matrix44f                                                                          modelMatrix; // object to world
+			math::Matrix44f                                                                           viewMatrix; // world to camera
+			math::Matrix44f                                                                      modelViewMatrix; // world to eye
+			math::Matrix44f                                                                     projectionMatrix; // camera to view
+			math::Matrix44f                                                            modelViewProjectionMatrix; // model view projection matrix (world to screen)
+			math::Matrix44f                                                                    viewInverseMatrix; // view matrix inverse (camera to world)
+			math::Matrix44f                                                                     modelViewInverse; // model view matrix inverse
+			math::Matrix33f                                                            modelViewInverseTranspose; // model view matrix inverse transpose (model view matrix without scaling/shearing) used to transform vectors
 		};
 
 		Context();
@@ -44,8 +51,8 @@ namespace base
 		math::Matrix44f                                                                    getModelViewInverse();
 		math::Matrix44f                                                                         getViewInverse();
 
-		void getTransformState( math::Matrix44f &modelMatrix, math::Matrix44f &viewMatrix, math::Matrix44f &projectionMatrix, math::Matrix44f &modelViewProjectionMatrix, math::Matrix44f &viewInverseMatrix, math::Matrix33f &modelViewInverseTranspose );
-		void setTransformState( const math::Matrix44f &modelMatrix, const math::Matrix44f &viewMatrix, math::Matrix44f &projectionMatrix, const math::Matrix44f &modelViewProjectionMatrix, const math::Matrix44f &viewInverseMatrix, const math::Matrix33f &modelViewInverseTranspose );
+		void                                                       getTransformState( TransformState &ts ) const;
+		void                                                       setTransformState( const TransformState &ts );
 
 		//
 		// global uniform manangement
@@ -58,12 +65,13 @@ namespace base
 		//
 		// rendering
 		//
-		void                 render( GeometryPtr geo, ShaderPtr shader );
-		void                            renderScreen( ShaderPtr shader );
-		void                        renderScreen( Texture2dPtr texture );
+		void                                                         render( GeometryPtr geo, ShaderPtr shader );
+		void                           render( GeometryPtr geo, ShaderPtr shader, const math::Matrix44f &xform );
+		void                                                                    renderScreen( ShaderPtr shader );
+		void                                                                renderScreen( Texture2dPtr texture );
 
-		void   bind( ShaderPtr shader, GeometryPtr geo = GeometryPtr() );
-		void unbind( ShaderPtr shader, GeometryPtr geo = GeometryPtr() );
+		void                                           bind( ShaderPtr shader, GeometryPtr geo = GeometryPtr() );
+		void                                         unbind( ShaderPtr shader, GeometryPtr geo = GeometryPtr() );
 
 		//
 		// some standard resources
@@ -74,6 +82,9 @@ namespace base
 		ShaderPtr                                       m_constantShader;
 
 	private:
+		TransformState                                                                   m_currentTransformState;
+
+		/*
 		math::Matrix44f                                                                            m_modelMatrix; // object to world
 		math::Matrix44f                                                                             m_viewMatrix; // world to camera
 		math::Matrix44f                                                                        m_modelViewMatrix; // world to eye
@@ -82,6 +93,7 @@ namespace base
 		math::Matrix44f                                                                      m_viewInverseMatrix; // view matrix inverse (camera to world)
 		math::Matrix44f                                                                       m_modelViewInverse; // model view matrix inverse
 		math::Matrix33f                                                              m_modelViewInverseTranspose; // model view matrix inverse transpose (model view matrix without scaling/shearing) used to transform vectors
+		*/
 
 
 

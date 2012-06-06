@@ -16,11 +16,11 @@ namespace base
 		//
 		// setup transform stuff
 		//
-		m_modelMatrix = math::Matrix44f::Identity();
-		m_viewMatrix = math::Matrix44f::Identity();
-		m_projectionMatrix = math::Matrix44f::Identity();
-		m_viewInverseMatrix = math::Matrix44f::Identity();
-		m_modelViewMatrix = math::Matrix44f::Identity();
+		m_currentTransformState.modelMatrix = math::Matrix44f::Identity();
+		m_currentTransformState.viewMatrix = math::Matrix44f::Identity();
+		m_currentTransformState.projectionMatrix = math::Matrix44f::Identity();
+		m_currentTransformState.viewInverseMatrix = math::Matrix44f::Identity();
+		m_currentTransformState.modelViewMatrix = math::Matrix44f::Identity();
 
 
 
@@ -120,114 +120,109 @@ namespace base
 
 	void Context::setView( const math::Matrix44f &view, const math::Matrix44f &viewInv, const math::Matrix44f &proj )
 	{
-		m_viewMatrix = view;
-		m_vmAttr->set( 0, m_viewMatrix );
+		m_currentTransformState.viewMatrix = view;
+		m_vmAttr->set( 0, m_currentTransformState.viewMatrix );
 
-		m_projectionMatrix = proj;
+		m_currentTransformState.projectionMatrix = proj;
 
 		// update camera transform
-		m_viewInverseMatrix = viewInv;
-		m_vminvAttr->set( 0, m_viewInverseMatrix );
+		m_currentTransformState.viewInverseMatrix = viewInv;
+		m_vminvAttr->set( 0, m_currentTransformState.viewInverseMatrix );
 
 		// updateModelViewProjection
-		m_modelViewProjectionMatrix = m_modelMatrix * m_viewMatrix * m_projectionMatrix;
-		m_mvpmAttr->set( 0, m_modelViewProjectionMatrix );
+		m_currentTransformState.modelViewProjectionMatrix = m_currentTransformState.modelMatrix * m_currentTransformState.viewMatrix * m_currentTransformState.projectionMatrix;
+		m_mvpmAttr->set( 0, m_currentTransformState.modelViewProjectionMatrix );
 
 
 		//update ModelViewMatrix
-		m_modelViewMatrix = m_modelMatrix * m_viewMatrix;
-		m_mvmAttr->set( 0, m_modelViewMatrix );
+		m_currentTransformState.modelViewMatrix = m_currentTransformState.modelMatrix * m_currentTransformState.viewMatrix;
+		m_mvmAttr->set( 0, m_currentTransformState.modelViewMatrix );
 
 		//update ModelViewMatrixInverseTranspose
-		m_modelViewInverse = m_modelViewMatrix.inverted();
+		m_currentTransformState.modelViewInverse = m_currentTransformState.modelViewMatrix.inverted();
 
-		math::Matrix44f m = m_modelViewInverse.transposed();
+		math::Matrix44f m = m_currentTransformState.modelViewInverse.transposed();
 
 		// we do the transpose when we extract the orientation from 44f matrix
-		m_modelViewInverseTranspose.ma[0] = m.m[0][0];
-		m_modelViewInverseTranspose.ma[1] = m.m[0][1];
-		m_modelViewInverseTranspose.ma[2] = m.m[0][2];
-		m_modelViewInverseTranspose.ma[3] = m.m[1][0];
-		m_modelViewInverseTranspose.ma[4] = m.m[1][1];
-		m_modelViewInverseTranspose.ma[5] = m.m[1][2];
-		m_modelViewInverseTranspose.ma[6] = m.m[2][0];
-		m_modelViewInverseTranspose.ma[7] = m.m[2][1];
-		m_modelViewInverseTranspose.ma[8] = m.m[2][2];
+		m_currentTransformState.modelViewInverseTranspose.ma[0] = m.m[0][0];
+		m_currentTransformState.modelViewInverseTranspose.ma[1] = m.m[0][1];
+		m_currentTransformState.modelViewInverseTranspose.ma[2] = m.m[0][2];
+		m_currentTransformState.modelViewInverseTranspose.ma[3] = m.m[1][0];
+		m_currentTransformState.modelViewInverseTranspose.ma[4] = m.m[1][1];
+		m_currentTransformState.modelViewInverseTranspose.ma[5] = m.m[1][2];
+		m_currentTransformState.modelViewInverseTranspose.ma[6] = m.m[2][0];
+		m_currentTransformState.modelViewInverseTranspose.ma[7] = m.m[2][1];
+		m_currentTransformState.modelViewInverseTranspose.ma[8] = m.m[2][2];
 
-		m_mvminvtAttr->set( 0, m_modelViewInverseTranspose );
+		m_mvminvtAttr->set( 0, m_currentTransformState.modelViewInverseTranspose );
 	}
 
 
 	void Context::setModelMatrix( const math::Matrix44f &modelMatrix )
 	{
-		m_modelMatrix = modelMatrix;
-		m_mmAttr->set( 0, m_modelMatrix );
+		m_currentTransformState.modelMatrix = modelMatrix;
+		m_mmAttr->set( 0, m_currentTransformState.modelMatrix );
 
 		// updateModelViewProjection
-		m_modelViewProjectionMatrix = m_modelMatrix * m_viewMatrix * m_projectionMatrix;
-		m_mvpmAttr->set( 0, m_modelViewProjectionMatrix );
+		m_currentTransformState.modelViewProjectionMatrix = m_currentTransformState.modelMatrix * m_currentTransformState.viewMatrix * m_currentTransformState.projectionMatrix;
+		m_mvpmAttr->set( 0, m_currentTransformState.modelViewProjectionMatrix );
 
 		//update ModelViewMatrix
-		m_modelViewMatrix = m_modelMatrix * m_viewMatrix;
-		m_mvmAttr->set( 0, m_modelViewMatrix );
+		m_currentTransformState.modelViewMatrix = m_currentTransformState.modelMatrix * m_currentTransformState.viewMatrix;
+		m_mvmAttr->set( 0, m_currentTransformState.modelViewMatrix );
 
 		//update ModelViewMatrixInverseTranspose
-		m_modelViewInverse = m_modelViewMatrix.inverted();
+		m_currentTransformState.modelViewInverse = m_currentTransformState.modelViewMatrix.inverted();
 
-		math::Matrix44f m = m_modelViewInverse.transposed();
+		math::Matrix44f m = m_currentTransformState.modelViewInverse.transposed();
 
 		// we do the transpose when we extract the orientation from 44f matrix
-		m_modelViewInverseTranspose.ma[0] = m.m[0][0];
-		m_modelViewInverseTranspose.ma[1] = m.m[0][1];
-		m_modelViewInverseTranspose.ma[2] = m.m[0][2];
-		m_modelViewInverseTranspose.ma[3] = m.m[1][0];
-		m_modelViewInverseTranspose.ma[4] = m.m[1][1];
-		m_modelViewInverseTranspose.ma[5] = m.m[1][2];
-		m_modelViewInverseTranspose.ma[6] = m.m[2][0];
-		m_modelViewInverseTranspose.ma[7] = m.m[2][1];
-		m_modelViewInverseTranspose.ma[8] = m.m[2][2];
+		m_currentTransformState.modelViewInverseTranspose.ma[0] = m.m[0][0];
+		m_currentTransformState.modelViewInverseTranspose.ma[1] = m.m[0][1];
+		m_currentTransformState.modelViewInverseTranspose.ma[2] = m.m[0][2];
+		m_currentTransformState.modelViewInverseTranspose.ma[3] = m.m[1][0];
+		m_currentTransformState.modelViewInverseTranspose.ma[4] = m.m[1][1];
+		m_currentTransformState.modelViewInverseTranspose.ma[5] = m.m[1][2];
+		m_currentTransformState.modelViewInverseTranspose.ma[6] = m.m[2][0];
+		m_currentTransformState.modelViewInverseTranspose.ma[7] = m.m[2][1];
+		m_currentTransformState.modelViewInverseTranspose.ma[8] = m.m[2][2];
 
-		m_mvminvtAttr->set( 0, m_modelViewInverseTranspose );
+		m_mvminvtAttr->set( 0,m_currentTransformState. modelViewInverseTranspose );
 	}
 
 	math::Vec3f Context::worldToView( const math::Vec3f &worldPos )
 	{
-		return math::transform( worldPos, m_modelViewMatrix );
+		return math::transform( worldPos, m_currentTransformState.modelViewMatrix );
 	}
 
 	math::Matrix44f Context::getModelViewInverse()
 	{
-		return m_modelViewInverse;
+		return m_currentTransformState.modelViewInverse;
 	}
 
 	math::Matrix44f Context::getViewInverse()
 	{
-		return m_viewInverseMatrix;
+		return m_currentTransformState.viewInverseMatrix;
 	}
 
 
-	void Context::getTransformState( math::Matrix44f &modelMatrix, math::Matrix44f &viewMatrix, math::Matrix44f &projectionMatrix, math::Matrix44f &modelViewProjectionMatrix, math::Matrix44f &viewInverseMatrix, math::Matrix33f &modelViewInverseTranspose )
+
+	void Context::getTransformState( TransformState &ts ) const
 	{
-		modelMatrix = m_modelMatrix; // object to world
-		viewMatrix = m_viewMatrix; // camera to world
-		projectionMatrix = m_projectionMatrix; // camera to view
-		modelViewProjectionMatrix = m_modelViewProjectionMatrix; // model view projection matrix (world to screen)
-		viewInverseMatrix = m_viewInverseMatrix; // view matrix inverse (camera to world)
-		modelViewInverseTranspose = m_modelViewInverseTranspose; // model view matrix inverse transpose (model view matrix without scaling/shearing) used to transform vectors
+		ts = m_currentTransformState;
 	}
-	void Context::setTransformState( const math::Matrix44f &modelMatrix, const math::Matrix44f &viewMatrix, math::Matrix44f &projectionMatrix, const math::Matrix44f &modelViewProjectionMatrix, const math::Matrix44f &viewInverseMatrix, const math::Matrix33f &modelViewInverseTranspose )
+
+	void Context::setTransformState( const TransformState &ts )
 	{
-		m_modelMatrix = modelMatrix; // model/object to world
-		m_mmAttr->set( 0, m_modelMatrix );
-		m_viewMatrix = viewMatrix; // camera to world
-		m_vmAttr->set( 0, m_viewMatrix );
-		m_projectionMatrix = projectionMatrix; // camera to view
-		m_modelViewProjectionMatrix = modelViewProjectionMatrix; // model view projection matrix (world to screen)
-		m_mvpmAttr->set( 0, m_modelViewProjectionMatrix );
-		m_viewInverseMatrix = viewInverseMatrix; // view matrix inverse (camera to world)
-		m_modelViewInverseTranspose = modelViewInverseTranspose; // model view matrix inverse transpose (model view matrix without scaling/shearing) used to transform vectors
-		m_mvminvtAttr->set( 0, m_modelViewInverseTranspose );
+		m_currentTransformState = ts;
+		m_mmAttr->set( 0, m_currentTransformState.modelMatrix );
+		m_mvpmAttr->set( 0, m_currentTransformState.modelViewProjectionMatrix );
+		m_mvmAttr->set( 0, m_currentTransformState.modelViewMatrix );
+		m_vmAttr->set( 0, m_currentTransformState.viewMatrix );
+		m_vminvAttr->set( 0, m_currentTransformState.viewInverseMatrix );
+		m_mvminvtAttr->set( 0, m_currentTransformState.modelViewInverseTranspose );
 	}
+
 
 
 
@@ -254,64 +249,20 @@ namespace base
 	{
 		bind(shader, geo);
 
-
 		// render primitives
 		geo->bindIndexBuffer();
 		glDrawElements(geo->m_primitiveType, geo->numPrimitives()*geo->numPrimitiveVertices(), GL_UNSIGNED_INT, 0);
 
-
-
-
-		// ...works for now
-		//glDrawElements(geo->m_primitiveType, (GLsizei)geo->m_indexBuffer.size(), GL_UNSIGNED_INT, &geo->m_indexBuffer[0]);
-		//AttributePtr  pos = geo->getAttr("P");
-		//glBegin(GL_POINTS);
-		//for(int i=0; i< pos->numElements(); ++i)
-		//{
-		//	glVertex3f( pos->get<math::Vec3f>(i).x, pos->get<math::Vec3f>(i).y, pos->get<math::Vec3f>(i).z );
-		//}
-		//glEnd();
-
-		/*
-		glEnable( GL_POINT_SPRITE_ARB );
-
-
-		float quadratic[] =  { 0.0f, 0.0f, 0.01f };
-
-		glPointParameterfvARB( GL_POINT_DISTANCE_ATTENUATION_ARB, quadratic );
-
-		float maxSize = 0.0f;
-
-		glGetFloatv( GL_POINT_SIZE_MAX_ARB, &maxSize );
-
-		glPointSize( maxSize );
-
-		glPointParameterf( GL_POINT_SIZE_MAX, maxSize );
-
-		glPointParameterf( GL_POINT_SIZE_MIN, 1.0f );
-
-		glTexEnvf( GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE );
-
-		glEnable( GL_POINT_SPRITE );
-
-		glDrawElements(geo->m_primitiveType, (GLsizei)geo->m_indexBuffer.size(), GL_UNSIGNED_INT, &geo->m_indexBuffer[0]);
-		
-		//AttributePtr  pos = geo->getAttr("P");
-		//glBegin(GL_POINTS);
-		//for(int i=0; i< pos->numElements(); ++i)
-		//{
-		//	glVertex3f( pos->get<math::Vec3f>(i).x, pos->get<math::Vec3f>(i).y, pos->get<math::Vec3f>(i).z );
-		//}
-		//glEnd();
-
-		glDisable( GL_POINT_SPRITE );
-		*/
-
-
-
-
-
 		unbind( shader, geo );
+	}
+
+	void Context::render( GeometryPtr geo, ShaderPtr shader, const math::Matrix44f &xform )
+	{
+		TransformState ts;
+		getTransformState(ts);
+		setModelMatrix(xform);
+		render( geo, shader );
+		setTransformState(ts);
 	}
 
 
