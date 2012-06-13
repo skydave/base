@@ -161,8 +161,6 @@ inline void crossProduct( double &result, const Vec2d &lhs, const Vec2d &rhs )
 }
 
 
-
-
 //
 // global Vec3f related ops
 //
