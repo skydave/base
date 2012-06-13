@@ -12,6 +12,7 @@ namespace base
 	{
 	public:
 		typedef void (*InitCallback)( void );
+		typedef void (*ShutdownCallback)( void );
 
 		GLWindow();                                                           // when using this constructor the window will be created when show is called first time
 		GLWindow( int width, int height, std::string caption, InitCallback init = 0 );
@@ -21,10 +22,12 @@ namespace base
 		virtual void                                               paintGL();
 		virtual void                       setCaption( std::string caption );
 		virtual void                        setSize( int width, int height );
+		virtual void                                               destroy(); // closes and destroys the window
 		void                                setSampleBuffers( bool enabled ); // specifies whether a glcontext with samplebuffer support is to be created
 		void                                setStencilBuffer( bool enabled ); // specifies whether a glcontext with stencil support is to be created
 		void                                    setSamples( int numSamples ); // specifies the number of samples we want
 		void                            setInitCallback( InitCallback init );
+		void                setShutdownCallback( ShutdownCallback shutdown );
 
 
 	private:
@@ -54,6 +57,7 @@ namespace base
 
 		// callbacks
 		InitCallback                                                  m_init;
+		InitCallback                                              m_shutdown;
 	};
 }
 #endif

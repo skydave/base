@@ -33,6 +33,15 @@ namespace base
 		Window::show();
 	}
 
+	// closes and destroys the window
+	void GLWindow::destroy()
+	{
+		// shutdown callback
+		if( m_shutdown )
+			m_shutdown();
+		Window::destroy();
+	}
+
 	void GLWindow::createWindow()
 	{
 		// intitialisierung
@@ -325,6 +334,11 @@ namespace base
 	void GLWindow::setInitCallback( InitCallback init )
 	{
 		m_init = init;
+	}
+
+	void GLWindow::setShutdownCallback( ShutdownCallback shutdown )
+	{
+		m_shutdown = shutdown;
 	}
 
 
