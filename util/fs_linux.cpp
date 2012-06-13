@@ -19,7 +19,7 @@ namespace base
 				struct stat info;
 				return (stat( path.c_str(), &info) == 0);
 			}
-			void *open( const Path &path )
+			void *open( const Path &path, std::string mode )
 			{
 				int fd;
 				fd = ::open(path.c_str(), O_RDONLY, S_IRUSR | S_IWUSR);

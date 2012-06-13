@@ -132,12 +132,12 @@ namespace base
 			close(f);
 		}
 
-		File *open( const Path &path )
+		File *open( const Path &path, std::string mode )
 		{
 			if( Options::fileLogging() )
 				Options::logFile(path.str());
 			File *f = 0;
-			void *opaque = platform::open(Options::realPath(path.str()));
+			void *opaque = platform::open(Options::realPath(path.str()), mode);
 			if(opaque)
 			{
 				f = new File();
@@ -169,6 +169,15 @@ namespace base
 			if( file )
 			{
 				return platform::read(file->opaque, buffer, size, count);
+			}
+			return 0;
+		}
+
+		uint64 write( File *file, const void *buffer, unsigned int size, unsigned int count )
+		{
+			if( file )
+			{
+				return platform::write(file->opaque, buffer, size, count);
 			}
 			return 0;
 		}
@@ -206,6 +215,12 @@ namespace base
 			lines.clear();
 			std::string content = read( path );
 			splitString( content, lines, "\n", false);
+		}
+
+		// convinience
+		void write( File *file, const std::string line )
+		{
+			platform::write(file->opaque, line.c_str(), line.size(), 1 );
 		}
 	}
 

@@ -6,6 +6,7 @@
 #ifdef _WINDOWS
 
 #include <windows.h>
+#include <iostream>
 
 namespace base
 {
@@ -26,12 +27,20 @@ namespace base
 
 				return true;
 			}
-			void *open( const Path &path )
+			void *open( const Path &path, std::string mode )
 			{
 				HANDLE fileHandle;
 				WinApiFile *retval;
+				DWORD dwDesiredAccess = GENERIC_READ;
+				DWORD creationDisposition = OPEN_EXISTING;
 
-				fileHandle = CreateFile(path.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+				if( mode == "w" )
+				{
+					dwDesiredAccess |= GENERIC_WRITE;
+					creationDisposition = CREATE_ALWAYS;
+				}
+
+				fileHandle = CreateFile(path.c_str(), dwDesiredAccess, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, creationDisposition, FILE_ATTRIBUTE_NORMAL, NULL);
 
 				retval = new WinApiFile;
 				//retval->readonly = rdonly;
@@ -81,6 +90,29 @@ namespace base
 					// Return the number of "objects" read.
 					// !!! FIXME: What if not the right amount of bytes was read to make an object?
 					retval = CountOfBytesRead / size;
+				}
+
+				return(retval);
+			}
+
+			uint64 write( void *opaque, const void *buffer, unsigned int size, unsigned int count )
+			{
+				HANDLE Handle = ((WinApiFile *) opaque)->handle;
+				DWORD CountOfBytesWritten;
+				uint64 retval = 0;
+
+				// Read data from the file
+				// !!! FIXME: uint32 might be a greater # than DWORD
+				if(!WriteFile(Handle, buffer, count * size, &CountOfBytesWritten, NULL))
+				{
+					// error
+					DWORD ec = GetLastError();
+					std::cout << ec << std::endl;
+				}else
+				{
+					// Return the number of "objects" read.
+					// !!! FIXME: What if not the right amount of bytes was read to make an object?
+					retval = CountOfBytesWritten / size;
 				}
 
 				return(retval);
